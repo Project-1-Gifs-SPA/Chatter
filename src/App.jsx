@@ -15,7 +15,6 @@ import Loader from "./components/Loader/Loader";
 
 function App() {
 
-
   const [user] = useAuthState(auth);
   const [appState, setAppState] = useState({
     user,
@@ -46,18 +45,22 @@ function App() {
           userData: currentUserData,
         })
         setLoading(false)
+        console.log(currentUserData)
       })
   }, [user?.uid])
 
   return (
     <>
       <AppContext.Provider value={{ ...appState, setContext: setAppState }}>
-        <Routes>
-          <Route path='/welcome' element={<LandingPage />} />
-          <Route path='/sign-in' element={<SignIn />} />
-          <Route path='/sign-up' element={<SignUp />} />
-          <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
-        </Routes>
+        {!loading ? (
+          <Routes>
+            <Route path='/welcome' element={<LandingPage />} />
+            <Route path='/sign-in' element={<SignIn />} />
+            <Route path='/sign-up' element={<SignUp />} />
+            <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+          </Routes>
+        ) : <Loader />
+        }
       </AppContext.Provider>
     </>
   )

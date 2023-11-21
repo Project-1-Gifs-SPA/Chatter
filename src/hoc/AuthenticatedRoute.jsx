@@ -8,7 +8,7 @@ export default function AuthenticatedRoute({ children }) {
     const location = useLocation();
 
     if (user === null) {
-        return <Navigate to="/sign-in" path={location.pathname} > </Navigate>;
+        return <Navigate to="/welcome" path={location.pathname} > </Navigate>;
     }
 
     return children;
