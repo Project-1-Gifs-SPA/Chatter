@@ -29,6 +29,7 @@ function App() {
   useEffect(() => {
 
     if (user === null) {
+      setLoading(false)
       return;
     }
 
