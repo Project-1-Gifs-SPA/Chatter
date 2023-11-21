@@ -57,6 +57,7 @@ function App() {
           <Route path='/sign-in' element={<SignIn />} />
           <Route path='/sign-up' element={<SignUp />} />
           <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+          <Route path="/teams/:teamId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
         </Routes>
       </AppContext.Provider>
     </>

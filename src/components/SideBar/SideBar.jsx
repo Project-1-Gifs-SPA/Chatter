@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import TeamIcon from '../TeamIcon/TeamIcon';
 import DMIcon from '../DMIcon/DMIcon';
-import AddTeams from '../AddTeams/AddTeams';
+import AddTeam from '../AddTeam/AddTeam';
 import { logoutUser } from '../../services/auth.service';
 import AppContext from '../../context/AppContext';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
@@ -30,6 +30,7 @@ const SideBar = () => {
 					<TeamIcon />
 					<TeamIcon />
 					<TeamIcon />
+					<AddTeam />
 				</div>
 
 				<div className="bg-gray-900 text-purple-lighter flex-none w-24 p-6 hidden md:block">
