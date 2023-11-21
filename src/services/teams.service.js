@@ -23,13 +23,13 @@ const fromTeamsDocument = (snapshot) => {
 export const addTeam = (handle, name) => {
     return push(ref(db, 'teams'), {})
     .then(response=>{
+        const members = {};
+        members[handle] = true;
         set(ref(db,`teams/${response.key}`),
         {
             name: name,
             createdOn: Date.now(),
-            members: {
-                handle:true,
-            },
+            members,
             owner: handle,
             id: response.key,
             
@@ -74,6 +74,9 @@ export const getAllTeams = () => {
     });
 };
 
+export const findTeamByName = (name) => {
+    return get(query(ref(db,'teams'), orderByChild('name'), equalTo(name)));
+};
 
 
 
