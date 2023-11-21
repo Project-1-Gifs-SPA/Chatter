@@ -61,7 +61,7 @@ const SignUp = () => {
 			return;
 		}
 
-		if (!form.phoneNumber || isValidPhoneNumber(form.phoneNumber)) {
+		if (!isValidPhoneNumber(form.phoneNumber)) {
 			setFail('Phone number must be valid phone number with 10 digits!');
 			setShowAlert(true);
 			return;
