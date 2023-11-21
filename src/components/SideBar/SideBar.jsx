@@ -10,7 +10,6 @@ const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
 	const navigate = useNavigate();
 
-
 	const onLogout = () => {
 		logoutUser()
 			.then(() => {
@@ -18,8 +17,8 @@ const SideBar = () => {
 					user: null,
 					userData: null,
 				});
+				navigate('/welcome')
 			});
-		navigate('/welcome')
 	};
 	return (
 		<>

@@ -61,7 +61,7 @@ const SignUp = () => {
 			return;
 		}
 
-		if (!form.phoneNumber || isValidPhoneNumber(form.phoneNumber)) {
+		if (!isValidPhoneNumber(form.phoneNumber)) {
 			setFail('Phone number must be valid phone number with 10 digits!');
 			setShowAlert(true);
 			return;
@@ -134,7 +134,7 @@ const SignUp = () => {
 		<div className="flex min-h-screen items-center justify-center bg-gray-900">
 			<div className="space-y-8 mx-auto max-w-xl py-12 px-6">
 				<div className="text-center">
-					<h1 className="text-4xl font-bold text-purple-400">Sign up</h1>
+					<h1 className="text-4xl font-bold text-purple-400" style={{ fontFamily: 'Rockwell, sans-serif' }}>Sign up</h1>
 				</div>
 				<div className="rounded-lg bg-gray-700 dark:bg-gray-700 shadow-lg p-8">
 					<div className="space-y-4">
@@ -238,7 +238,9 @@ const SignUp = () => {
 						<div className="pt-6 ">
 							<p className="text-gray-200">
 								Already a user?{' '}
-								<Link to="/sign-in" className="text-purple-400">
+								<Link to="/sign-in" className="text-purple-400"
+									style={{ fontFamily: 'Rockwell, sans-serif' }}>
+
 									Sign in
 								</Link>
 							</p>
