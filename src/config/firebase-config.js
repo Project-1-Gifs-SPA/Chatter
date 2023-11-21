@@ -10,7 +10,8 @@ const firebaseConfig = {
   projectId: "chatter-app-52b85",
   storageBucket: "chatter-app-52b85.appspot.com",
   messagingSenderId: "580470035986",
-  appId: "1:580470035986:web:cad987b9faa690516eaacb"
+  appId: "1:580470035986:web:cad987b9faa690516eaacb",
+  databaseURL: "https://chatter-app-52b85-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 // Initialize Firebase
