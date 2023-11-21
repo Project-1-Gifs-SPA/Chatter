@@ -22,7 +22,6 @@ function App() {
   })
   const [loading, setLoading] = useState(true)
 
-
   if (appState.user !== user) {
     setAppState({ user, userData: null });
   }
@@ -47,7 +46,8 @@ function App() {
         setLoading(false)
         console.log(currentUserData)
       })
-  }, [user?.uid])
+
+  }, [user]);
 
   return (
     <>
