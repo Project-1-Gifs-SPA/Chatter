@@ -21,10 +21,11 @@ const AddTeam = () => {
   
 
 
-  const createTeam = () => {
+  const createTeam = (e) => {
+    e.preventDefault();
     if(teamName.length<3 || teamName>40 ) { //magic numbers
       setTeamError('Team name must be between 3 and 40 characters');
-      return;
+      throw new Error('Team name must be between 3 and 40 characters');
 
     } 
     setTeamError('')
@@ -32,13 +33,14 @@ const AddTeam = () => {
     .then(snapshot=>{
       if(snapshot.exists()){
         setTeamError(`Team ${teamName} already exists`);
-        return;
+        throw new Error(`Team ${teamName} already exists`);
       }
+      addTeam(userData.handle, teamName)
+      .then(teamId => {
+        navigate(`/teams/${teamId}`)
+      })
     })
-    addTeam(userData.handle, teamName)
-    .then(teamId => {
-      navigate(`/teams/${teamId}`)
-    })
+   
     .catch(e=> console.log(e)) //better error handling
     // document.getElementById(modalRef.current.id).close();
     // console.log(modalRef.current.id)
@@ -66,7 +68,7 @@ const AddTeam = () => {
             </p>
             <input type='text' value={teamName} onChange={(e)=>setTeamName(e.target.value)} /><br />
             <span className="bg-red">{teamError}</span>
-
+            
             <div className="modal-action">
             
               <form method="dialog" >
