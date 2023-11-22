@@ -43,3 +43,5 @@ export const setDefaultPic = (user, picURL,setLoading) => {
     console.error('Error uploading file:', error);
   });
 }
+
+//setTeamDefaultPic

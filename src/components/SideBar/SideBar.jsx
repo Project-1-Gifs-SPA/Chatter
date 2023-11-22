@@ -10,69 +10,51 @@ import { getLiveUserInfo } from '../../services/users.service';
 
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
-	const navigate = useNavigate();
-
 
 	console.log(user)
 
 	const [teams, setTeams] = useState([]);
 	const [allTeams, setAllTeams] = useState([]);
 	const [currentUser, setCurrentUser] = useState({})
-	
-	
 
-	const onLogout = () => {
-		logoutUser()
-			.then(() => {
-				setContext({
-					user: null,
-					userData: null,
-				});
-				navigate('/welcome')
-			});
-	};
-
-	useEffect(()=>{
+	useEffect(() => {
 		console.log('live teams')
 
-		const u = getLiveUserInfo ((data)=> {
+		const u = getLiveUserInfo((data) => {
 			setCurrentUser(data)
 		}, userData.handle)
 
-		const unsubscribe = getLiveAllTeams((result)=>{
+		const unsubscribe = getLiveAllTeams((result) => {
 			setAllTeams(result);
 		})
 
-		return ()=>{
+		return () => {
 			unsubscribe();
 			u();
 		}
 
-	},[userData.handle])	
+	}, [userData.handle])
 
 
-	useEffect(()=>{
+	useEffect(() => {
 		console.log('getting teams')
 		const teamArr = [];
-		if(currentUser.teams){
+		if (currentUser.teams) {
 			// const teamsData = Object.keys(currentUser.teams);
-			for(let id of Object.keys(currentUser.teams)) {
+			for (let id of Object.keys(currentUser.teams)) {
 				teamArr.push(id)
 			}
-			
-			
 		}
-		if(currentUser.myTeams){
+
+		if (currentUser.myTeams) {
 			// const myTeamsData = Object.keys(currentUser.myTeams);
 			// setTeams([...myTeamsData])
-			for(let id of Object.keys(currentUser.myTeams)) {
+			for (let id of Object.keys(currentUser.myTeams)) {
 				teamArr.push(id)
 			}
 		}
 		setTeams(teamArr);
-		
-		
-},[allTeams, currentUser])
+	}, [allTeams, currentUser])
 
 
 	return (
@@ -81,11 +63,11 @@ const SideBar = () => {
 				<div className="bg-gray-900 text-purple-lighter flex-none w-24 p-6 hidden md:block">
 					{/* Your existing content */}
 					<DMIcon />
-					{teams.length?
-					teams.map(teamId=>{
-						return <TeamIcon key={teamId} id={teamId} />
-					
-					}) : null	
+					{teams.length ?
+						teams.map(teamId => {
+							return <TeamIcon key={teamId} id={teamId} />
+
+						}) : null
 					}
 					{/* <TeamIcon />
 					<TeamIcon />
