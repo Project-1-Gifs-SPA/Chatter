@@ -44,6 +44,16 @@ export const addTeam = (handle, name) => {
    
 }
 
+export const getTeamName = (teamId) => {
+    return get(ref(db, `teams/${teamId}/name` ))
+    .then(snapshot=>{
+        if(!snapshot.exists()){
+            return '';
+        }
+        return snapshot.val();
+    });
+}
+
 export const getLiveTeamInfo = (listenFn, teamId) => {
     return onValue(
         ref(db, `teams/${teamId}`),
@@ -52,6 +62,30 @@ export const getLiveTeamInfo = (listenFn, teamId) => {
             listenFn(data);
         });
 };
+
+export const getLiveTeamMembers = (listenFn, teamId) => {
+    return onValue(
+        ref(db, `teams/${teamId}/members`),
+        snapshot=>{
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
+}
+
+export const getLiveAllTeams = (listenFn) => {
+    return onValue(
+        ref(db,'teams'),
+        snapshot=>{
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.values(data);
+
+            listenFn(result);
+        }
+    )
+}
 
 export const getAllTeamMembers = (teamId) => {
     return get(ref(db,`teams/${teamId}/members`))
