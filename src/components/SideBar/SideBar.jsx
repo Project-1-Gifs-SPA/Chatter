@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TeamIcon from '../TeamIcon/TeamIcon';
 import DMIcon from '../DMIcon/DMIcon';
 import AddTeam from '../AddTeam/AddTeam';
@@ -10,6 +10,9 @@ const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
 	const navigate = useNavigate();
 
+	const [teams, setTeams] = useState([]);
+	
+
 	const onLogout = () => {
 		logoutUser()
 			.then(() => {
@@ -20,15 +23,40 @@ const SideBar = () => {
 				navigate('/welcome')
 			});
 	};
+
+
+	useEffect(()=>{
+		console.log('getting teams')
+		if(userData.teams){
+			const teamsData = Object.keys(userData.teams);
+			setTeams([...teams,...teamsData])
+			
+		}
+		if(userData.myTeams){
+			const myTeamsData = Object.keys(userData.myTeams);
+			setTeams([...teams,...myTeamsData])
+		}
+
+		
+		
+},[userData.myTeams,userData.teams])
+
+
 	return (
 		<>
 			<div className="flex flex-col justify-between h-screen bg-gray-900">
 				<div className="bg-gray-900 text-purple-lighter flex-none w-24 p-6 hidden md:block">
 					{/* Your existing content */}
 					<DMIcon />
+					{teams.length?
+					teams.map(teamId=>{
+						return <TeamIcon key={teamId} id={teamId} />
+					
+					}) : null	
+					}
+					{/* <TeamIcon />
 					<TeamIcon />
-					<TeamIcon />
-					<TeamIcon />
+					<TeamIcon /> */}
 					<AddTeam />
 				</div>
 

@@ -1,9 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
+import { getLiveTeamInfo } from '../../services/teams.service';
 
 
-const MyServers = () => {
+const MyServers = ({teamId}) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [currentTeam, setCurrentTeam] = useState({}); 
+
+
+	useEffect(()=>{
+		console.log('get team info')
+
+		const unsubscribe =	getLiveTeamInfo( data=> {
+
+		setCurrentTeam({...data})
+
+		}, teamId)
+		return ()=>{
+			unsubscribe();
+		}
+
+	},[teamId])
+
+
+
+
+
 
 	const toggleAccordion = () => {
 		setIsOpen(!isOpen);
@@ -13,7 +35,7 @@ const MyServers = () => {
 			<div
 				className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
 				<div className="flex-auto ">
-					<h1 className="font-semibold text-xl leading-tight mb-1 truncate">My Server</h1>
+					<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{currentTeam.name}</h1>
 				</div>
 				<div>
 					{isOpen ? (<GoChevronUp onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />) : (<GoChevronDown onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />)
