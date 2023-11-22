@@ -5,12 +5,12 @@ import SideBar from "../../components/SideBar/SideBar"
 
 const MainPage = () => {
 
-  const{teamId} = useParams();
+ 
 
   return (
     <div className="font-sans antialiased h-screen flex">
       <SideBar />
-      <MyServers teamId={teamId} />
+      <MyServers />
       <ChatBox />
     </div>
   )
