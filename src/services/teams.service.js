@@ -75,6 +75,18 @@ export const getLiveTeamMembers = (listenFn, teamId) => {
     )
 }
 
+export const getLiveAllTeams = (listenFn) => {
+    return onValue(
+        ref(db,'teams'),
+        snapshot=>{
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.values(data);
+
+            listenFn(result);
+        }
+    )
+}
+
 export const getAllTeamMembers = (teamId) => {
     return get(ref(db,`teams/${teamId}/members`))
     .then(snapshot=>{

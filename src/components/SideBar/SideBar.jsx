@@ -5,12 +5,19 @@ import AddTeam from '../AddTeam/AddTeam';
 import { logoutUser } from '../../services/auth.service';
 import AppContext from '../../context/AppContext';
 import { useNavigate, useParams } from 'react-router';
+import { getLiveAllTeams } from '../../services/teams.service';
+import { getLiveUserInfo } from '../../services/users.service';
 
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
 	const navigate = useNavigate();
 
+	console.log(user)
+
 	const [teams, setTeams] = useState([]);
+	const [allTeams, setAllTeams] = useState([]);
+	const [currentUser, setCurrentUser] = useState({})
+	
 	
 
 	const onLogout = () => {
@@ -24,22 +31,47 @@ const SideBar = () => {
 			});
 	};
 
+	useEffect(()=>{
+		console.log('live teams')
+
+		const u = getLiveUserInfo ((data)=> {
+			setCurrentUser(data)
+		}, userData.handle)
+
+		const unsubscribe = getLiveAllTeams((result)=>{
+			setAllTeams(result);
+		})
+
+		return ()=>{
+			unsubscribe();
+			u();
+		}
+
+	},[userData.handle])	
+
 
 	useEffect(()=>{
 		console.log('getting teams')
-		if(userData.teams){
-			const teamsData = Object.keys(userData.teams);
-			setTeams([...teams,...teamsData])
+		const teamArr = [];
+		if(currentUser.teams){
+			// const teamsData = Object.keys(currentUser.teams);
+			for(let id of Object.keys(currentUser.teams)) {
+				teamArr.push(id)
+			}
+			
 			
 		}
-		if(userData.myTeams){
-			const myTeamsData = Object.keys(userData.myTeams);
-			setTeams([...teams,...myTeamsData])
+		if(currentUser.myTeams){
+			// const myTeamsData = Object.keys(currentUser.myTeams);
+			// setTeams([...myTeamsData])
+			for(let id of Object.keys(currentUser.myTeams)) {
+				teamArr.push(id)
+			}
 		}
-
+		setTeams(teamArr);
 		
 		
-},[userData.myTeams,userData.teams])
+},[allTeams, currentUser])
 
 
 	return (

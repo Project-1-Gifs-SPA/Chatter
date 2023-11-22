@@ -68,11 +68,11 @@ const AddTeam = () => {
             <span className="bg-red">{teamError}</span>
 
             <div className="modal-action">
-            <button className="btn mr-5" onClick={createTeam}>Add Team</button>
+            
               <form method="dialog" >
 
                 {/* if there is a button in form, it will close the modal */}
-               
+                <button className="btn mr-5" onClick={createTeam}>Add Team</button>
                 <button className="btn">Close</button>
                 </form>
   
