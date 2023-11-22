@@ -9,8 +9,10 @@ import LandingPage from "./views/LandingPage/LandingPage";
 import AuthenticatedRoute from "./hoc/AuthenticatedRoute";
 import SignIn from "./views/SignIn/SignIn";
 import SignUp from "./views/SignUp/SignUp";
-import { getUserData } from "./services/users.service";
+import { changeUserStatus, getUserData } from "./services/users.service";
 import Loader from "./components/Loader/Loader";
+import Profile from "./views/Profile/Profile";
+import { statuses } from "./common/constants";
 
 
 function App() {
@@ -38,13 +40,13 @@ function App() {
           throw new Error('User data not found');
         }
         const currentUserData = snapshot.val()[Object.keys(snapshot.val())[0]];
+        changeUserStatus(currentUserData.handle, statuses.online)
 
         setAppState({
           ...appState,
           userData: currentUserData,
         })
         setLoading(false)
-        console.log(currentUserData)
       })
 
   }, [user]);
@@ -59,6 +61,7 @@ function App() {
             <Route path='/sign-up' element={<SignUp />} />
             <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/teams/:teamId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+            <Route path="/profile" element={<AuthenticatedRoute><Profile /></AuthenticatedRoute>} />
           </Routes>
         ) : <Loader />
         }

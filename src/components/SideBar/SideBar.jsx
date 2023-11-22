@@ -12,6 +12,7 @@ const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
 	const navigate = useNavigate();
 
+
 	console.log(user)
 
 	const [teams, setTeams] = useState([]);
@@ -91,14 +92,8 @@ const SideBar = () => {
 					<TeamIcon /> */}
 					<AddTeam />
 				</div>
-
-				<div className="bg-gray-900 text-purple-lighter flex-none w-24 p-6 hidden md:block">
-					{/* Button at the bottom */}
-					<button className="text-white px-4 py-2 rounded btn bg-purple-600 transition-colors hover:bg-purple-400 border-none" onClick={onLogout}>
-						Sign out
-					</button>
-				</div>
 			</div>
+			{/* </div > */}
 		</>
 	)
 }
