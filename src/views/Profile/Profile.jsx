@@ -83,7 +83,7 @@ const Profile = ({ isVisible, onClose }) => {
 	return (
 		<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
 			<div className='w-[550px] flex flex-col'>
-				<button className='text-white text-xl place-self-end' onClick={() => onClose()}>X</button>
+				<button className='text-white text-xl place-self-end' onClick={() => onClose()}>x</button>
 				<div className='bg-gray-900 p-2 rounded-xl h-[660px]'>
 
 					<div className="flex flex-col items-center mt-5 text-white">

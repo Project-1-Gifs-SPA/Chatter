@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { IoIosCloseCircle } from "react-icons/io";
 import AppContext from '../../context/AppContext';
 import { changeUserStatus, getLiveUserInfo } from '../../services/users.service';
 import { logoutUser } from '../../services/auth.service';
@@ -41,8 +40,8 @@ const ProfileModal = ({ isVisible, onClose }) => {
 	return (
 		<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
 			<div className='w-[350px] flex flex-col'>
-				<button className='text-white text-xl place-self-end' onClick={() => onClose()}>X</button>
-				<div className='bg-gray-900 p-2 rounded-xl h-[330px]'>
+				<button className='text-white text-xl place-self-end' onClick={() => onClose()}>x</button>
+				<div className='bg-gray-900 p-2 rounded-xl h-[350px]'>
 
 					<div className="flex items-center ml-5 mt-5">
 						<div className="avatar online">
