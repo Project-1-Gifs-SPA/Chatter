@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH, defaultPicURL } from '../../common/constants';
+import { MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH, defaultPicURL, statuses, isValidPhoneNumber } from '../../common/constants';
 import { createUserHandle, getUserByHandle } from '../../services/users.service';
 import { registerUser } from '../../services/auth.service';
 import { updateProfile } from 'firebase/auth';
@@ -36,12 +36,6 @@ const SignUp = () => {
 			...form,
 			[field]: e.target.value,
 		});
-	}
-
-	function isValidPhoneNumber(phoneNumber) {
-
-		const regex = /^\d{10}$/
-		return regex.test(phoneNumber);
 	}
 
 	const onRegister = (event) => {
@@ -99,7 +93,7 @@ const SignUp = () => {
 				return registerUser(form.email, form.password);
 			})
 			.then(credential => {
-				return createUserHandle(form.handle, credential.user.uid, credential.user.email, form.firstName, form.lastName, form.phoneNumber)
+				return createUserHandle(form.handle, credential.user.uid, credential.user.email, form.firstName, form.lastName, form.phoneNumber, statuses.online)
 					.then(() => {
 						setContext({
 							user: { ...credential.user },
