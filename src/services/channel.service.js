@@ -23,12 +23,12 @@ export const addChannel = (teamId, members, name) => {
         });
 }
 
-export const removeChannel = () => {
+export const removeChannel = (teamId, channelName) => {
 
 }
 
-export const createDefaultChannel = (teamid) => {
-    return addChannel(teamid, 'General');
+export const createDefaultChannel = (teamId) => {
+    return addChannel(teamId, 'General');
 }
 
 export const setChannelUsers = (channelName, members) => {
@@ -39,6 +39,8 @@ export const setChannelUsers = (channelName, members) => {
     );
 }
 
-export const getTeamChannels = () => {
-
+export const getTeamChannels = (teamId) => {
+    return onValue(
+        ref(db, `teams/${teamId}/channels`),
+        snapshot => Object.keys(snapshot.exists() ? snapshot.val() : {}));
 }
