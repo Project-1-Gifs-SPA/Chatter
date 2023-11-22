@@ -8,8 +8,8 @@ const ProfileModal = ({ closeModal }) => {
 	const date = new Date(userData.createdOn);
 
 	return (
-		<div className="flex items-center justify-center bg-gray-700 bg-opacity-50">
-			< div className="bg-gray-800  max-w-2xl h-96 rounded-3xl shadow-2xl flex flex-col" >
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-700 bg-opacity-50">
+			<div className="bg-gray-800  max-w-2xl h-96 rounded-3xl shadow-2xl flex flex-col">
 				<div className='bg-orange-200 rounded-xl flex flex-col'>
 
 					<button className="flex items-center justify-center text-orange-400 text-3xl p-2 self-end  hover:text-orange-500">
@@ -43,8 +43,8 @@ const ProfileModal = ({ closeModal }) => {
 					</div>
 					<div className="border-b border-gray-700 mt-5 mr-5"></div>
 				</div>
-			</ >
-		</div >
+			</div>
+		</div>
 	);
 };
 export default ProfileModal
