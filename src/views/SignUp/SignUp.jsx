@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH, PHONE_LENGTH } from '../../common/constants';
+import { MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH, defaultPicURL, statuses, isValidPhoneNumber } from '../../common/constants';
 import { createUserHandle, getUserByHandle } from '../../services/users.service';
 import { registerUser } from '../../services/auth.service';
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../../config/firebase-config';
 import AppContext from '../../context/AppContext';
 import { FaRegEyeSlash, FaRegEye } from 'react-icons/fa'
+import { setDefaultPic } from '../../services/storage.service';
+
 
 const SignUp = () => {
 	const { user, setContext } = useContext(AppContext);
@@ -34,12 +36,6 @@ const SignUp = () => {
 			...form,
 			[field]: e.target.value,
 		});
-	}
-
-	function isValidPhoneNumber(phoneNumber) {
-
-		const regex = /^\d{10}$/
-		return regex.test(phoneNumber);
 	}
 
 	const onRegister = (event) => {
@@ -97,7 +93,7 @@ const SignUp = () => {
 				return registerUser(form.email, form.password);
 			})
 			.then(credential => {
-				return createUserHandle(form.handle, credential.user.uid, credential.user.email, form.firstName, form.lastName, form.phoneNumber)
+				return createUserHandle(form.handle, credential.user.uid, credential.user.email, form.firstName, form.lastName, form.phoneNumber, statuses.online)
 					.then(() => {
 						setContext({
 							user: { ...credential.user },
@@ -106,6 +102,9 @@ const SignUp = () => {
 			})
 			.then(() => {
 				return updateProfile(auth.currentUser, { displayName: form.handle });
+			})
+			.then(() => {
+				return setDefaultPic(auth.currentUser, defaultPicURL, setLoading);
 			})
 			.catch(e => {
 				if (e.code === 'auth/email-already-in-use') {
@@ -240,7 +239,6 @@ const SignUp = () => {
 								Already a user?{' '}
 								<Link to="/sign-in" className="text-purple-400"
 									style={{ fontFamily: 'Rockwell, sans-serif' }}>
-
 									Sign in
 								</Link>
 							</p>

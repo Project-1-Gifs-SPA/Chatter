@@ -7,10 +7,9 @@ export const getUserByHandle = (handle) => {
   return get(ref(db, `users/${handle}`));
 };
 
-export const createUserHandle = (handle, uid, email, firstName, lastName, phoneNumber) => {
+export const createUserHandle = (handle, uid, email, firstName, lastName, phoneNumber, availability) => {
 
-
-  return set(ref(db, `users/${handle}`), { handle, uid, email, createdOn: Date.now(), firstName, lastName, phoneNumber,  })
+  return set(ref(db, `users/${handle}`), { handle, uid, email, createdOn: Date.now(), firstName, lastName, phoneNumber, availability, })
 };
 
 export const getUserData = (uid) => {
@@ -18,11 +17,12 @@ export const getUserData = (uid) => {
   return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
 };
 
-export const writeUserData = (handle, firstName, lastName) => {
+export const writeUserData = (handle, firstName, lastName, phoneNumber) => {
 
   update(ref(db, `users/${handle}`), {
     firstName: firstName,
     lastName: lastName,
+    phoneNumber: phoneNumber
   })
   .catch(error => console.error(error))
 }
@@ -33,3 +33,21 @@ export const updateUserPhoto = (handle, photoURL) => {
 
   return update(ref(db), changePicture);
 }
+
+export const changeUserStatus = (handle, status) => {
+
+  update(ref(db, `users/${handle}`), {
+    availability: status
+  })
+  .catch(error => console.error(error))
+}
+
+export const getLiveUserInfo = (listener, handle) => {
+  return onValue(
+    ref(db, `users/${handle}`),
+    snapshot => {
+      const data = snapshot.exists() ? snapshot.val() : {};
+
+      listener(data);
+    });
+};
