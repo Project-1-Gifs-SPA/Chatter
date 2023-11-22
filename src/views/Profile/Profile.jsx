@@ -14,8 +14,8 @@ const Profile = ({ isVisible, onClose }) => {
 	const [fileName, setFileName] = useState('');
 	const [showAlert, setShowAlert] = useState(false);
 
-	const [newFirstName, setNewFirstName] = useState(userData.firstName);
-	const [newLastName, setNewLastName] = useState(userData.lastName);
+	const [newFirstName, setNewFirstName] = useState(currentUser.firstName);
+	const [newLastName, setNewLastName] = useState(currentUser.lastName);
 	const [newPhoneNumber, setNewPhoneNumber] = useState(userData.phoneNumber);
 
 	const inputRef = useRef(null);
@@ -54,12 +54,6 @@ const Profile = ({ isVisible, onClose }) => {
 		setShowAlert(true);
 		setFileName('');
 	}
-
-	// useEffect(() => {
-	// 	if (userData?.photoURL) {
-	// 		setPhotoURL(user.photoURL);
-	// 	}
-	// }, [userData.photoURL, user.photoURL, photoURL]);
 
 	useEffect(
 		() => {
