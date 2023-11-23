@@ -2,8 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { getAllUsers } from '../../services/users.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { IoIosArrowDown } from "react-icons/io";
+import { BsPersonFillAdd } from "react-icons/bs";
+import { addTeamMember } from '../../services/teams.service';
+import AppContext from '../../context/AppContext';
 
-const SearchBar = () => {
+const SearchBar = ({ team }) => {
+	const { userData } = useContext(AppContext)
 	const [allUsers, setAllUsers] = useState([]);
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState("");
@@ -15,6 +19,10 @@ const SearchBar = () => {
 				setAllUsers([...r].sort((a, b) => b.createdOn - a.createdOn));
 			})
 	}, []);
+
+	const handleAddMember = (user) => {
+		addTeamMember(user, team.id)
+	}
 
 	const handleSearchTerm = (e) => {
 		const searchTerm = e.target.value.toLowerCase();
@@ -55,10 +63,15 @@ const SearchBar = () => {
 				</form>
 			</div>
 
-			{searchedUsers && <div className='rounded bg-gray-700 bg-opacity-90 absolute top-24 right-9 z-50'>
+			{searchedUsers && <div className='w-[300px] rounded bg-gray-700 bg-opacity-90 absolute  top-24 right-9 z-50'>
 				{searchedUsers.map(regUser => {
 					return (
-						<TeamMember key={regUser.uid} member={regUser} />
+						<div key={regUser.uid} className='flex items-center'>
+							<TeamMember member={regUser} />
+							{team.owner === userData.handle && <BsPersonFillAdd className='cursor-pointer text-white text-xl' onClick={() => handleAddMember(regUser.handle)} />
+							}
+
+						</div>
 					)
 				})
 				}

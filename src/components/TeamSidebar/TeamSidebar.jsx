@@ -14,8 +14,6 @@ const TeamSidebar = () => {
 	const { teamId } = useParams();
 
 	useEffect(() => {
-		console.log('get team info')
-
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
 		}, teamId)
@@ -65,7 +63,7 @@ const TeamSidebar = () => {
           `}
 				>
 					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-						<SearchBar />
+						<SearchBar team={currentTeam} />
 						{/* Everything in the sidebar */}
 						{members.length ?
 							(members.map(member => {
