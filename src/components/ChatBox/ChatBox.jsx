@@ -21,19 +21,35 @@ const ChatBox = () => {
 	const[msg, setMsg] = useState('');
 	const[messages, setMessages] = useState([])
 
-	console.log(userData)
+
+	const container = useRef(null)
+
+	const Scroll = () => {
+	  const { offsetHeight, scrollHeight, scrollTop } = container.current;
+	  if (scrollHeight <= scrollTop + offsetHeight + 100) {
+		container.current?.scrollTo(0, scrollHeight)
+	  }
+	}
+  
+	useEffect(() => {
+	  Scroll()
+	}, [messages])
+
+	
 
 
 	// useEffect(()=> scrollToBottom, [messages]);
 
 
 	useEffect(()=> {
+		console.log('live msg')
 		getChatTest(teamId)
 		.then(chatArr=> setMessages(chatArr))
 
 	},[teamId])
 
 	useEffect(()=> {
+		console.log('live msg')
 
 		const unsubscribe = getLiveMessagesTest((snapshot=>{
 
@@ -45,7 +61,7 @@ const ChatBox = () => {
 
 	},[teamId])
 
-	console.log(messages)
+
 
 
 	const handleMsg =(e) =>{
@@ -63,7 +79,7 @@ const ChatBox = () => {
 			{/* Top bar */}
 			<ChatTopBar />
 			{/* <!-- Chat messages --> */}
-			<div className="px-6 py-4 flex-1 overflow-y-scroll">
+			<div ref={container} className="px-6 py-4 flex-1 overflow-y-scroll">
 				{/* <Message />
 				<Message /> */}
 				{messages.length ? messages.map(message=> <Message key={message.id} message={message} />) : null}

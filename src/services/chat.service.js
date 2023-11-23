@@ -27,10 +27,6 @@ export const getLiveMessages = (listenFn,channelId) => {
 }
 
 
-
-
-
-
 export const getChat = (channelId) => {
     return get(ref(db, `channels/${channelId}/msgs`))
     .then(snapshot =>{
