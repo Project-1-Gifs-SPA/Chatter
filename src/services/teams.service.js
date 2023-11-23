@@ -113,7 +113,7 @@ export const findTeamByName = (name) => {
 export const addTeamMember = (handle, teamId) => {
         const updateTeam = {};
         updateTeam[`/teams/${teamId}/members/${handle}`] = true;
-        updateTeam[`/users/${handle}/myTeams/${teamId}`] = true;
+        updateTeam[`/users/${handle}/teams/${teamId}`] = true;
       
         return update(ref(db), updateTeam);
     };
