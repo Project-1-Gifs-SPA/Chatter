@@ -1,22 +1,21 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import AppContext from '../../context/AppContext';
 import { upload } from '../../services/storage.service'
-import { MIN_NAME_LENGTH, defaultPicURL, isValidPhoneNumber } from '../../common/constants';
+import { MIN_NAME_LENGTH, isValidPhoneNumber } from '../../common/constants';
 import { db } from '../../config/firebase-config';
 import { getLiveUserInfo, writeUserData } from '../../services/users.service';
 
 const Profile = ({ isVisible, onClose }) => {
 	const { user, userData } = useContext(AppContext);
-	const [photoURL, setPhotoURL] = useState(defaultPicURL);
 	const [photo, setPhoto] = useState(null);
 	const [currentUser, setCurrentUser] = useState({});
 	const [loading, setLoading] = useState(false);
 	const [fileName, setFileName] = useState('');
 	const [showAlert, setShowAlert] = useState(false);
 
-	const [newFirstName, setNewFirstName] = useState(currentUser.firstName);
-	const [newLastName, setNewLastName] = useState(currentUser.lastName);
-	const [newPhoneNumber, setNewPhoneNumber] = useState(userData.phoneNumber);
+	const [newFirstName, setNewFirstName] = useState('');
+	const [newLastName, setNewLastName] = useState('');
+	const [newPhoneNumber, setNewPhoneNumber] = useState('');
 
 	const inputRef = useRef(null);
 
@@ -28,7 +27,8 @@ const Profile = ({ isVisible, onClose }) => {
 		}
 	}
 
-	function handleSaveChanges() {
+	function handleSaveChanges(e) {
+		e.preventDefault()
 		if (newFirstName.length < MIN_NAME_LENGTH
 			|| newLastName.length < MIN_NAME_LENGTH) {
 			alert('Name/Last name must be between 4 and 35 characters!');
@@ -60,6 +60,9 @@ const Profile = ({ isVisible, onClose }) => {
 			const u1 = getLiveUserInfo(
 				data => {
 					setCurrentUser(data);
+					setNewFirstName(data.firstName);
+					setNewLastName(data.lastName);
+					setNewPhoneNumber(data.phoneNumber);
 				},
 				userData.handle);
 			return () => {
@@ -67,6 +70,8 @@ const Profile = ({ isVisible, onClose }) => {
 			};
 		}, [userData]);
 
+
+	console.log(newLastName)
 
 	useEffect(() => {
 		if (showAlert) {
@@ -127,7 +132,7 @@ const Profile = ({ isVisible, onClose }) => {
 										maxLength="35"
 										value={newFirstName}
 										onChange={(e) => setNewFirstName(e.target.value)}
-										placeholder={currentUser.firstName}
+										// placeholder={currentUser.firstName}
 										type="text"
 									/>
 								</div>
@@ -155,6 +160,7 @@ const Profile = ({ isVisible, onClose }) => {
 												className="input input-bordered w-[300px]"
 												style={{ backgroundColor: 'white' }}
 												maxLength="32"
+												value={newPhoneNumber}
 												onChange={(e) => setNewPhoneNumber(e.target.value)}
 												placeholder={currentUser.phoneNumber}
 												type="tel"

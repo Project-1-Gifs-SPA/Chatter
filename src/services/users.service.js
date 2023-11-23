@@ -51,3 +51,31 @@ export const getLiveUserInfo = (listener, handle) => {
       listener(data);
     });
 };
+
+const fromUsersDocument = snapshot => {
+  const usersDocument = snapshot.val();
+
+  return Object.keys(usersDocument).map(key=>{
+    const user = usersDocument[key];
+
+    return {
+      ...user,
+      uid:key,
+      createdOn: new Date(user.createdOn),
+      likedPosts: user.likedPosts ? Object.keys(user.likedPosts) : []
+    }
+  })
+}
+
+export const getAllUsers = () => {
+
+  return get(ref(db,'users'))
+  .then(snapshot=>{
+    if(!snapshot.exists()){
+      return [];
+    }
+
+    return fromUsersDocument(snapshot);
+  })
+
+}
