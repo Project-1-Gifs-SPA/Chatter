@@ -11,7 +11,7 @@ import { getLiveUserInfo } from '../../services/users.service';
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
 
-	console.log(user)
+
 
 	const [teams, setTeams] = useState([]);
 	const [allTeams, setAllTeams] = useState([]);
