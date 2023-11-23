@@ -208,7 +208,7 @@ const SignUp = () => {
 									id="password"
 									value={form.password}
 									onChange={updateForm('password')}
-									className="w-full border border-gray-500 bg-gray-400 rounded-md p-2 pl-10"
+									className="w-full border border-gray-500 bg-gray-400 rounded-md p-2"
 								/>
 								<button
 									type="button"
