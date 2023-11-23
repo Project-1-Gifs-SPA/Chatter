@@ -57,7 +57,9 @@ const ChatBox = () => {
 		console.log("live msg");
 
 		const unsubscribe = getLiveMessages((snapshot) => {
-			setMessages(Object.values(snapshot.val()));
+			const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.values(data);
+			setMessages(result);
 		}, channelId);
 
 		return () => unsubscribe;

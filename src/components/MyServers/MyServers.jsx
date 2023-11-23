@@ -5,14 +5,16 @@ import { getLiveTeamInfo } from '../../services/teams.service';
 import { useLocation, useParams } from "react-router"
 
 import ProfileBar from '../ProfileBar/ProfileBar';
-
-
+import ChannelTile from '../ChannelTile/ChannelTile';
 
 const MyServers = () => {
+
 	const [isOpen, setIsOpen] = useState(false);
 	const [currentTeam, setCurrentTeam] = useState({});
+	const [currentChannels, setCurrentChannels] = useState({});
 
-	const { teamId } = useParams();
+
+	const { teamId, channelId } = useParams();
 
 	useEffect(() => {
 		console.log('get team info')
@@ -26,7 +28,7 @@ const MyServers = () => {
 			unsubscribe();
 		}
 
-	}, [teamId])
+	}, [teamId]);
 
 	// const toggleAccordion = () => {
 	// 	setIsOpen(!isOpen);
@@ -59,6 +61,9 @@ const MyServers = () => {
 						<div className="skeleton h-4 w-full"></div>
 					</div>  */}
 				{/* )} */}
+				{currentTeam?.channels
+				? Object.keys(currentTeam.channels).map(channelId => <ChannelTile key={channelId} channel={channelId}/>)
+				: null}
 				<div className="flex-grow"></div>
 				<ProfileBar />
 			</div>
