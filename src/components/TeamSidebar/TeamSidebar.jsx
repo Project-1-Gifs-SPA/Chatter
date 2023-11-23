@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IoPeopleSharp } from "react-icons/io5";
 import { IoPeopleOutline } from "react-icons/io5";
 import { useParams } from 'react-router';
 import { getLiveTeamInfo } from '../../services/teams.service';
+import { getUserByHandle } from '../../services/users.service';
+import TeamMember from '../TeamMember/TeamMember';
+import SearchBar from '../SearchBar/SearchBar';
 
 const TeamSidebar = () => {
 	const [expanded, setExpanded] = useState(true)
 	const [currentTeam, setCurrentTeam] = useState({});
-
+	const [members, setMembers] = useState([]);
 	const { teamId } = useParams();
 
 	useEffect(() => {
@@ -21,7 +24,24 @@ const TeamSidebar = () => {
 		}
 	}, [teamId])
 
-	console.log(currentTeam.members)
+	useEffect(() => {
+		if (currentTeam.members) {
+			const promises = Object.keys(currentTeam.members).map(member => {
+				return getUserByHandle(member)
+					.then((snapshot) => {
+						return snapshot.val();
+					});
+			});
+
+			Promise.all(promises)
+				.then((membersData) => {
+					setMembers(membersData);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, [currentTeam.members])
 
 	return (
 		<div className="h-screen flex justify-end bg-gray-800">
@@ -38,27 +58,31 @@ const TeamSidebar = () => {
 						}
 					</button>
 				</div>
-
-				<div className="flex p-3">
-					<img
-						src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-						alt=""
-						className="w-10 h-10 rounded-md"
-					/>
-					<div
-						className={`
+				<div
+					className={`
               flex justify-between items-center
               overflow-hidden transition-all ${expanded ? "w-64" : "w-0"}
           `}
-					>
-						<div className="leading-4 pl-3 text-white">
-							<h4 className="font-semibold">John Doe</h4>
-							<span className="text-xs text-white">johndoe99</span>
-						</div>
+				>
+					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+						<SearchBar />
+						{/* Everything in the sidebar */}
+						{members.length ?
+							(members.map(member => {
+								return (
+									<TeamMember key={member.uid} member={member} owner={currentTeam.owner} />
+								)
+							}))
+							:
+							(<p className='text-gray-300 p-4' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4', textAlign: 'center' }}>The quiet surrounds us.
+								<br className="md:hidden lg:inline" />
+								Reach out to your friends connecting the silence with shared moments and laughter.</p>)
+						}
 					</div>
+					{/* inside the sidebar ends here */}
 				</div>
 			</div>
-		</div>
+		</div >
 	)
 }
 
