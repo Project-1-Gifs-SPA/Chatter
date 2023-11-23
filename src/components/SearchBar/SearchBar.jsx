@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { getAllUsers } from '../../services/users.service';
+import { addFriends, getAllUsers, getLiveUserInfo, removeFriends, sendFriendRequest } from '../../services/users.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { IoIosArrowDown } from "react-icons/io";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { addTeamMember } from '../../services/teams.service';
 import AppContext from '../../context/AppContext';
+import { IoPeopleSharp } from "react-icons/io5";
+import { MdPersonAddDisabled } from "react-icons/md";
 
 const SearchBar = ({ team }) => {
 	const { userData } = useContext(AppContext)
@@ -12,6 +14,19 @@ const SearchBar = ({ team }) => {
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchedUsers, setSearchedUsers] = useState([]);
+	const [currentUser, setCurrentUser] = useState({});
+
+	useEffect(
+		() => {
+			const u1 = getLiveUserInfo(
+				data => {
+					setCurrentUser(data);
+				},
+				userData.handle);
+			return () => {
+				u1();
+			};
+		}, [userData]);
 
 	useEffect(() => {
 		getAllUsers()
@@ -22,6 +37,18 @@ const SearchBar = ({ team }) => {
 
 	const handleAddMember = (user) => {
 		addTeamMember(user, team.id)
+	}
+
+	const handleAddFriends = (user) => {
+		addFriends(userData.handle, user)
+	}
+
+	const handleSendFriendRequest = (user) => {
+		sendFriendRequest(userData.handle, user)
+	}
+
+	const handleRemoveFriends = (user) => {
+		removeFriends(userData.handle, user)
 	}
 
 	const handleSearchTerm = (e) => {
@@ -68,9 +95,18 @@ const SearchBar = ({ team }) => {
 					return (
 						<div key={regUser.uid} className='flex items-center'>
 							<TeamMember member={regUser} />
-							{team.owner === userData.handle && <BsPersonFillAdd className='cursor-pointer text-white text-xl' onClick={() => handleAddMember(regUser.handle)} />
+							{team.owner === currentUser.handle && (
+								<div className='tooltip' data-tip='Add to team'>
+									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
+								</div>)
 							}
-
+							{(currentUser.friends && Object.keys(currentUser.friends).includes(regUser.handle)) ? (<div className='tooltip' data-tip='Remove friend'>
+								<MdPersonAddDisabled className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleRemoveFriends(regUser.handle)} />
+							</div>) :
+								(<div className='tooltip' data-tip='Send friend request'>
+									<BsPersonFillAdd className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleSendFriendRequest(regUser.handle)} />
+								</div>)
+							}
 						</div>
 					)
 				})
