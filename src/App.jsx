@@ -61,6 +61,7 @@ function App() {
             <Route path='/sign-up' element={<SignUp />} />
             <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/teams/:teamId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+            <Route path="/dms/:dmId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/profile" element={<AuthenticatedRoute><Profile /></AuthenticatedRoute>} />
           </Routes>
         ) : <Loader />
