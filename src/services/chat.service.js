@@ -2,7 +2,7 @@ import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, start
 import { db } from '../config/firebase-config';
 
 
-export const sendMessage = (channelId, owner, msg, picURL) => {
+export const sendMessage = (channelId, handle, msg, picURL) => {
 
     return push(ref(db, `channels/${channelId}/msgs`),{})
     .then(response => {
@@ -10,7 +10,7 @@ export const sendMessage = (channelId, owner, msg, picURL) => {
         set(ref(db,`channels/${channelId}/msgs/${response.key}`), {
             body:msg,
             id: response.key,
-            owner,
+            owner:handle,
             createdOn: serverTimestamp(),
             avatar: picURL
         });
@@ -35,35 +35,35 @@ export const getChat = (channelId) => {
     })
 }
 
-export const sendMessageTest = (teamId, handle, msg, picURL) => { ////delete when testing is done!
+// export const sendMessageTest = (teamId, handle, msg, picURL) => { ////delete when testing is done!
 
-    return push(ref(db, `teams/${teamId}/msgs`),{})
-    .then(response => {
+//     return push(ref(db, `teams/${teamId}/msgs`),{})
+//     .then(response => {
 
-        set(ref(db,`teams/${teamId}/msgs/${response.key}`), {
-            body:msg,
-            id: response.key,
-            owner:handle,
-            createdOn: serverTimestamp(),
-            avatar: picURL,
-        });
-    })
-}
+//         set(ref(db,`teams/${teamId}/msgs/${response.key}`), {
+//             body:msg,
+//             id: response.key,
+//             owner:handle,
+//             createdOn: serverTimestamp(),
+//             avatar: picURL,
+//         });
+//     })
+// }
 
 
-export const getLiveMessagesTest = (listenFn,teamId) => {  //delete when testing is done!
-    const q= query(
-        ref(db, `/teams/${teamId}/msgs`),
-        orderByChild('createdOn'),
-        limitToFirst(50)
-    )
-    return onValue(q, listenFn)
-}
+// export const getLiveMessagesTest = (listenFn,teamId) => {  //delete when testing is done!
+//     const q= query(
+//         ref(db, `/teams/${teamId}/msgs`),
+//         orderByChild('createdOn'),
+//         limitToFirst(50)
+//     )
+//     return onValue(q, listenFn)
+// }
 
-export const getChatTest = (teamId) => {
-    return get(ref(db, `teams/${teamId}/msgs`))
-    .then(snapshot =>{
-        const data = snapshot.exists() ? snapshot.val() : [];
-        return Object.values(data);
-    })
-}
+// export const getChatTest = (teamId) => {
+//     return get(ref(db, `teams/${teamId}/msgs`))
+//     .then(snapshot =>{
+//         const data = snapshot.exists() ? snapshot.val() : [];
+//         return Object.values(data);
+//     })
+// }

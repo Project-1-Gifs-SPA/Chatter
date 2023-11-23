@@ -4,22 +4,23 @@ import ChatTopBar from "../ChatTopBar/ChatTopBar";
 import bg from "../../assets/background.png";
 import { set } from "firebase/database";
 import {
-  getChatTest,
-  getLiveMessages,
-  getLiveMessagesTest,
-  sendMessageTest,
+	getChat,
+  getLiveMessages, 
+  sendMessage,
 } from "../../services/chat.service";
 import { useParams } from "react-router";
 import AppContext from "../../context/AppContext";
 
 const ChatBox = () => {
   // const messagesEndRef = useRef();
-  const { teamId } = useParams();
+  const { channelId } = useParams();
   const { user, userData } = useContext(AppContext);
 
   // const scrollToBottom = () => {
   // 	messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
   // }
+
+   // useEffect(()=> scrollToBottom, [messages]);
 
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
@@ -42,31 +43,30 @@ const ChatBox = () => {
     scroll();
   }, [messages]);
 
-  // useEffect(()=> scrollToBottom, [messages]);
+ 
 
   useEffect(() => {
     console.log("live msg");
-    getChatTest(teamId)
+    getChat(channelId)
       .then((chatArr) => setMessages(chatArr))
       .then(() => scrollToBottom());
-  }, [teamId]);
+  }, [channelId]);
 
   useEffect(() => {
     console.log("live msg");
 
-    const unsubscribe = getLiveMessagesTest((snapshot) => {
+    const unsubscribe = getLiveMessages((snapshot) => {
       setMessages(Object.values(snapshot.val()));
-    }, teamId);
+    }, channelId);
 
     return () => unsubscribe;
-  }, [teamId]);
+  }, [channelId]);
 
   const handleMsg = (e) => {
     e.preventDefault();
 
-    sendMessageTest(teamId, userData.handle, msg, userData.photoURL).then(() =>
-      setMsg("")
-    );
+    sendMessage(channelId, userData.handle, msg, userData.photoURL)
+	.then(() => setMsg(""));
   };
 
   return (
@@ -87,7 +87,7 @@ const ChatBox = () => {
             ))
           : null}
       </div>
-      <form
+      {channelId ? <form
         style={{
           backgroundColor: "gray 900",
           color: "white",
@@ -104,7 +104,7 @@ const ChatBox = () => {
           onChange={(e) => setMsg(e.target.value)}
         />
         {/* <button type='submit' className='ml-50'>Send</button> */}
-      </form>
+      </form> :null}
     </div>
   );
 };
