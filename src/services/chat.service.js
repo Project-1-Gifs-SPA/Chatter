@@ -18,12 +18,13 @@ export const sendMessage = (channelId, handle, msg, picURL) => {
 }
 
 export const getLiveMessages = (listenFn,channelId) => {
-    const q= query(
+    const q = query(
         ref(db, `/channels/${channelId}/msgs`),
         orderByChild('createdOn'),
         limitToFirst(50)
     )
-    return onValue(q, listenFn)
+
+    return onValue(q, listenFn);
 }
 
 
