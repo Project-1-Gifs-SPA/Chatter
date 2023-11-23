@@ -31,8 +31,10 @@ function App() {
   useEffect(() => {
 
     if (user === null) {
+      setLoading(false)
       return;
     }
+    setLoading(true)
 
     getUserData(user.uid)
       .then(snapshot => {
@@ -61,6 +63,7 @@ function App() {
             <Route path='/sign-up' element={<SignUp />} />
             <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/teams/:teamId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+            <Route path="/dms/:dmId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/profile" element={<AuthenticatedRoute><Profile /></AuthenticatedRoute>} />
           </Routes>
         ) : <Loader />
