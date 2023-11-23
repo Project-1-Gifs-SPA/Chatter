@@ -31,8 +31,10 @@ function App() {
   useEffect(() => {
 
     if (user === null) {
+      setLoading(false)
       return;
     }
+    setLoading(true)
 
     getUserData(user.uid)
       .then(snapshot => {
