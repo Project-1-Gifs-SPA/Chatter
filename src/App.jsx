@@ -22,7 +22,7 @@ function App() {
     user,
     userData: null
   })
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   if (appState.user !== user) {
     setAppState({ user, userData: null });

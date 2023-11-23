@@ -17,7 +17,7 @@ const ProfileBar = () => {
 				data => {
 					setCurrentUser(data);
 				},
-				userData.handle);
+				userData?.handle);
 			return () => {
 				u1();
 			};

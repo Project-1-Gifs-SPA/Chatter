@@ -22,7 +22,7 @@ const SideBar = () => {
 
 		const u = getLiveUserInfo((data) => {
 			setCurrentUser(data)
-		}, userData.handle)
+		}, userData?.handle)
 
 		const unsubscribe = getLiveAllTeams((result) => {
 			setAllTeams(result);
@@ -33,7 +33,7 @@ const SideBar = () => {
 			u();
 		}
 
-	}, [userData.handle])
+	}, [userData?.handle])
 
 
 	useEffect(() => {
