@@ -12,7 +12,6 @@ import FriendsRequests from '../FriendsRequests/FriendsRequests';
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
 	const [showModal, setShowModal] = useState(false);
-
 	const [teams, setTeams] = useState([]);
 	const [allTeams, setAllTeams] = useState([]);
 	const [currentUser, setCurrentUser] = useState({});
@@ -107,4 +106,4 @@ const SideBar = () => {
 	)
 }
 
-export default SideBar
+export default SideBar;
