@@ -3,7 +3,8 @@ import { db } from '../config/firebase-config';
 
 export const addChannel = (teamId, members, name) => {
 
-    const formattedMembers = members.map(member => ({ [member]: true }));
+    const formattedMembers = {}
+    members.map(member => (formattedMembers[member]= true ));
     console.table(formattedMembers);
 
     return push(ref(db, 'channels'), {})
@@ -13,7 +14,7 @@ export const addChannel = (teamId, members, name) => {
                     name,
                     createdOn: Date.now(),
                     members: {
-                        ...formattedMembers, /* create function */
+                        ...formattedMembers,
                     },
                     id: response.key,
                 });
@@ -32,6 +33,22 @@ export const removeChannel = (teamId, channelName) => {
 
 export const createDefaultChannel = (teamId, members) => {
     return addChannel(teamId, members, 'General');
+}
+
+export const getGeneralChannel = (teamId) => {
+    return get(ref(db, `teams/${teamId}/channels`))
+        .then(snapshot => {
+            const channelIds = Object.keys(snapshot.exists() ? snapshot.val() : {})
+
+            console.table(channelIds);
+            return channelIds.length === 1
+            ? channelIds[0]
+            : channelIds.filter(channelId => getChannelById(channelId))
+                .then(channel => channel.name === 'General' ? channel : false)[0]
+        });
+        // Object.keys(channelIds)
+        //     .filter(channelId => getChannelById(channelId)
+        //         .then(channel => channel.name === 'General' ? channel : null)
 }
 
 export const setChannelUsers = (channelName, members) => {
