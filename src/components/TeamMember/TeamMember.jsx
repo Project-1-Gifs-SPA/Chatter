@@ -7,7 +7,7 @@ const TeamMember = ({ member, owner }) => {
 	return (
 		<>
 			<div className="flex p-3 relative">
-				{member.handle === owner && (<p p className="absolute top-2 left-8 transform -translate-x-1/2 -translate-y-1/2">👑</p>)}
+				{member.handle === owner && (<p className="absolute top-2 left-8 transform -translate-x-1/2 -translate-y-1/2 tooltip tooltip-right" data-tip='Team owner'>👑</p>)}
 				<div className={`avatar ${member.availability} relative z-[0]`}>
 
 					<div className="w-10 rounded-full">

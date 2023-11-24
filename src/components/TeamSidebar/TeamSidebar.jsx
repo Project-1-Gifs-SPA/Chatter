@@ -96,10 +96,10 @@ const TeamSidebar = () => {
 									<div key={member.uid} className='flex items-center'>
 										<TeamMember member={member} owner={currentTeam.owner} />
 										{currentUser.handle !== member.handle && (
-											(currentUser.friends && Object.keys(currentUser.friends).includes(member.handle)) ? (<div className='tooltip' data-tip='Remove friend'>
+											(currentUser.friends && Object.keys(currentUser.friends).includes(member.handle)) ? (<div className='tooltip tooltip-left' data-tip='Remove friend'>
 												<MdPersonAddDisabled className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleRemoveFriends(member.handle)} />
 											</div>) :
-												(<div className='tooltip' data-tip='Send friend request'>
+												(<div className='tooltip tooltip-left' data-tip='Send friend request'>
 													<BsPersonFillAdd className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleSendFriendRequest(member.handle)} />
 												</div>)
 										)
