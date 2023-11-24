@@ -77,6 +77,7 @@ const SideBar = () => {
 
 	console.log(requests)
 
+
 	return (
 		<>
 			<div className="flex flex-col justify-between h-screen bg-gray-900">
@@ -95,12 +96,12 @@ const SideBar = () => {
 					style={{ width: '80px', height: '70px', padding: '4px 8px' }}
 				>
 					<div className="badge badge-secondary badge-xs">
-						{requests ? `+${requests.length}` : 0}
+						{currentUser.friendRequests ? `+${Object.keys(currentUser.friendRequests).length}` : 0}
 					</div>
 					Friends requests
 				</button>
 			</div >
-			{showModal && <FriendsRequests friendsRequests={requests} onClose={() => setShowModal(false)} />}
+			{showModal && <FriendsRequests friendsRequests={currentUser.friendRequests} onClose={() => setShowModal(false)} />}
 			{/* </div > */}
 		</>
 	)

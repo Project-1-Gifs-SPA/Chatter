@@ -1,10 +1,30 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TeamMember from '../TeamMember/TeamMember'
 import AppContext from '../../context/AppContext'
-import { addFriends, declineFriendRequest } from '../../services/users.service';
+import { addFriends, declineFriendRequest, getUserByHandle } from '../../services/users.service';
 
 const FriendsRequests = ({ friendsRequests, onClose }) => {
 	const { userData } = useContext(AppContext);
+	const [requests, setRequests] = useState([])
+
+	useEffect(() => {
+		if (friendsRequests) {
+			const promises = Object.keys(friendsRequests).map(request => {
+				return getUserByHandle(request)
+					.then((snapshot) => {
+						return snapshot.val();
+					});
+			});
+
+			Promise.all(promises)
+				.then((membersData) => {
+					setRequests(membersData);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, [friendsRequests])
 
 	const handleAcceptRequest = (handle) => {
 		addFriends(userData.handle, handle)
@@ -13,14 +33,14 @@ const FriendsRequests = ({ friendsRequests, onClose }) => {
 	const handleDeclineRequest = (handle) => {
 		declineFriendRequest(userData.handle, handle)
 	}
+	console.log(requests)
 
-	console.log(userData.friendRequests)
 	return (
 		<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
 			<div className='w-[350px] flex flex-col'>
 				<button className='text-white text-xl place-self-end' onClick={() => onClose()}>x</button>
 				<div className='bg-gray-900 p-2 rounded-xl h-[400px]'>
-					{friendsRequests.length > 0 ? friendsRequests.map(friendRequest => {
+					{requests.length > 0 ? requests.map(friendRequest => {
 						return <div className='flex items-center justify-center mt-5' key={friendRequest.uid}>
 							<TeamMember member={friendRequest} owner={null} />
 							<p className='pl-5 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Accept' onClick={() => handleAcceptRequest(friendRequest.handle)}>✅</p>

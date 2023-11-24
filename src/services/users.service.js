@@ -85,7 +85,8 @@ export const addFriends = (handle, friendHandle) => {
   updateFriends[`users/${friendHandle}/friends/${handle}`] = true;
   updateFriends[`users/${handle}/friendRequests/${friendHandle}`] = null;
 
-  return update(ref(db), updateFriends);
+  return update(ref(db), updateFriends)
+  .then(() => alert("Friend request was accepted"));
 };
 
 export const removeFriends = (handle, friendHandle) => {
@@ -123,5 +124,6 @@ export const declineFriendRequest = (handle, friendHandle) => {
     const updateFriendsRequest = {};
     updateFriendsRequest[`/users/${handle}/friendRequests/${friendHandle}`] = null;
 
-    return update(ref(db), updateFriendsRequest);
+    return update(ref(db), updateFriendsRequest)
+    .then(() => alert("Friend request was declined"));
 }
