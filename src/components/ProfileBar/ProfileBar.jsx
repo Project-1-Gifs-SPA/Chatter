@@ -41,11 +41,9 @@ const ProfileBar = () => {
 					<IoSettingsSharp />
 				</div>
 			</div>
-			{showModal && <ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} />}
+			{showModal && <ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} profile={currentUser} />}
 			{showProfile && <Profile isVisible={showProfile} onClose={() => setShowProfile(false)} />}
 		</>
 	)
 }
-
-// the avatar can be changed online or offline depending on what we chose
 export default ProfileBar

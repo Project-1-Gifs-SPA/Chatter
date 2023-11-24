@@ -26,7 +26,7 @@ const TeamMember = ({ member, owner }) => {
 					<div className='w-[90%] sm:w-[80%] md:w-[60%] lg:w-[50%] flex flex-col'>
 						<div className='bg-gray-900 p-4 rounded-xl'>
 							{/* ProfileModal content */}
-							<ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} publicProfile={member} />
+							<ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} profile={member} />
 						</div>
 					</div>
 				</div>
