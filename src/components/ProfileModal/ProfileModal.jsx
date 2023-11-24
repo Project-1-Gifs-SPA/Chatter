@@ -12,6 +12,20 @@ const ProfileModal = ({ isVisible, onClose, publicProfile }) => {
 	const [currentUser, setCurrentUser] = useState({});
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			const modal = document.getElementById('myModal');
+			if (modal && !modal.contains(event.target)) {
+				onClose();
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [onClose]);
+
 	useEffect(
 		() => {
 			const u1 = getLiveUserInfo(
@@ -40,8 +54,7 @@ const ProfileModal = ({ isVisible, onClose, publicProfile }) => {
 	return (
 		publicProfile ? (
 			<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
-				<div className='w-[350px] flex flex-col'>
-					<button className='text-white text-xl place-self-end' onClick={() => onClose()}>x</button>
+				<div id='myModal' className='w-[350px] flex flex-col'>
 					<div className='bg-gray-900 p-2 rounded-xl h-[350px]'>
 
 						<div className="flex items-center ml-5 mt-5">
@@ -79,8 +92,7 @@ const ProfileModal = ({ isVisible, onClose, publicProfile }) => {
 			</div>
 		) : (
 			<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
-				<div className='w-[350px] flex flex-col'>
-					<button className='text-white text-xl place-self-end' onClick={() => onClose()}>x</button>
+				<div id='myModal' className='w-[350px] flex flex-col'>
 					<div className='bg-gray-900 p-2 rounded-xl h-[350px]'>
 
 						<div className="flex items-center ml-5 mt-5">

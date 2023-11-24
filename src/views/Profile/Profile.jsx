@@ -19,6 +19,20 @@ const Profile = ({ isVisible, onClose }) => {
 
 	const inputRef = useRef(null);
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			const modal = document.getElementById('myModal');
+			if (modal && !modal.contains(event.target)) {
+				onClose();
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [onClose]);
+
 	function handleChange(e) {
 		const file = e.target.files[0];
 		if (e.target.files[0] !== null) {
@@ -87,8 +101,7 @@ const Profile = ({ isVisible, onClose }) => {
 
 	return (
 		<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
-			<div className='w-[550px] flex flex-col'>
-				<button className='text-white text-xl place-self-end' onClick={() => onClose()}>x</button>
+			<div id='myModal' className='w-[550px] flex flex-col'>
 				<div className='bg-gray-900 p-2 rounded-xl h-[660px]'>
 
 					<div className="flex flex-col items-center mt-5 text-white">
