@@ -4,6 +4,7 @@ import { changeUserStatus, getLiveUserInfo } from '../../services/users.service'
 import { logoutUser } from '../../services/auth.service';
 import { useNavigate } from 'react-router';
 import { statuses } from '../../common/constants';
+import { createDM } from '../../services/dms.service';
 
 
 const ProfileModal = ({ isVisible, onClose, profile }) => {
@@ -51,6 +52,13 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
 	};
 	if (!isVisible) return null;
 
+
+	const handleSendDM = (e)=>{
+		e.preventDefault();
+		createDM(profile.handle, userData.handle)
+		.then((dmId)=> navigate(`/dms/${dmId}`))
+	}
+
 	return (
 		<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
 			<div id='myModal' className='w-[350px] flex flex-col'>
@@ -92,7 +100,8 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
 						</div>
 					</div>
 					{profile.handle !== currentUser.handle && <button
-						className="text-white rounded btn btn-sm bg-orange-600 transition-colors hover:bg-purple-400 border-none ml-5 mt-2"
+						className="text-white rounded btn btn-sm bg-orange-600 transition-colors hover:bg-orange-400 border-none ml-5 mt-2"
+						onClick={handleSendDM}
 					>
 						Send DM
 					</button>}

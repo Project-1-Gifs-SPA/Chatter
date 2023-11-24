@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { GoChevronDown, GoChevronUp } from "react-icons/go";
 
 import { getLiveTeamInfo } from '../../services/teams.service';
-import { useLocation, useParams } from "react-router"
+import { useLocation, useNavigate, useParams } from "react-router"
 
 import ProfileBar from '../ProfileBar/ProfileBar';
+import App from '../../App';
+import AppContext from '../../context/AppContext';
 
 
 
 const MyServers = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [currentTeam, setCurrentTeam] = useState({});
+	
+	const{userData} = useContext(AppContext);
+	const { teamId, dmId } = useParams();
 
-	const { teamId } = useParams();
+	const navigate = useNavigate();
+
+	const [currentTeam, setCurrentTeam] = useState({});
+	const[dms, setDms] = useState([Object.values(userData.DMs)])
+
+
+	
+
+	
 
 	useEffect(() => {
 		console.log('get team info')
@@ -39,6 +51,8 @@ const MyServers = () => {
 					<div className="flex-auto">
 						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
 					</div>
+				
+					
 					{/* <div>
 						{isOpen ? (
 							<GoChevronUp onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
@@ -60,6 +74,12 @@ const MyServers = () => {
 					</div>  */}
 				{/* )} */}
 				<div className="flex-grow"></div>
+				{dms.map(dm=>{
+					return(
+					<button key={dm} onClick={()=>navigate(`/dms/${dm}`)}>{dm}</button>
+
+					)
+					})}
 				<ProfileBar />
 			</div>
 		</div>

@@ -29,10 +29,10 @@ const ChatBox = () => {
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
 
-	const scrollToBottom = () => {
-		const chat = document.getElementById("chat");
-		chat.scrollTop = chat.scrollHeight;
-	};
+	// const scrollToBottom = () => {
+	// 	const chat = document.getElementById("chat");
+	// 	chat.scrollTop = chat.scrollHeight;
+	// };
 
 	const container = useRef(null);
 
@@ -54,12 +54,12 @@ const ChatBox = () => {
 		if(channelId){
 		getChat(channelId)
 			.then((chatArr) => setMessages(chatArr))
-			.then(() => scrollToBottom());
+			// .then(() => scrollToBottom());
 		}
 		if(dmId){
 			getDMChat(dmId)
 				.then((dmArr)=> setMessages(dmArr))
-				.then(()=>scrollToBottom())
+				// .then(()=>scrollToBottom())
 		}
 	}, [channelId,dmId]);
 
