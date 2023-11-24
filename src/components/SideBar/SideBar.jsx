@@ -41,17 +41,20 @@ const SideBar = () => {
 		const teamArr = [];
 		if (currentUser.teams) {
 			// const teamsData = Object.keys(currentUser.teams);
-			for (let id of Object.keys(currentUser.teams)) {
-				teamArr.push(id)
-			}
+			// for (let id of Object.keys(currentUser.teams)) {
+			// 	teamArr.push(id)
+			// }
+			(Object.keys(currentUser.teams)).forEach(id=>teamArr.push(id));
 		}
 
 		if (currentUser.myTeams) {
 			// const myTeamsData = Object.keys(currentUser.myTeams);
 			// setTeams([...myTeamsData])
-			for (let id of Object.keys(currentUser.myTeams)) {
-				teamArr.push(id)
-			}
+			// for (let id of Object.keys(currentUser.myTeams)) {
+			// 	teamArr.push(id)
+			// }
+
+			(Object.keys(currentUser.myTeams)).forEach(id=>teamArr.push(id));
 		}
 		setTeams(teamArr);
 	}, [allTeams, currentUser])

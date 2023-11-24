@@ -6,7 +6,10 @@ import bg from "../../assets/background.png";
 import { set } from "firebase/database";
 import {
 	getChat,
+	getDMChat,
+	getLiveDirectMessages,
 	getLiveMessages,
+	sendDirectMessage,
 	sendMessage,
 } from "../../services/chat.service";
 import { useParams } from "react-router";
@@ -14,7 +17,7 @@ import AppContext from "../../context/AppContext";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId } = useParams();
+	const { channelId, dmId } = useParams();
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -48,26 +51,52 @@ const ChatBox = () => {
 
 	useEffect(() => {
 		console.log("live msg");
+		if(channelId){
 		getChat(channelId)
 			.then((chatArr) => setMessages(chatArr))
 			.then(() => scrollToBottom());
-	}, [channelId]);
+		}
+		if(dmId){
+			getDMChat(dmId)
+				.then((dmArr)=> setMessages(dmArr))
+				.then(()=>scrollToBottom())
+		}
+	}, [channelId,dmId]);
 
 	useEffect(() => {
 		console.log("live msg");
 
-		const unsubscribe = getLiveMessages((snapshot) => {
-			setMessages(Object.values(snapshot.val()));
-		}, channelId);
 
-		return () => unsubscribe;
-	}, [channelId]);
+		if(channelId){
+			const unsubscribe = getLiveMessages((snapshot) => {
+				setMessages(Object.values(snapshot.val()));
+			}, channelId);
+	
+			return () => unsubscribe;
+		}
+		if(dmId){
+			const unsubscribe = getLiveDirectMessages((snapshot)=>{
+				setMessages(Object.values(snapshot.val()));
+			}, dmId);
+
+			return () => unsubscribe;
+		}
+
+	
+	}, [channelId, dmId]);
 
 	const handleMsg = (e) => {
 		e.preventDefault();
 
-		sendMessage(channelId, userData.handle, msg, userData.photoURL)
+		if(channelId){
+			sendMessage(channelId, userData.handle, msg, userData.photoURL)
 			.then(() => setMsg(""));
+		}
+
+		if(dmId){
+			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
+			.then(()=> setMsg(''));
+		}	
 	};
 
 	return (
@@ -88,7 +117,7 @@ const ChatBox = () => {
 					))
 					: null}
 			</div>
-			{channelId ? <form
+			{channelId || dmId ? <form
 				style={{
 					backgroundColor: "gray 900",
 					color: "white",
