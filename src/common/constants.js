@@ -19,3 +19,7 @@ export const isValidPhoneNumber = (phoneNumber) =>{
 	const regex = /^\d{10}$/
 	return regex.test(phoneNumber);
 }
+
+export const MIN_TEAMNAME_LENGTH = 3;
+
+export const MAX_TEAMNAME_LENGTH = 40;
