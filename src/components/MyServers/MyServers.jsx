@@ -19,7 +19,7 @@ const MyServers = () => {
 	const navigate = useNavigate();
 
 	const [currentTeam, setCurrentTeam] = useState({});
-	const[dms, setDms] = useState([Object.values(userData.DMs)])
+	const[dms, setDms] = useState(userData.DMs?Object.values(userData.DMs):[])
 
 
 	
@@ -74,12 +74,7 @@ const MyServers = () => {
 					</div>  */}
 				{/* )} */}
 				<div className="flex-grow"></div>
-				{dms.map(dm=>{
-					return(
-					<button key={dm} onClick={()=>navigate(`/dms/${dm}`)}>{dm}</button>
 
-					)
-					})}
 				<ProfileBar />
 			</div>
 		</div>
