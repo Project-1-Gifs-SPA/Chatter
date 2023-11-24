@@ -16,11 +16,22 @@ const TeamMember = ({ member, owner }) => {
 					</div>
 				</div>
 				<div className="leading-4 pl-3 text-white">
-					<h4 className="font-semibold">{member.firstName} {member.lastName}</h4>
-					<span className="text-xs text-white">{member.handle}</span>
+					<h4 className="font-semibold hidden sm:flex">{member.firstName} {member.lastName}</h4>
+					<span className="text-xs text-white hidden sm:flex">{member.handle}</span>
 				</div>
 			</div >
-			{showModal && <ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} publicProfile={member} />}
+			{showModal && (
+
+				<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+					<div className='w-[90%] sm:w-[80%] md:w-[60%] lg:w-[50%] flex flex-col'>
+						<div className='bg-gray-900 p-4 rounded-xl'>
+							{/* ProfileModal content */}
+							<ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} publicProfile={member} />
+						</div>
+					</div>
+				</div>
+			)}
+			{/* {showModal && <ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} publicProfile={member} />} */}
 		</>
 	)
 }

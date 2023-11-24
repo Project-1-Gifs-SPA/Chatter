@@ -32,7 +32,7 @@ const MyServers = () => {
 	// 	setIsOpen(!isOpen);
 	// };
 	return (
-		<div className="bg-gray-800 h-screen text-purple-lighter flex-none w-64 pb-6 hidden md:block">
+		<div className="bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col w-64 pb-6 md:block">
 
 			<div className="flex flex-col h-screen">
 				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
