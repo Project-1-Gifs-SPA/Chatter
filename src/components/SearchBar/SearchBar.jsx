@@ -95,17 +95,20 @@ const SearchBar = ({ team }) => {
 					return (
 						<div key={regUser.uid} className='flex items-center'>
 							<TeamMember member={regUser} />
-							{team.owner === currentUser.handle && (
+							{currentUser.handle !== regUser.handle && (team.owner === currentUser.handle && (
 								<div className='tooltip' data-tip='Add to team'>
 									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
 								</div>)
+							)
 							}
-							{(currentUser.friends && Object.keys(currentUser.friends).includes(regUser.handle)) ? (<div className='tooltip' data-tip='Remove friend'>
-								<MdPersonAddDisabled className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleRemoveFriends(regUser.handle)} />
-							</div>) :
-								(<div className='tooltip' data-tip='Send friend request'>
-									<BsPersonFillAdd className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleSendFriendRequest(regUser.handle)} />
-								</div>)
+							{currentUser.handle !== regUser.handle && (
+								(currentUser.friends && Object.keys(currentUser.friends).includes(regUser.handle)) ? (<div className='tooltip' data-tip='Remove friend'>
+									<MdPersonAddDisabled className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleRemoveFriends(regUser.handle)} />
+								</div>) :
+									(<div className='tooltip' data-tip='Send friend request'>
+										<BsPersonFillAdd className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleSendFriendRequest(regUser.handle)} />
+									</div>)
+							)
 							}
 						</div>
 					)
