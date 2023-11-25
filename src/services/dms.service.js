@@ -9,7 +9,7 @@ export const createDM = (partner, handle) => {
 };
 
 
-export const addMembersToDM = (partner, handle, id) => {
+ const addMembersToDM = (partner, handle, id) => {
     const updates = {};
 
     updates[`dms/${id}/members/${partner}`] = true;
@@ -22,11 +22,11 @@ export const addMembersToDM = (partner, handle, id) => {
     return id;
 }
 
-export const updateDmMembers = (newMember, dmId) => {
-    const updateMember = {};
-    updateMember[`dms/${dmId}/members/${newMember}`] = true;
+export const addDmMember = (newMember, dmId) => {
+    const addDmMember = {};
+    addDmMember[`dms/${dmId}/members/${newMember}`] = true;
 
-    return update(ref(db), updateMember);
+    return update(ref(db), addDmMember);
 }
 
 
@@ -34,7 +34,7 @@ export const createGroupDM = (partner, handle, newMember, dmId ) => {
     const updates = {};
 
     updates[`users/${handle}/DMs/${partner[0]}`] = null;
-    updates[`users/${handle}/DMs/groupDMs/${dmId}`] = true;
+    updates[`users/${handle}/groupDMs/${dmId}`] = true;
     updates[`users/${partner[0]}/DMs/${handle}`] = null;
     updates[`users/${partner[0]}/groupDMs/${dmId}`] = true;
     updates[`users/${newMember}/groupDMs/${dmId}`] = true;

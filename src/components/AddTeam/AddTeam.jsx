@@ -4,10 +4,11 @@ import { addTeam, findTeamByName } from "../../services/teams.service";
 import AppContext from "../../context/AppContext";
 import { useNavigate } from 'react-router-dom';
 import { createDefaultChannel } from "../../services/channel.service";
+import { MAX_TEAMNAME_LENGTH, MIN_TEAMNAME_LENGTH } from "../../common/constants";
 
 const AddTeam = () => {
-
   const modalRef = useRef(null)
+  const { userData } = useContext(AppContext);
 
   const { userData } = useContext(AppContext);
 
@@ -19,7 +20,7 @@ const AddTeam = () => {
 
   const createTeam = (e) => {
     e.preventDefault();
-    if (teamName.length < 3 || teamName > 40) { //magic numbers
+    if (teamName.length < MIN_TEAMNAME_LENGTH || teamName > MAX_TEAMNAME_LENGTH) {
       setTeamError('Team name must be between 3 and 40 characters');
       throw new Error('Team name must be between 3 and 40 characters');
 
@@ -39,7 +40,6 @@ const AddTeam = () => {
             });
           });
       })
-
       .catch(e => console.log(e)) //better error handling
     // document.getElementById(modalRef.current.id).close();
     // console.log(modalRef.current.id)

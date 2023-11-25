@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { GoChevronDown, GoChevronUp, GoPlus } from "react-icons/go";
 
 import { getAllTeamMembers, getLiveTeamInfo, getTeamById } from '../../services/teams.service';
 import { useLocation, useNavigate, useParams } from "react-router"
 
 import ProfileBar from '../ProfileBar/ProfileBar';
+import App from '../../App';
+import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
 import { addChannel, addChannelUser, getChannelById, getChannelInTeamByName } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
@@ -16,6 +18,12 @@ import SearchBar from '../SearchBar/SearchBar';
 const MyServers = () => {
 
 	const [isOpen, setIsOpen] = useState(false);
+	
+	const{userData} = useContext(AppContext);
+	const { teamId, dmId } = useParams();
+
+	const navigate = useNavigate();
+
 	const [currentTeam, setCurrentTeam] = useState({});
 	const [currentChannels, setCurrentChannels] = useState({});
 	const [searchParam, setSearchParam] = useState("handle");
@@ -34,6 +42,8 @@ const MyServers = () => {
 	const [channelMembers, setChannelMembers] = useState('');
 
 	const [channelError, setChannelError] = useState('');
+  
+	const[dms, setDms] = useState(userData.DMs?Object.values(userData.DMs):[])
 
 	useEffect(() => {
 		getAllUsers()
@@ -95,13 +105,20 @@ const MyServers = () => {
 	// }
 
 	return (
-		<div className="bg-gray-800 h-screen text-purple-lighter flex-none w-64 pb-6 hidden md:block">
+		<div className="bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col w-64 pb-6 md:block">
 
 			<div className="flex flex-col h-screen">
 				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
 					<div className="flex-auto">
 						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
 					</div>
+					{/* <div>
+						{isOpen ? (
+							<GoChevronUp onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
+						) : (
+							<GoChevronDown onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
+						)}
+					</div> */}
 				</div>
 				<div className='flex mx-auto content-center items-center'>
 					<div className='text-xl mr-4'>
@@ -141,6 +158,7 @@ const MyServers = () => {
 					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
 					: null}
 				<div className="flex-grow"></div>
+
 				<ProfileBar />
 			</div>
 		</div>

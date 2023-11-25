@@ -108,12 +108,26 @@ export const findTeamByName = (name) => {
     return get(query(ref(db, 'teams'), orderByChild('name'), equalTo(name)));
 };
 
+
 export const getTeamById = (teamId) => get(ref(db, `teams${teamId}`));
 
 export const addTeamMember = (handle, teamId) => {
-        const updateTeam = {};
-        updateTeam[`/teams/${teamId}/members/${handle}`] = true;
-        updateTeam[`/users/${handle}/teams/${teamId}`] = true;
+    const teamRef = ref(db, `/teams/${teamId}/members/${handle}`);
 
-        return update(ref(db), updateTeam);
-    };
+    return get(teamRef)
+        .then((teamSnapshot) => {
+            if (teamSnapshot.exists()) {
+                return Promise.reject(alert ("User is already a member of this team!"));
+            } else {
+                const updateTeam = {};
+                updateTeam[`/teams/${teamId}/members/${handle}`] = true;
+                updateTeam[`/users/${handle}/teams/${teamId}`] = true;
+
+                return update(ref(db), updateTeam);
+            }
+        })
+        .catch((error) => {
+            console.error("Error adding team member:", error);
+            return Promise.reject("Error adding team member");
+        });
+}

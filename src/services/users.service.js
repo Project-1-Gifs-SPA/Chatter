@@ -88,3 +88,53 @@ export const getUsersBySearchTerm = (users, searchParam, searchTerm) => {
         : false
     );
 };
+
+
+export const addFriends = (handle, friendHandle) => {
+  const updateFriends = {};
+  updateFriends[`/users/${handle}/friends/${friendHandle}`] = true;
+  updateFriends[`users/${friendHandle}/friends/${handle}`] = true;
+  updateFriends[`users/${handle}/friendRequests/${friendHandle}`] = null;
+
+  return update(ref(db), updateFriends)
+  .then(() => alert("Friend request was accepted"));
+};
+
+export const removeFriends = (handle, friendHandle) => {
+  const updateFriends = {};
+  updateFriends[`/users/${handle}/friends/${friendHandle}`] = null;
+  updateFriends[`/users/${friendHandle}/friends/${handle}`] = null;
+
+  return update(ref(db), updateFriends);
+}
+
+export const sendFriendRequest = (senderHandle, receiverHandle) => {
+  const receiverFriendRequestsRef = ref(db, `/users/${receiverHandle}/friendRequests/${senderHandle}`);
+
+  return get(receiverFriendRequestsRef)
+    .then((friendRequestSnapshot) => {
+      if (friendRequestSnapshot.exists()) {
+        // If the friend request already exists, reject with a message
+        return Promise.reject(alert("Friend request already sent to this user"));
+      } else {
+        // If the friend request doesn't exist, proceed to send the request
+        const sendRequest = {};
+        sendRequest[`/users/${receiverHandle}/friendRequests/${senderHandle}`] = true;
+
+        return update(ref(db), sendRequest)
+          .then(() => alert("Friend request sent successfully"))
+          .catch((error) => Promise.reject(error));
+      }
+    })
+    .catch((error) => {
+      console.error('Error sending friend request:', error);
+      return Promise.reject("Error sending friend request");
+    });
+};
+export const declineFriendRequest = (handle, friendHandle) => {
+    const updateFriendsRequest = {};
+    updateFriendsRequest[`/users/${handle}/friendRequests/${friendHandle}`] = null;
+
+    return update(ref(db), updateFriendsRequest)
+    .then(() => alert("Friend request was declined"));
+}

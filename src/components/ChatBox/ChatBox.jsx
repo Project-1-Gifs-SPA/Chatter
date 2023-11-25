@@ -6,7 +6,10 @@ import bg from "../../assets/background.png";
 import { set } from "firebase/database";
 import {
 	getChat,
+	getDMChat,
+	getLiveDirectMessages,
 	getLiveMessages,
+	sendDirectMessage,
 	sendMessage,
 } from "../../services/chat.service";
 import { useParams } from "react-router";
@@ -14,7 +17,7 @@ import AppContext from "../../context/AppContext";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId } = useParams();
+	const { channelId, dmId } = useParams();
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -28,7 +31,7 @@ const ChatBox = () => {
 
 	const scrollToBottom = () => {
 		const chat = document.getElementById("chat");
-		chat.scrollTop = chat.scrollHeight;
+		chat.scrollTop = chat?.scrollHeight;
 	};
 
 	const container = useRef(null);
@@ -48,32 +51,56 @@ const ChatBox = () => {
 
 	useEffect(() => {
 		console.log("live msg");
+		if(channelId){
 		getChat(channelId)
-			.then((chatArr) => setMessages(chatArr))
+			.then((response) => setMessages(Object.values(response)))
 			.then(() => scrollToBottom());
-	}, [channelId]);
+		}
+		if(dmId){
+			getDMChat(dmId)
+				.then((response)=> setMessages(Object.values(response)))
+				.then(()=>scrollToBottom())
+		}
+	}, [channelId,dmId]);
 
 	useEffect(() => {
 		console.log("live msg");
 
-		const unsubscribe = getLiveMessages((snapshot) => {
-			const data = snapshot.exists() ? snapshot.val() : {};
-            const result = Object.values(data);
-			setMessages(result);
-		}, channelId);
 
-		return () => unsubscribe;
-	}, [channelId]);
+		if(channelId){
+			const unsubscribe = getLiveMessages((snapshot) => {
+				setMessages(Object.values(snapshot.val()));
+			}, channelId);
+	
+			return () => unsubscribe;
+		}
+		if(dmId){
+			const unsubscribe = getLiveDirectMessages((snapshot)=>{
+				setMessages(Object.values(snapshot.val()));
+			}, dmId);
+
+			return () => unsubscribe;
+		}
+
+	
+	}, [channelId, dmId]);
 
 	const handleMsg = (e) => {
 		e.preventDefault();
 
-		sendMessage(channelId, userData.handle, msg, userData.photoURL)
+		if(channelId){
+			sendMessage(channelId, userData.handle, msg, userData.photoURL)
 			.then(() => setMsg(""));
+		}
+
+		if(dmId){
+			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
+			.then(()=> setMsg(''));
+		}	
 	};
 
 	return (
-		<div className="flex-1 flex flex-col bg-gray-700 overflow-hidden">
+		<div className="flex-1 flex flex-col bg-gray-700">
 			{/* Top bar */}
 			<ChatTopBar />
 			{/* <!-- Chat messages --> */}
@@ -90,7 +117,7 @@ const ChatBox = () => {
 					))
 					: null}
 			</div>
-			{channelId ? <form
+			{channelId || dmId ? <form
 				style={{
 					backgroundColor: "gray 900",
 					color: "white",
