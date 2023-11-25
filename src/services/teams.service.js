@@ -108,7 +108,7 @@ export const findTeamByName = (name) => {
     return get(query(ref(db, 'teams'), orderByChild('name'), equalTo(name)));
 };
 
-//getTeamById
+export const getTeamById = (teamId) => get(ref(db, `teams${teamId}`));
 
 export const addTeamMember = (handle, teamId) => {
         const updateTeam = {};
