@@ -1,11 +1,12 @@
 import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, startAt, onValue } from 'firebase/database';
 import { db } from '../config/firebase-config';
+import { getAllTeamMembers } from './teams.service';
 
 export const addChannel = (teamId, members, name) => {
 
     const formattedMembers = {}
-    members.map(member => (formattedMembers[member]= true ));
-    console.table(formattedMembers);
+    members.map(member => (formattedMembers[member] = true ));
+    // console.table(formattedMembers);
 
     return push(ref(db, 'channels'), {})
         .then(response => {
@@ -37,8 +38,8 @@ export const createDefaultChannel = (teamId, members) => {
 
 export const getGeneralChannel = (teamId) => {
     return get(ref(db, `teams/${teamId}/channels`))
-        .then(snapshot => {
-            const channelIds = Object.keys(snapshot.exists() ? snapshot.val() : {})
+        .then(async snapshot => {
+            const channelIds = Object.keys(snapshot.exists() ? snapshot.val() : [await createDefaultChannel(teamId, await getAllTeamMembers(teamId))]);
 
             console.table(channelIds);
             return channelIds.length === 1
