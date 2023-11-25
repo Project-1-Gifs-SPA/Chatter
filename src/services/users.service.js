@@ -77,5 +77,14 @@ export const getAllUsers = () => {
 
     return fromUsersDocument(snapshot);
   })
+};
 
-}
+export const getUsersBySearchTerm = (users, searchParam, searchTerm) => {
+
+  return searchTerm === ''
+    ? []
+    : users.filter((user) => typeof user[searchParam] === 'string'
+        ? user[searchParam].toLowerCase().includes(searchTerm)
+        : false
+    );
+};
