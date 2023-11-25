@@ -34,7 +34,7 @@ export const createGroupDM = (partner, handle, newMember, dmId ) => {
     const updates = {};
 
     updates[`users/${handle}/DMs/${partner[0]}`] = null;
-    updates[`users/${handle}/DMs/groupDMs/${dmId}`] = true;
+    updates[`users/${handle}/groupDMs/${dmId}`] = true;
     updates[`users/${partner[0]}/DMs/${handle}`] = null;
     updates[`users/${partner[0]}/groupDMs/${dmId}`] = true;
     updates[`users/${newMember}/groupDMs/${dmId}`] = true;
