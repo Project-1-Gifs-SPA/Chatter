@@ -39,7 +39,7 @@ const MyServers = () => {
 
 	const [channelError, setChannelError] = useState('');
 
-	const [dms, setDms] = useState(userData.DMs ? Object.values(userData.DMs) : [])
+	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
 
 	useEffect(() => {
 		getAllUsers()
@@ -90,6 +90,8 @@ const MyServers = () => {
 		// console.log(modalRef.current.id)
 	}
 
+	console.log(Object.entries(userData.DMs))
+
 	// const handleSearchTerm = async (e) => {
 	// 	setSearchTerm(e.target.value.toLowerCase());
 
@@ -116,6 +118,7 @@ const MyServers = () => {
 						)}
 					</div> */}
 				</div>
+				{teamId? <>
 				<div className='flex mx-auto content-center items-center'>
 					<div className='text-xl mr-4'>
 						Channels
@@ -149,10 +152,13 @@ const MyServers = () => {
 						</div>
 					</div>
 				</dialog>
+				</>
+				: null}
 
-				{currentTeam?.channels
+				{currentTeam.channels
 					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
-					: null}
+				
+					 : dms.map(([partner,dmId]) => <TeamMember key={dmId} dmPartner={partner} dmId={dmId} />)}
 				<div className="flex-grow"></div>
 
 				<ProfileBar />
