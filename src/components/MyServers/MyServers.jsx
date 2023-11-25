@@ -18,8 +18,8 @@ import SearchBar from '../SearchBar/SearchBar';
 const MyServers = () => {
 
 	const [isOpen, setIsOpen] = useState(false);
-	
-	const{userData} = useContext(AppContext);
+
+	const { userData } = useContext(AppContext);
 	const { teamId, dmId } = useParams();
 
 	const navigate = useNavigate();
@@ -30,20 +30,16 @@ const MyServers = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
 
-	const { teamId, channelId } = useParams();
-
 	const modalRef = useRef(null);
 
 	// const { userData } = useContext(AppContext);
-
-	const navigate = useNavigate();
 
 	const [channelName, setChannelName] = useState('');
 	const [channelMembers, setChannelMembers] = useState('');
 
 	const [channelError, setChannelError] = useState('');
-  
-	const[dms, setDms] = useState(userData.DMs?Object.values(userData.DMs):[])
+
+	const [dms, setDms] = useState(userData.DMs ? Object.values(userData.DMs) : [])
 
 	useEffect(() => {
 		getAllUsers()
