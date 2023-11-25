@@ -17,16 +17,14 @@ export const sendMessage = (channelId, handle, msg, picURL) => {
     })
 }
 
-
-
-
 export const getLiveMessages = (listenFn,channelId) => {
-    const q= query(
+    const q = query(
         ref(db, `/channels/${channelId}/msgs`),
         orderByChild('createdOn'),
         limitToFirst(50)
     )
-    return onValue(q, listenFn)
+
+    return onValue(q, listenFn);
 };
 
 
@@ -55,7 +53,6 @@ export const sendDirectMessage = (dmId, handle, msg, picURL) => {
     })
 };
 
-
 export const getDMChat = (dmId) => {
     return get(ref(db, `dms/${dmId}/msgs`))
     .then(snapshot =>{
@@ -63,8 +60,6 @@ export const getDMChat = (dmId) => {
         return data;
     })
 };
-
-
 
 export const getLiveDirectMessages = (listenFn,dmId) => {
     const q= query(
@@ -80,11 +75,6 @@ export const getLiveGroupDmMembers = (listenFn, dmId) => {
     
     return onValue(ref(`dms/${dmId}/members`), listenFn);
 };
-
-
-
-
-
 
 // export const sendMessageTest = (teamId, handle, msg, picURL) => { ////delete when testing is done!
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { getLiveTeamInfo } from '../../services/teams.service';
 import { set } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
+import { getGeneralChannel } from '../../services/channel.service';
 
 const TeamIcon = ({ id }) => {
 
@@ -25,7 +26,10 @@ const TeamIcon = ({ id }) => {
 	}, [id])
 
 	return (
-		<div className="cursor-pointer mb-4" onClick={() => navigate(`/teams/${currentTeam.id}`)}>
+		<div className="cursor-pointer mb-4" onClick={() =>
+			getGeneralChannel(currentTeam.id)
+				.then(channelId => navigate(`/teams/${currentTeam.id}/channels/${channelId}`))}
+		>
 			<div className="tooltip tooltip-right" data-tip={currentTeam.name}>
 				<div
 					className="bg-orange-500 h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden hover:rounded-md">

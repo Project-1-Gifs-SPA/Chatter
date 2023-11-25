@@ -3,22 +3,27 @@ import { GoPlus } from "react-icons/go";
 import { addTeam, findTeamByName } from "../../services/teams.service";
 import AppContext from "../../context/AppContext";
 import { useNavigate } from 'react-router-dom';
+import { createDefaultChannel } from "../../services/channel.service";
 import { MAX_TEAMNAME_LENGTH, MIN_TEAMNAME_LENGTH } from "../../common/constants";
 
 const AddTeam = () => {
   const modalRef = useRef(null)
   const { userData } = useContext(AppContext);
 
-  const [teamName, setTeamName] = useState('');
-  const [teamError, setTeamError] = useState('');
+  const { userData } = useContext(AppContext);
 
   const navigate = useNavigate();
+
+  const [teamName, setTeamName] = useState('');
+
+  const [teamError, setTeamError] = useState('');
 
   const createTeam = (e) => {
     e.preventDefault();
     if (teamName.length < MIN_TEAMNAME_LENGTH || teamName > MAX_TEAMNAME_LENGTH) {
       setTeamError('Team name must be between 3 and 40 characters');
       throw new Error('Team name must be between 3 and 40 characters');
+
     }
     setTeamError('')
     findTeamByName(teamName)
@@ -29,8 +34,11 @@ const AddTeam = () => {
         }
         addTeam(userData.handle, teamName)
           .then(teamId => {
-            navigate(`/teams/${teamId}`)
-          })
+            createDefaultChannel(teamId, [userData.handle])
+            .then(channelId => {
+              navigate(`/teams/${teamId}/channels/${channelId}`)
+            });
+          });
       })
       .catch(e => console.log(e)) //better error handling
     // document.getElementById(modalRef.current.id).close();

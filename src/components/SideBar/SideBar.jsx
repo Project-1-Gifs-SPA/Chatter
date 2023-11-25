@@ -37,7 +37,7 @@ const SideBar = () => {
 	console.log(currentUser)
 
 	useEffect(() => {
-		console.log('getting teams')
+		console.log('getting teams');
 		const teamArr = [];
 		if (currentUser.teams) {
 			// const teamsData = Object.keys(currentUser.teams);

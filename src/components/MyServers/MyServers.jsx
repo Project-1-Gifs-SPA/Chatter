@@ -1,16 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { GoChevronDown, GoChevronUp } from "react-icons/go";
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { GoChevronDown, GoChevronUp, GoPlus } from "react-icons/go";
 
-import { getLiveTeamInfo } from '../../services/teams.service';
+import { getAllTeamMembers, getLiveTeamInfo, getTeamById } from '../../services/teams.service';
 import { useLocation, useNavigate, useParams } from "react-router"
 
 import ProfileBar from '../ProfileBar/ProfileBar';
 import App from '../../App';
 import AppContext from '../../context/AppContext';
-
-
+import ChannelTile from '../ChannelTile/ChannelTile';
+import { addChannel, addChannelUser, getChannelById, getChannelInTeamByName } from '../../services/channel.service';
+import TeamMember from '../TeamMember/TeamMember';
+import { BsPersonFillAdd } from 'react-icons/bs';
+import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
+import { IoIosArrowDown } from 'react-icons/io';
+import SearchBar from '../SearchBar/SearchBar';
 
 const MyServers = () => {
+
 	const [isOpen, setIsOpen] = useState(false);
 	
 	const{userData} = useContext(AppContext);
@@ -19,15 +25,35 @@ const MyServers = () => {
 	const navigate = useNavigate();
 
 	const [currentTeam, setCurrentTeam] = useState({});
+	const [currentChannels, setCurrentChannels] = useState({});
+	const [searchParam, setSearchParam] = useState("handle");
+	const [searchTerm, setSearchTerm] = useState('');
+	const [searchedUsers, setSearchedUsers] = useState([]);
+
+	const { teamId, channelId } = useParams();
+
+	const modalRef = useRef(null);
+
+	// const { userData } = useContext(AppContext);
+
+	const navigate = useNavigate();
+
+	const [channelName, setChannelName] = useState('');
+	const [channelMembers, setChannelMembers] = useState('');
+
+	const [channelError, setChannelError] = useState('');
+  
 	const[dms, setDms] = useState(userData.DMs?Object.values(userData.DMs):[])
 
-
-	
-
-	
+	useEffect(() => {
+		getAllUsers()
+			.then((r) => {
+				setChannelMembers([...r].sort((a, b) => b.createdOn - a.createdOn));
+			})
+	}, []);
 
 	useEffect(() => {
-		console.log('get team info')
+		console.log('get team info');
 
 		const unsubscribe = getLiveTeamInfo(data => {
 
@@ -38,11 +64,46 @@ const MyServers = () => {
 			unsubscribe();
 		}
 
-	}, [teamId])
+	}, [teamId]);
 
-	// const toggleAccordion = () => {
-	// 	setIsOpen(!isOpen);
+	const createChannel = (e) => {
+		e.preventDefault();
+		if (channelName.length < 3 || channelName > 40) { //magic numbers
+			setChannelError('Channel name must be between 3 and 40 characters');
+			throw new Error('Channel name must be between 3 and 40 characters');
+
+		}
+		setChannelError('');
+		getChannelInTeamByName(teamId, channelName)
+			.then(answer => {
+				console.log(answer);
+				console.table(answer);
+				if (answer !== 'No such channel') {
+					setChannelError(`Channel ${channelName} already exists`);
+					throw new Error(`Channel ${channelName} already exists`);
+				}
+
+				addChannel(teamId, channelMembers, channelName)
+					.then(channelId => {
+						navigate(`/teams/${teamId}/channels/${channelId}`)
+					});
+			})
+
+			.catch(e => console.log(e)) //better error handling
+		// document.getElementById(modalRef.current.id).close();
+		// console.log(modalRef.current.id)
+	}
+
+	// const handleSearchTerm = async (e) => {
+	// 	setSearchTerm(e.target.value.toLowerCase());
+
+	// 	setSearchedUsers(getUsersBySearchTerm(await getAllTeamMembers(), searchParam, searchTerm));
 	// };
+
+	// const handleAddMember = (user) => {
+	// 	addChannelUser(channelId, user);
+	// }
+
 	return (
 		<div className="bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col w-64 pb-6 md:block">
 
@@ -51,8 +112,6 @@ const MyServers = () => {
 					<div className="flex-auto">
 						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
 					</div>
-				
-					
 					{/* <div>
 						{isOpen ? (
 							<GoChevronUp onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
@@ -61,18 +120,43 @@ const MyServers = () => {
 						)}
 					</div> */}
 				</div>
-				{/* {isOpen && ( */}
-				{/* <div className="flex flex-col gap-4 w-52 opacity-10 mt-5 ml-4">
-						{/* Skeleton content */}
-				{/* <div className="skeleton h-20 w-full"></div>
-						<div className="skeleton h-4 w-full"></div>
-						<div className="skeleton h-4 w-full"></div>
-						<div className="skeleton h-4 w-full"></div>
-						<div className="skeleton h-4 w-full"></div>
-						<div className="skeleton h-4 w-full"></div>
-						<div className="skeleton h-4 w-full"></div>
-					</div>  */}
-				{/* )} */}
+				<div className='flex mx-auto content-center items-center'>
+					<div className='text-xl mr-4'>
+						Channels
+					</div>
+					<div
+						className="cursor-pointer"
+
+						onClick={() => document.getElementById("create-channel").showModal()}
+					>
+						<div className="bg-white opacity-25 h-8 w-8 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl mb-1 overflow-hidden">
+							<GoPlus className="h-10 w-10" />
+						</div>
+					</div>
+				</div>
+
+				<dialog ref={modalRef} id="create-channel" className="modal">
+					<div className="modal-box">
+						<h3 className="font-bold text-lg py-2">Enter Channel name</h3>
+						<input type='text' value={channelName} onChange={(e) => setChannelName(e.target.value)} /><br />
+						<span className="bg-red">{channelError}</span>
+
+						<div className="modal-action">
+
+							<form method="dialog" >
+
+								{/* if there is a button in form, it will close the modal */}
+								<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
+								<button className="btn">Close</button>
+							</form>
+
+						</div>
+					</div>
+				</dialog>
+
+				{currentTeam?.channels
+					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
+					: null}
 				<div className="flex-grow"></div>
 
 				<ProfileBar />

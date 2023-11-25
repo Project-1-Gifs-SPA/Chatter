@@ -108,7 +108,9 @@ export const findTeamByName = (name) => {
     return get(query(ref(db, 'teams'), orderByChild('name'), equalTo(name)));
 };
 
-//getTeamById
+
+export const getTeamById = (teamId) => get(ref(db, `teams${teamId}`));
+
 export const addTeamMember = (handle, teamId) => {
     const teamRef = ref(db, `/teams/${teamId}/members/${handle}`);
 
@@ -128,4 +130,4 @@ export const addTeamMember = (handle, teamId) => {
             console.error("Error adding team member:", error);
             return Promise.reject("Error adding team member");
         });
-};
+}

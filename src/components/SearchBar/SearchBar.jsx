@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { addFriends, getAllUsers, getLiveUserInfo, removeFriends, sendFriendRequest } from '../../services/users.service';
+import { addFriends, getAllUsers, getUsersBySearchTerm, getLiveUserInfo, removeFriends, sendFriendRequest } from '../../services/users.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { IoIosArrowDown } from "react-icons/io";
 import { BsPersonFillAdd } from "react-icons/bs";
@@ -55,16 +55,7 @@ const SearchBar = ({ team }) => {
 		const searchTerm = e.target.value.toLowerCase();
 		setSearchTerm(searchTerm);
 
-		if (searchTerm === '') {
-			setSearchedUsers([]);
-		} else {
-			const filteredUsers = allUsers.filter((filterUser) =>
-				typeof filterUser[searchParam] === 'string'
-					? filterUser[searchParam].toLowerCase().includes(searchTerm)
-					: false
-			);
-			setSearchedUsers(filteredUsers);
-		}
+		setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm));
 	};
 
 	return (
