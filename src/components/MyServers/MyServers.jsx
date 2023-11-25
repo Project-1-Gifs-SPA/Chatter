@@ -159,6 +159,7 @@ const MyServers = () => {
 					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
 				
 					 : dms.map(([partner,dmId]) => <TeamMember key={dmId} dmPartner={partner} dmId={dmId} />)}
+				{userData.groupDMs && Object.keys(userData.groupDMs).map(groupDMId=> <TeamMember key={groupDMId} groupDMId={groupDMId} />)}	 
 				<div className="flex-grow"></div>
 
 				<ProfileBar />

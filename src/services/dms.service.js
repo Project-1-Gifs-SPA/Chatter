@@ -50,6 +50,10 @@ export const getLiveGroupDMs = (listenFn, handle) => {
     });
 }
 
+export const getDMById =(dmId) => {
+    return get(ref(db, `dms/${dmId}`));
+}
+
 export const getLiveDMs = (listenFn, dmId) => {
     return onValue(ref(db, `dms/${dmId}`), (snapshot)=>{
         const data = snapshot.exists() ? snapshot.val() : {};

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import ProfileModal from '../ProfileModal/ProfileModal';
 import { getUserByHandle } from '../../services/users.service';
 import { useNavigate, useParams } from 'react-router';
+import { getDMById } from '../../services/dms.service';
 
-const TeamMember = ({ member, owner, dmPartner, dmId }) => {
+const TeamMember = ({ member, owner, dmPartner, dmId, groupDMId }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [partner, setPartner] = useState({})
+	const[partners, setPartners] = useState([]);
 	const{teamId, channelId} = useParams();
 	const navigate = useNavigate();
 
@@ -15,11 +17,48 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 		.then(response=> response.exists() ? setPartner({...response.val()}): null)
 	},[dmId])
 
+
+	useEffect(() => {
+		if (groupDMId) {
+			getDMById(groupDMId)
+			.then(snapshot=>{
+				const data = snapshot.exists() ? snapshot.val() : {};
+				return data.members;
+			})
+			.then(dmMembers => {
+			const promises = dmMembers.map(member => {
+				return getUserByHandle(member)
+					.then((snapshot) => {
+						return snapshot.val();
+					});
+			});
+
+			Promise.all(promises)
+				.then((membersData) => {
+					setPartners(membersData);
+				})
+				.catch((error) => {
+					console.error(error);
+				})
+			});
+		}
+	}, [groupDMId])
+
 	console.log(partner)
 
 	return (
 		<>
-			<div className="flex p-3 relative" onClick={dmId? ()=> navigate(`/dms/${dmId}`): null}>
+		{groupDMId?
+
+		partners.map(partner=>
+		<div className="flex p-3 relative" onClick={groupDMId? ()=> navigate(`/dms/${groupDMId}`): null}>
+			<div className="w-10 rounded-full">
+				<img src={partner.photoURL} alt="User Avatar" />
+			</div>
+		</div>
+		)
+
+			: <div className="flex p-3 relative" onClick={dmId? ()=> navigate(`/dms/${dmId}`): null}>
 				{member? member.handle === owner && (<p className="absolute top-2 left-8 transform -translate-x-1/2 -translate-y-1/2 tooltip tooltip-right" data-tip='Team owner'>👑</p>):null}
 				<div className={`avatar ${member? member.availability:partner.availability} relative z-[0]`}>
 
@@ -33,6 +72,7 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 					<span className="text-xs text-white hidden sm:flex">{member? member.handle : partner.handle}</span>
 				</div>
 			</div >
+			}
 			{showModal && (
 
 				<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
