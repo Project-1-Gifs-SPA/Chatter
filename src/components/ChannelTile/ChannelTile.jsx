@@ -21,7 +21,7 @@ const ChannelTile = ({ channelId }) => {
     }, [channelId])
 
     return (
-        <button className="text-white"
+        <button className="text-white ml-5"
             onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
         >
             {channelName}
