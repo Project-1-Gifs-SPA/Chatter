@@ -14,6 +14,7 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
+import GroupDmTile from '../GroupDmTile/GroupDmTile';
 
 const MyServers = () => {
 
@@ -157,9 +158,12 @@ const MyServers = () => {
 
 				{currentTeam.channels
 					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
-				
-					 : dms.map(([partner,dmId]) => <TeamMember key={dmId} dmPartner={partner} dmId={dmId} />)}
-				{userData.groupDMs && Object.keys(userData.groupDMs).map(groupDMId=> <TeamMember key={groupDMId} groupDMId={groupDMId} />)}	 
+					:(
+						<>
+						{dms && dms.map(([partner,dmId]) => <TeamMember key={dmId} dmPartner={partner} dmId={dmId} />)}
+						{userData?.groupDMs && (Object.keys(userData.groupDMs).map(groupDmId=> <GroupDmTile key={groupDmId} groupDmId={groupDmId} />))}
+						</>
+					)}
 				<div className="flex-grow"></div>
 
 				<ProfileBar />

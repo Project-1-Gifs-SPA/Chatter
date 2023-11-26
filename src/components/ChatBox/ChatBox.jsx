@@ -53,13 +53,18 @@ const ChatBox = () => {
 		console.log("live msg");
 		if(channelId){
 		getChat(channelId)
-			.then((response) => setMessages(Object.values(response)))
-			.then(() => scrollToBottom());
+			.then((response) => {	
+				setMessages(Object.values(response))
+			})
+			// .then(() => scrollToBottom());
 		}
 		if(dmId){
 			getDMChat(dmId)
-				.then((response)=> setMessages(Object.values(response)))
-				.then(()=>scrollToBottom())
+				.then((response)=> {
+		
+					setMessages(Object.values(response))
+				})
+				// .then(()=>scrollToBottom())
 		}
 	}, [channelId,dmId]);
 
@@ -69,14 +74,16 @@ const ChatBox = () => {
 
 		if(channelId){
 			const unsubscribe = getLiveMessages((snapshot) => {
-				setMessages(Object.values(snapshot.val()));
+				const msgData = snapshot.exists() ? snapshot.val() : {};
+				setMessages(Object.values(msgData));
 			}, channelId);
 	
 			return () => unsubscribe;
 		}
 		if(dmId){
 			const unsubscribe = getLiveDirectMessages((snapshot)=>{
-				setMessages(Object.values(snapshot.val()));
+				const msgData = snapshot.exists() ? snapshot.val() : {};
+				setMessages(Object.values(msgData));
 			}, dmId);
 
 			return () => unsubscribe;
