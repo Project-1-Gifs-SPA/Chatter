@@ -18,8 +18,6 @@ const SideBar = () => {
 	const [requests, setRequests] = useState([]);
 
 	useEffect(() => {
-		console.log('live teams')
-
 		const u = getLiveUserInfo((data) => {
 			setCurrentUser(data)
 		}, userData?.handle)
@@ -32,12 +30,9 @@ const SideBar = () => {
 			unsubscribe();
 			u();
 		}
-	}, [userData])
-
-	console.log(currentUser)
+	}, [userData]);
 
 	useEffect(() => {
-		console.log('getting teams');
 		const teamArr = [];
 		if (currentUser.teams) {
 			// const teamsData = Object.keys(currentUser.teams);
@@ -76,9 +71,7 @@ const SideBar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentUser.friendRequests])
-
-	console.log(requests)
+	}, [currentUser.friendRequests]);
 
 
 	return (

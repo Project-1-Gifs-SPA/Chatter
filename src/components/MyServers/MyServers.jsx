@@ -8,7 +8,7 @@ import ProfileBar from '../ProfileBar/ProfileBar';
 import App from '../../App';
 import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
-import { addChannel, addChannelUser, getChannelById, getChannelInTeamByName } from '../../services/channel.service';
+import { addChannel, addChannelUser, getChannelById, getChannelInTeamByName, getGeneralChannel } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { BsPersonFillAdd } from 'react-icons/bs';
 import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
@@ -18,8 +18,8 @@ import SearchBar from '../SearchBar/SearchBar';
 const MyServers = () => {
 
 	const [isOpen, setIsOpen] = useState(false);
-	
-	const{userData} = useContext(AppContext);
+
+	const { userData } = useContext(AppContext);
 	const { teamId, dmId } = useParams();
 
 	const navigate = useNavigate();
@@ -30,40 +30,42 @@ const MyServers = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
 
-	const { teamId, channelId } = useParams();
+	const [generalId, setGeneralId] = useState('');
 
 	const modalRef = useRef(null);
 
-	// const { userData } = useContext(AppContext);
-
-	const navigate = useNavigate();
+	// const { userData } = useContext(AppContext)
 
 	const [channelName, setChannelName] = useState('');
 	const [channelMembers, setChannelMembers] = useState('');
 
 	const [channelError, setChannelError] = useState('');
-  
-	const[dms, setDms] = useState(userData.DMs?Object.values(userData.DMs):[])
+
+	const [dms, setDms] = useState(userData.DMs ? Object.values(userData.DMs) : [])
 
 	useEffect(() => {
 		getAllUsers()
 			.then((r) => {
 				setChannelMembers([...r].sort((a, b) => b.createdOn - a.createdOn));
-			})
+			});
 	}, []);
 
 	useEffect(() => {
-		console.log('get team info');
-
 		const unsubscribe = getLiveTeamInfo(data => {
 
 			setCurrentTeam({ ...data })
 
-		}, teamId)
+		}, teamId);
+
+		getGeneralChannel(teamId)
+			.then((r) => {
+				setGeneralId(r);
+				console.log(r);
+			});
+
 		return () => {
 			unsubscribe();
 		}
-
 	}, [teamId]);
 
 	const createChannel = (e) => {
@@ -76,8 +78,6 @@ const MyServers = () => {
 		setChannelError('');
 		getChannelInTeamByName(teamId, channelName)
 			.then(answer => {
-				console.log(answer);
-				console.table(answer);
 				if (answer !== 'No such channel') {
 					setChannelError(`Channel ${channelName} already exists`);
 					throw new Error(`Channel ${channelName} already exists`);
@@ -85,7 +85,7 @@ const MyServers = () => {
 
 				addChannel(teamId, channelMembers, channelName)
 					.then(channelId => {
-						navigate(`/teams/${teamId}/channels/${channelId}`)
+						navigate(`/teams/${teamId}/channels/${channelId}`);
 					});
 			})
 
@@ -155,7 +155,7 @@ const MyServers = () => {
 				</dialog>
 
 				{currentTeam?.channels
-					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
+					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} generalId={generalId} />)
 					: null}
 				<div className="flex-grow"></div>
 

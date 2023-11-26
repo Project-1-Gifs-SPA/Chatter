@@ -47,56 +47,48 @@ const ChatBox = () => {
 		scroll();
 	}, [messages]);
 
-
-
 	useEffect(() => {
-		console.log("live msg");
-		if(channelId){
-		getChat(channelId)
-			.then((response) => setMessages(Object.values(response)))
-			.then(() => scrollToBottom());
+		if (channelId) {
+			getChat(channelId)
+				.then((response) => setMessages(Object.values(response)))
+				.then(() => scrollToBottom());
 		}
-		if(dmId){
+		if (dmId) {
 			getDMChat(dmId)
-				.then((response)=> setMessages(Object.values(response)))
-				.then(()=>scrollToBottom())
+				.then((response) => setMessages(Object.values(response)))
+				.then(() => scrollToBottom())
 		}
-	}, [channelId,dmId]);
+	}, [channelId, dmId]);
 
 	useEffect(() => {
-		console.log("live msg");
-
-
-		if(channelId){
+		if (channelId) {
 			const unsubscribe = getLiveMessages((snapshot) => {
 				setMessages(Object.values(snapshot.val()));
 			}, channelId);
-	
+
 			return () => unsubscribe;
 		}
-		if(dmId){
-			const unsubscribe = getLiveDirectMessages((snapshot)=>{
+		if (dmId) {
+			const unsubscribe = getLiveDirectMessages((snapshot) => {
 				setMessages(Object.values(snapshot.val()));
 			}, dmId);
 
 			return () => unsubscribe;
 		}
-
-	
 	}, [channelId, dmId]);
 
 	const handleMsg = (e) => {
 		e.preventDefault();
 
-		if(channelId){
+		if (channelId) {
 			sendMessage(channelId, userData.handle, msg, userData.photoURL)
-			.then(() => setMsg(""));
+				.then(() => setMsg(""));
 		}
 
-		if(dmId){
+		if (dmId) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
-			.then(()=> setMsg(''));
-		}	
+				.then(() => setMsg(''));
+		}
 	};
 
 	return (
