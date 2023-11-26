@@ -10,8 +10,6 @@ const AddTeam = () => {
   const modalRef = useRef(null)
   const { userData } = useContext(AppContext);
 
-  const { userData } = useContext(AppContext);
-
   const navigate = useNavigate();
 
   const [teamName, setTeamName] = useState('');
