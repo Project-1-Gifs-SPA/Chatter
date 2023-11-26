@@ -16,6 +16,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
+import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
 
 const MyServers = () => {
 
@@ -31,7 +32,7 @@ const MyServers = () => {
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
-	const [expanded, setExpanded] = useState(false)
+	const [expanded, setExpanded] = useState(true)
 
 	const modalRef = useRef(null);
 
@@ -70,7 +71,7 @@ const MyServers = () => {
 
 		if (!teamId) return;
 
-		if (channelName.length < 3 || channelName > 40) { //magic numbers
+		if (channelName.length < MIN_CHANNEL_LENGTH || channelName > MAX_CHANNEL_LENGTH) {
 			setChannelError('Channel name must be between 3 and 40 characters');
 			throw new Error('Channel name must be between 3 and 40 characters');
 		}
@@ -109,14 +110,14 @@ const MyServers = () => {
 
 	return (
 
-		<div className={`bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
+		<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
 			<div className="flex flex-col h-screen">
 				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
-					<div className="flex justify-between items-center w-full">
+					<div className="flex justify-between items-center max-w-">
 						<h1
 							style={{ fontFamily: 'Rockwell, sans-serif' }}
-							className={`font-semibold text-xl leading-tight mb-1 truncate ${expanded ? '' : 'hidden'}`}>
+							className={`font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
 							{teamId ?
 								`${currentTeam.name}` : 'Direct Messages'}
 						</h1>

@@ -137,53 +137,54 @@ const ChatBox = () => {
 					: null}
 			</div>
 
-			<div className='flex items-center' style={{ width: "100%", outline: 'none' }}>
-				<div className='flex-grow'>
-					{channelId || dmId ? <form
-						style={{
-							backgroundColor: "gray 900",
-							color: "white",
-							border: "none",
-							padding: "10px 20px",
-						}}
-						onSubmit={handleMsg}
-					>
-						<input
-							className="bg-gray-800 border-none rounded"
-							style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
-							type="text"
-							value={msg}
-							onChange={(e) => setMsg(e.target.value)}
-						/>
+			{channelId || dmId ?
+				<div className='flex items-center bg-gray-800 rounded-xl ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
+					<div className='flex-grow'>
+						<form
+							style={{
+								backgroundColor: "gray 900",
+								color: "white",
+								border: "none",
+								padding: "10px 20px",
+							}}
+							onSubmit={handleMsg}
+						>
+							<input
+								className="bg-gray-800 border-none rounded"
+								style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
+								type="text"
+								value={msg}
+								onChange={(e) => setMsg(e.target.value)}
+							/>
 
-						{/* <button type='submit' className='ml-50'>Send</button> */}
-					</form> : null}
-				</div>
-				<div className="relative inline-block pr-5">
-					<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
-						style={{
-							bottom: '30px',
-							left: 'auto',
-							right: '0'
-						}}>
-						<Picker
-							data={data} previewPosition='none' onEmojiSelect={(e) => {
-								setPickerVisible(!isPickerVisible);
-								setMsg(msg + e.native);
-							}} />
+							{/* <button type='submit' className='ml-50'>Send</button> */}
+						</form>
 					</div>
-					<button style={{
-						//transform: 'translateY(-50%)',
-						background: 'transparent',
-						border: 'none',
-						outline: 'none',
-						cursor: 'pointer',
-						color: 'white',
-					}} className='btn btn-xs rounded-full w-8 h-8' onClick={() => setPickerVisible(!isPickerVisible)}>
-						<FaRegSmile className="w-6 h-6" />
-					</button>
-				</div>
-			</div>
+					<div className="relative inline-block pr-5">
+						<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
+							style={{
+								bottom: '30px',
+								left: 'auto',
+								right: '0'
+							}}>
+							<Picker
+								data={data} previewPosition='none' onEmojiSelect={(e) => {
+									setPickerVisible(!isPickerVisible);
+									setMsg(msg + e.native);
+								}} />
+						</div>
+						<button style={{
+							//transform: 'translateY(-50%)',
+							background: 'transparent',
+							border: 'none',
+							outline: 'none',
+							cursor: 'pointer',
+							color: 'white',
+						}} className='btn btn-xs rounded-full w-8 h-8' onClick={() => setPickerVisible(!isPickerVisible)}>
+							<FaRegSmile className="w-6 h-6" />
+						</button>
+					</div>
+				</div> : null}
 		</div>
 	);
 };
