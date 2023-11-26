@@ -69,3 +69,19 @@ export const deleteMember = (dmId, member) => {
 
     return update(ref(db), updateMember);
 }
+
+
+export const getLiveDmMembers = (listenFn, dmId) => {
+    return onValue(
+        ref(db, `dms/${dmId}/members`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
+}
+
+
+

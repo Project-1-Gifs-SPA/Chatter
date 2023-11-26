@@ -70,7 +70,9 @@ const MyServers = () => {
 			throw new Error('Channel name must be between 3 and 40 characters');
 
 		}
+		
 		setChannelError('');
+		if(!teamId) return;
 		getChannelInTeamByName(teamId, channelName)
 			.then(answer => {
 				console.log(answer);

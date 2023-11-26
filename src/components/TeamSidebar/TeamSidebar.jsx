@@ -9,14 +9,16 @@ import SearchBar from '../SearchBar/SearchBar';
 import AppContext from '../../context/AppContext';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { MdPersonAddDisabled } from "react-icons/md";
+import { getLiveDMs } from '../../services/dms.service';
 
 const TeamSidebar = () => {
 	const { userData } = useContext(AppContext)
 	const [expanded, setExpanded] = useState(true)
 	const [currentTeam, setCurrentTeam] = useState({});
 	const [members, setMembers] = useState([]);
-	const { teamId } = useParams();
+	const { teamId, dmId } = useParams();
 	const [currentUser, setCurrentUser] = useState({});
+	const [currentDM, setCurrentDm] = useState({})
 
 	useEffect(
 		() => {
@@ -31,13 +33,34 @@ const TeamSidebar = () => {
 		}, [userData]);
 
 	useEffect(() => {
-		const unsubscribe = getLiveTeamInfo(data => {
-			setCurrentTeam({ ...data })
-		}, teamId)
-		return () => {
-			unsubscribe();
+		console.log('get team or dm')
+
+
+		if(teamId){
+
+			const unsubscribe = getLiveTeamInfo(data => {
+				setCurrentTeam({ ...data })
+			}, teamId)
+			return () => {
+				unsubscribe();
+			}
+
+
 		}
-	}, [teamId])
+
+		if(dmId) {
+
+			const unsubscribe = getLiveDMs(data => {
+				setCurrentDm({ ...data })
+				console.log(data);
+			}, dmId)
+			return () => {
+				unsubscribe();
+			}
+
+		}
+	
+	}, [teamId, dmId])
 
 	useEffect(() => {
 		if (currentTeam.members) {
@@ -56,7 +79,28 @@ const TeamSidebar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentTeam.members])
+
+		if (currentDM.members) {
+			const promises = Object.keys(currentDM.members).map(member => {
+				return getUserByHandle(member)
+					.then((snapshot) => {
+						return snapshot.val();
+					});
+			});
+
+			Promise.all(promises)
+				.then((membersData) => {
+					setMembers(membersData);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, [currentTeam.members,currentDM.members])
+
+	
+
+	
 
 	const handleSendFriendRequest = (user) => {
 		sendFriendRequest(userData.handle, user)
