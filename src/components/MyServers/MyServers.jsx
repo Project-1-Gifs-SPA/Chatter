@@ -67,11 +67,14 @@ const MyServers = () => {
 
 	const createChannel = (e) => {
 		e.preventDefault();
+
+		if (!teamId) return;
+
 		if (channelName.length < 3 || channelName > 40) { //magic numbers
 			setChannelError('Channel name must be between 3 and 40 characters');
 			throw new Error('Channel name must be between 3 and 40 characters');
-
 		}
+
 		setChannelError('');
 		getChannelInTeamByName(teamId, channelName)
 			.then(answer => {
@@ -91,6 +94,7 @@ const MyServers = () => {
 			.catch(e => console.log(e)) //better error handling
 		// document.getElementById(modalRef.current.id).close();
 		// console.log(modalRef.current.id)
+
 	}
 
 	// const handleSearchTerm = async (e) => {
@@ -158,7 +162,8 @@ const MyServers = () => {
 						</div>
 					</div>
 				</dialog>
-				<div className={`${expanded ? '' : 'hidden'}`}>
+
+				<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
 					{currentTeam?.channels
 						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
 						: null}
