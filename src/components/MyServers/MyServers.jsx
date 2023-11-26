@@ -14,6 +14,8 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 
 const MyServers = () => {
 
@@ -29,6 +31,7 @@ const MyServers = () => {
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
+	const [expanded, setExpanded] = useState(false)
 
 	const modalRef = useRef(null);
 
@@ -101,23 +104,29 @@ const MyServers = () => {
 	// }
 
 	return (
-		<div className="bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col w-64 pb-6 md:block">
+
+		<div className={`bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
 			<div className="flex flex-col h-screen">
 				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
-					<div className="flex-auto">
-						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
-					</div>
-					{/* <div>
-						{isOpen ? (
-							<GoChevronUp onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
+					<div className="flex justify-between items-center w-full">
+						<h1
+							style={{ fontFamily: 'Rockwell, sans-serif' }}
+							className={`font-semibold text-xl leading-tight mb-1 truncate ${expanded ? '' : 'hidden'}`}>
+							{teamId ?
+								`${currentTeam.name}` : 'Direct Messages'}
+						</h1>
+						{expanded ? (
+							<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Hide channels"><IoIosArrowBack onClick={() => setExpanded(false)} className="text-purple-500 text-2xl" /></div>
 						) : (
-							<GoChevronDown onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
-						)}
-					</div> */}
+							<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Show channels"><IoIosArrowForward onClick={() => setExpanded(true)} className="text-purple-500 text-2xl" /></div>
+						)
+						}
+					</div>
 				</div>
-				<div className='flex mx-auto content-center items-center'>
-					<div className='text-xl mr-4'>
+				<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
+					<div className='text-xl mr-4 text-white'
+						style={{ fontFamily: 'Rockwell, sans-serif' }}>
 						Channels
 					</div>
 					<div
@@ -125,7 +134,7 @@ const MyServers = () => {
 
 						onClick={() => document.getElementById("create-channel").showModal()}
 					>
-						<div className="bg-white opacity-25 h-8 w-8 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl mb-1 overflow-hidden">
+						<div className="bg-white opacity-25 h-5 w-5 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl overflow-hidden">
 							<GoPlus className="h-10 w-10" />
 						</div>
 					</div>
@@ -149,13 +158,16 @@ const MyServers = () => {
 						</div>
 					</div>
 				</dialog>
-
-				{currentTeam?.channels
-					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
-					: null}
+				<div className={`${expanded ? '' : 'hidden'}`}>
+					{currentTeam?.channels
+						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
+						: null}
+				</div>
 				<div className="flex-grow"></div>
+				<div className={`${expanded ? '' : 'hidden'}`}>
 
-				<ProfileBar />
+					<ProfileBar />
+				</div>
 			</div>
 		</div>
 	)
