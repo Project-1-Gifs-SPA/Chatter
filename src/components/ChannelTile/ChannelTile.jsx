@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getChannelById } from "../../services/channel.service";
 import { useNavigate, useParams } from "react-router";
 
-const ChannelTile = ({channelId}) => {
+const ChannelTile = ({ channelId }) => {
 
     const { teamId } = useParams();
 
@@ -21,10 +21,10 @@ const ChannelTile = ({channelId}) => {
     }, [channelId])
 
     return (
-        <button
-            onClick={() => {navigate(`/teams/${teamId}/channels/${channelId}`)}}
+        <button className="text-white ml-5"
+            onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
         >
-            { channelName }
+            {channelName}
         </button >
     )
 }

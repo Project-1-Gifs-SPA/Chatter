@@ -14,6 +14,11 @@ import {
 } from "../../services/chat.service";
 import { useParams } from "react-router";
 import AppContext from "../../context/AppContext";
+import { FaRegSmile } from "react-icons/fa";
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
+import { IoDocumentAttachOutline } from "react-icons/io5";
+
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
@@ -25,9 +30,10 @@ const ChatBox = () => {
 	// }
 
 	// useEffect(()=> scrollToBottom, [messages]);
-
+	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
+	const [picURL, setPicURL] = useState([]);
 
 	const scrollToBottom = () => {
 		const chat = document.getElementById("chat");
@@ -48,63 +54,61 @@ const ChatBox = () => {
 	}, [messages]);
 
 
-
 	useEffect(() => {
 		console.log("live msg");
-		if(channelId){
-		getChat(channelId)
-			.then((response) => {	
-				setMessages(Object.values(response))
-			})
-			// .then(() => scrollToBottom());
+
+		if (channelId) {
+			getChat(channelId)
+				.then((response) => setMessages(Object.values(response)))
+				.then(() => scrollToBottom());
+
 		}
-		if(dmId){
+		if (dmId) {
 			getDMChat(dmId)
-				.then((response)=> {
-		
-					setMessages(Object.values(response))
-				})
-				// .then(()=>scrollToBottom())
+
+				.then((response) => setMessages(Object.values(response)))
+				.then(() => scrollToBottom())
+
 		}
-	}, [channelId,dmId]);
+	}, [channelId, dmId]);
 
 	useEffect(() => {
 		console.log("live msg");
 
-
-		if(channelId){
+		if (channelId) {
 			const unsubscribe = getLiveMessages((snapshot) => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
 			}, channelId);
-	
+
 			return () => unsubscribe;
 		}
+
 		if(dmId){
 			const unsubscribe = getLiveDirectMessages((snapshot)=>{
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
+
 			}, dmId);
 
 			return () => unsubscribe;
 		}
-
-	
 	}, [channelId, dmId]);
 
 	const handleMsg = (e) => {
 		e.preventDefault();
 
-		if(channelId){
+		if (channelId) {
 			sendMessage(channelId, userData.handle, msg, userData.photoURL)
-			.then(() => setMsg(""));
+				.then(() => setMsg(""));
 		}
 
-		if(dmId){
+		if (dmId) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
-			.then(()=> setMsg(''));
-		}	
+				.then(() => setMsg(''));
+		}
 	};
+
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -124,24 +128,72 @@ const ChatBox = () => {
 					))
 					: null}
 			</div>
-			{channelId || dmId ? <form
-				style={{
-					backgroundColor: "gray 900",
-					color: "white",
-					fontWeight: "bold",
-					border: "none",
-					padding: "10px 20px",
-				}}
-				onSubmit={handleMsg}
-			>
-				<input
-					style={{ padding: "10px 20px", width: "100%" }}
-					type="text"
-					value={msg}
-					onChange={(e) => setMsg(e.target.value)}
-				/>
-				{/* <button type='submit' className='ml-50'>Send</button> */}
-			</form> : null}
+
+			{channelId || dmId ?
+				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
+					<div className='flex-grow'>
+						<form
+							style={{
+								backgroundColor: "gray 900",
+								color: "white",
+								border: "none",
+								padding: "2px 20px",
+							}}
+							onSubmit={handleMsg}
+						>
+							<input
+								className="bg-gray-800 border-none rounded"
+								style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
+								type="text"
+								value={msg}
+								placeholder={`Type something...`}
+								onChange={(e) => setMsg(e.target.value)}
+							/>
+
+							{/* <button type='submit' className='ml-50'>Send</button> */}
+						</form>
+					</div>
+					<div className="relative inline-block pr-5">
+						<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
+							style={{
+								bottom: '42px',
+								left: 'auto',
+								right: '0'
+							}}>
+							<Picker
+								data={data} previewPosition='none' onEmojiSelect={(e) => {
+									setPickerVisible(!isPickerVisible);
+									setMsg(msg + e.native);
+								}} />
+						</div>
+						<div className="flex items-center justify-between">
+							<button style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}} className='btn btn-xs rounded-full' onClick={() => setPickerVisible(!isPickerVisible)}>
+								<FaRegSmile className="w-6 h-6" />
+							</button>
+							<label style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}}
+								htmlFor='pic'>
+								<IoDocumentAttachOutline className='w-6 h-6 text-white cursor-pointer' />
+								{/* <input className='upl hidden' id='pic' type='file' onChange={addImage} /> */}
+							</label>
+						</div>
+					</div>
+				</div> : null}
+
+
 		</div>
 	);
 };

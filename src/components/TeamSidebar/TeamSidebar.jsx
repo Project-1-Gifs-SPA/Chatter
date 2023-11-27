@@ -13,7 +13,7 @@ import { getLiveDMs } from '../../services/dms.service';
 
 const TeamSidebar = () => {
 	const { userData } = useContext(AppContext)
-	const [expanded, setExpanded] = useState(true)
+	const [expanded, setExpanded] = useState(false)
 	const [currentTeam, setCurrentTeam] = useState({});
 	const [members, setMembers] = useState([]);
 	const { teamId, dmId } = useParams();
@@ -105,9 +105,7 @@ const TeamSidebar = () => {
 	return (
 		<div className="h-screen flex flex-col md:flex md:block justify-end bg-gray-800">
 			<div className="h-full flex flex-col border-r shadow-sm bg-gray-800">
-				<div className="border-b border-gray-600 flex px-6 py-2 items-center justify-between shadow-xl">
-					<p className={`text-white overflow-hidden transition-all ${expanded ? "w-54" : "w-0"
-						}`}>Members</p>
+				<div className="border-b border-gray-600 flex px-6 py-2 items-center shadow-xl">
 					<button
 						onClick={() => setExpanded((curr) => !curr)}
 						className="p-0 p-0 rounded-lg focus:outline-none"
@@ -116,6 +114,8 @@ const TeamSidebar = () => {
 							<div className='tooltip tooltip-bottom' data-tip="Show members"><IoPeopleSharp className="text-purple-500 text-2xl" /></div>
 						}
 					</button>
+					<p className={`ml-3 text-white overflow-hidden transition-all ${expanded ? "w-54" : "w-0"
+						}`}>Members</p>
 				</div>
 				<div
 					className={`

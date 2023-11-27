@@ -14,8 +14,14 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
+
 import GroupDmTile from '../GroupDmTile/GroupDmTile';
 import { getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveUserDMs } from '../../services/dms.service';
+
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
+import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
+
 
 const MyServers = () => {
 
@@ -31,6 +37,7 @@ const MyServers = () => {
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
+	const [expanded, setExpanded] = useState(true)
 
 	const modalRef = useRef(null);
 
@@ -96,12 +103,14 @@ const MyServers = () => {
 
 	const createChannel = (e) => {
 		e.preventDefault();
-		if (channelName.length < 3 || channelName > 40) { //magic numbers
+
+		if (!teamId) return;
+
+		if (channelName.length < MIN_CHANNEL_LENGTH || channelName > MAX_CHANNEL_LENGTH) {
 			setChannelError('Channel name must be between 3 and 40 characters');
 			throw new Error('Channel name must be between 3 and 40 characters');
-
 		}
-		
+
 		setChannelError('');
 		if(!teamId) return;
 		getChannelInTeamByName(teamId, channelName)
@@ -122,6 +131,7 @@ const MyServers = () => {
 			.catch(e => console.log(e)) //better error handling
 		// document.getElementById(modalRef.current.id).close();
 		// console.log(modalRef.current.id)
+
 	}
 
 	
@@ -137,24 +147,33 @@ const MyServers = () => {
 	// }
 
 	return (
-		<div className="bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col w-64 pb-6 md:block">
+
+		<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
 			<div className="flex flex-col h-screen">
 				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
-					<div className="flex-auto">
-						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
-					</div>
-					{/* <div>
-						{isOpen ? (
-							<GoChevronUp onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
+					<div className="flex justify-between items-center max-w-">
+						<h1
+							style={{ fontFamily: 'Rockwell, sans-serif' }}
+							className={`font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
+							{teamId ?
+								`${currentTeam.name}` : 'Direct Messages'}
+						</h1>
+						{expanded ? (
+							<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Hide channels"><IoIosArrowBack onClick={() => setExpanded(false)} className="text-purple-500 text-2xl" /></div>
 						) : (
-							<GoChevronDown onClick={toggleAccordion} className="h-6 w-6 cursor-pointer" />
-						)}
-					</div> */}
+							<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Show channels"><IoIosArrowForward onClick={() => setExpanded(true)} className="text-purple-500 text-2xl" /></div>
+						)
+						}
+					</div>
 				</div>
+
 				{teamId? <>
-				<div className='flex mx-auto content-center items-center'>
-					<div className='text-xl mr-4'>
+
+				<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
+					<div className='text-xl mr-4 text-white'
+						style={{ fontFamily: 'Rockwell, sans-serif' }}>
+
 						Channels
 					</div>
 					<div
@@ -162,7 +181,7 @@ const MyServers = () => {
 
 						onClick={() => document.getElementById("create-channel").showModal()}
 					>
-						<div className="bg-white opacity-25 h-8 w-8 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl mb-1 overflow-hidden">
+						<div className="bg-white opacity-25 h-5 w-5 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl overflow-hidden">
 							<GoPlus className="h-10 w-10" />
 						</div>
 					</div>
@@ -188,7 +207,7 @@ const MyServers = () => {
 				</dialog>
 				</>
 				: null}
-
+        <div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
 				{currentTeam.channels
 					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
 					:(
@@ -197,9 +216,13 @@ const MyServers = () => {
 						{groupDMs && groupDMs.map(groupDmId=> <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
 						</>
 					)}
-				<div className="flex-grow"></div>
+          </div>
 
-				<ProfileBar />
+				<div className="flex-grow"></div>
+				<div className={`${expanded ? '' : 'hidden'}`}>
+
+					<ProfileBar />
+				</div>
 			</div>
 		</div>
 	)

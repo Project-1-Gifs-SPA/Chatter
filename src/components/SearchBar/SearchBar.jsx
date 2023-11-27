@@ -57,10 +57,6 @@ const SearchBar = ({ team, dm }) => {
 		
 	}
 
-	const handleAddFriends = (user) => {
-		addFriends(userData.handle, user)
-	}
-
 	const handleSendFriendRequest = (user) => {
 		sendFriendRequest(userData.handle, user)
 	}
