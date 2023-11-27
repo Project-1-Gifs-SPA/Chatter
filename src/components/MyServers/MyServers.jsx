@@ -15,6 +15,7 @@ import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service'
 import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
 import GroupDmTile from '../GroupDmTile/GroupDmTile';
+import { getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveUserDMs } from '../../services/dms.service';
 
 const MyServers = () => {
 
@@ -41,6 +42,7 @@ const MyServers = () => {
 	const [channelError, setChannelError] = useState('');
 
 	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
+	const[groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs): []);
 
 	useEffect(() => {
 		getAllUsers()
@@ -62,6 +64,35 @@ const MyServers = () => {
 		}
 
 	}, [teamId]);
+
+
+	useEffect(()=> {
+		console.log('get dm info')
+
+		const unsubscribe = getLiveGroupDMs(data=>{
+
+			setGroupDms(Object.keys(data));
+		}, userData.handle)
+
+		const unsub = getLiveUserDMs(data=> {
+			setDms(Object.entries(data))
+		}, userData.handle)
+
+		return () => {
+			unsubscribe();
+			unsub();
+		}
+
+
+	},[dmId,userData])
+
+
+
+
+
+
+
+
 
 	const createChannel = (e) => {
 		e.preventDefault();
@@ -93,7 +124,7 @@ const MyServers = () => {
 		// console.log(modalRef.current.id)
 	}
 
-	console.log(Object.entries(userData.DMs))
+	
 
 	// const handleSearchTerm = async (e) => {
 	// 	setSearchTerm(e.target.value.toLowerCase());
@@ -163,7 +194,7 @@ const MyServers = () => {
 					:(
 						<>
 						{dms && dms.map(([partner,dmId]) => <TeamMember key={dmId} dmPartner={partner} dmId={dmId} />)}
-						{userData?.groupDMs && (Object.keys(userData.groupDMs).map(groupDmId=> <GroupDmTile key={groupDmId} groupDmId={groupDmId} />))}
+						{groupDMs && groupDMs.map(groupDmId=> <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
 						</>
 					)}
 				<div className="flex-grow"></div>

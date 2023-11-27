@@ -7,14 +7,19 @@ import { addTeamMember } from '../../services/teams.service';
 import AppContext from '../../context/AppContext';
 import { IoPeopleSharp } from "react-icons/io5";
 import { MdPersonAddDisabled } from "react-icons/md";
+import { addDmMember, createGroupDM } from '../../services/dms.service';
+import { useParams } from 'react-router';
 
-const SearchBar = ({ team }) => {
+const SearchBar = ({ team, dm }) => {
 	const { userData } = useContext(AppContext)
 	const [allUsers, setAllUsers] = useState([]);
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchedUsers, setSearchedUsers] = useState([]);
 	const [currentUser, setCurrentUser] = useState({});
+	const{dmId,teamId} = useParams();
+
+	
 
 	useEffect(
 		() => {
@@ -36,7 +41,20 @@ const SearchBar = ({ team }) => {
 	}, []);
 
 	const handleAddMember = (user) => {
+		if(dmId){
+		const dmMembers = Object.keys(dm.members);
+		if(dmMembers.length===2){
+			const partner = dmMembers.find(member=>member!==userData.handle)
+			createGroupDM(partner,userData.handle, user, dm.id)
+			return;
+		}	
+		addDmMember(user, dm.id)
+		}
+		if(teamId){
 		addTeamMember(user, team.id)
+		}
+		
+		
 	}
 
 	const handleAddFriends = (user) => {
@@ -86,6 +104,9 @@ const SearchBar = ({ team }) => {
 					return (
 						<div key={regUser.uid} className='flex items-center'>
 							<TeamMember member={regUser} />
+							{dmId && <div className='tooltip' data-tip='Add to chat'>
+									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
+								</div>}
 							{currentUser.handle !== regUser.handle && (team.owner === currentUser.handle && (
 								<div className='tooltip' data-tip='Add to team'>
 									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />

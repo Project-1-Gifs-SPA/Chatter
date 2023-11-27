@@ -34,33 +34,25 @@ const TeamSidebar = () => {
 
 	useEffect(() => {
 		console.log('get team or dm')
-
-
-		if(teamId){
-
 			const unsubscribe = getLiveTeamInfo(data => {
 				setCurrentTeam({ ...data })
 			}, teamId)
 			return () => {
 				unsubscribe();
 			}
-
-
-		}
-
-		if(dmId) {
-
-			const unsubscribe = getLiveDMs(data => {
-				setCurrentDm({ ...data })
-				console.log(data);
-			}, dmId)
-			return () => {
-				unsubscribe();
-			}
-
-		}
 	
-	}, [teamId, dmId])
+	}, [teamId])
+
+	useEffect(()=>{
+		const unsubscribe = getLiveDMs(data => {
+			setCurrentDm({ ...data })
+			console.log(data);
+		}, dmId)
+		return () => {
+			unsubscribe();
+		}
+	},[dmId])
+
 
 	useEffect(() => {
 		if (currentTeam.members) {
@@ -132,7 +124,7 @@ const TeamSidebar = () => {
           `}
 				>
 					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-						<SearchBar team={currentTeam} />
+						<SearchBar team={currentTeam} dm={currentDM} />
 						{/* Everything in the sidebar */}
 						{members.length ?
 							(members.map(member => {
