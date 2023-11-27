@@ -13,21 +13,18 @@ import { FaPen } from "react-icons/fa";
 import { BsEmojiSmile } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import { MIN_MESSAGE_LENGTH } from '../../common/constants';
-
-const Message = ({ message, channelId, dmId }) => {
-
-import { getLiveUserInfo, getUserByHandle } from '../../services/users.service';
+import { getUserByHandle } from '../../services/users.service';
 
 const Message = ({ message }) => {
-	const{user} = useContext(AppContext)
+	const { user } = useContext(AppContext)
 
-	const[ownerPic, setOwnerPic] = useState('');
+	const [ownerPic, setOwnerPic] = useState('');
 
-	useEffect(()=>{
+	useEffect(() => {
 		console.log('user msg')
-		getLiveUserInfo(user=> setOwnerPic(user.photoURL), message.owner)
-		
-	},[user])
+		getLiveUserInfo(user => setOwnerPic(user.photoURL), message.owner)
+
+	}, [user])
 
 	const { userData } = useContext(AppContext);
 	const hOptions = {
