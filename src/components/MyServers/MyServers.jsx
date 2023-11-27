@@ -14,9 +14,14 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
+
+import GroupDmTile from '../GroupDmTile/GroupDmTile';
+import { getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveUserDMs } from '../../services/dms.service';
+
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
+
 
 const MyServers = () => {
 
@@ -43,7 +48,8 @@ const MyServers = () => {
 
 	const [channelError, setChannelError] = useState('');
 
-	const [dms, setDms] = useState(userData.DMs ? Object.values(userData.DMs) : [])
+	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
+	const[groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs): []);
 
 	useEffect(() => {
 		getAllUsers()
@@ -66,6 +72,35 @@ const MyServers = () => {
 
 	}, [teamId]);
 
+
+	useEffect(()=> {
+		console.log('get dm info')
+
+		const unsubscribe = getLiveGroupDMs(data=>{
+
+			setGroupDms(Object.keys(data));
+		}, userData.handle)
+
+		const unsub = getLiveUserDMs(data=> {
+			setDms(Object.entries(data))
+		}, userData.handle)
+
+		return () => {
+			unsubscribe();
+			unsub();
+		}
+
+
+	},[dmId,userData])
+
+
+
+
+
+
+
+
+
 	const createChannel = (e) => {
 		e.preventDefault();
 
@@ -77,6 +112,7 @@ const MyServers = () => {
 		}
 
 		setChannelError('');
+		if(!teamId) return;
 		getChannelInTeamByName(teamId, channelName)
 			.then(answer => {
 				console.log(answer);
@@ -97,6 +133,8 @@ const MyServers = () => {
 		// console.log(modalRef.current.id)
 
 	}
+
+	
 
 	// const handleSearchTerm = async (e) => {
 	// 	setSearchTerm(e.target.value.toLowerCase());
@@ -129,9 +167,13 @@ const MyServers = () => {
 						}
 					</div>
 				</div>
+
+				{teamId? <>
+
 				<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
 					<div className='text-xl mr-4 text-white'
 						style={{ fontFamily: 'Rockwell, sans-serif' }}>
+
 						Channels
 					</div>
 					<div
@@ -163,12 +205,19 @@ const MyServers = () => {
 						</div>
 					</div>
 				</dialog>
+				</>
+				: null}
+        <div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
+				{currentTeam.channels
+					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
+					:(
+						<>
+						{dms && dms.map(([partner,dmId]) => <TeamMember key={dmId} dmPartner={partner} dmId={dmId} />)}
+						{groupDMs && groupDMs.map(groupDmId=> <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
+						</>
+					)}
+          </div>
 
-				<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
-					{currentTeam?.channels
-						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
-						: null}
-				</div>
 				<div className="flex-grow"></div>
 				<div className={`${expanded ? '' : 'hidden'}`}>
 

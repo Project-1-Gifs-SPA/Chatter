@@ -33,21 +33,34 @@ export const addDmMember = (newMember, dmId) => {
 export const createGroupDM = (partner, handle, newMember, dmId ) => {
     const updates = {};
 
-    updates[`users/${handle}/DMs/${partner[0]}`] = null;
+    updates[`users/${handle}/DMs/${partner}`] = null;
     updates[`users/${handle}/groupDMs/${dmId}`] = true;
-    updates[`users/${partner[0]}/DMs/${handle}`] = null;
-    updates[`users/${partner[0]}/groupDMs/${dmId}`] = true;
+    updates[`users/${partner}/DMs/${handle}`] = null;
+    updates[`users/${partner}/groupDMs/${dmId}`] = true;
     updates[`users/${newMember}/groupDMs/${dmId}`] = true;
+    updates[`dms/${dmId}/members/${newMember}`] = true;
 
     return update(ref(db), updates);
 };
 
 export const getLiveGroupDMs = (listenFn, handle) => {
-    return onValue(ref(db, `users/${handle}/groupDMs`)).then((snapshot)=>{
+    return onValue(ref(db, `users/${handle}/groupDMs`), (snapshot)=>{
         const data = snapshot.exists() ? snapshot.val() : {};
 
         listenFn(data);
     });
+}
+
+export const getLiveUserDMs = (listenFn, handle) => {
+    return onValue(ref(db, `users/${handle}/DMs`), (snapshot)=>{
+        const data = snapshot.exists() ? snapshot.val() : {};
+
+        listenFn(data);
+    });
+}
+
+export const getDMById =(dmId) => {
+    return get(ref(db, `dms/${dmId}`));
 }
 
 export const getLiveDMs = (listenFn, dmId) => {
@@ -58,6 +71,14 @@ export const getLiveDMs = (listenFn, dmId) => {
     });
 }
 
+export const getLiveGroupDMsMembers = (listenFn, dmId) =>{
+    return onValue(ref(db, `dms/${dmId}/members` ), (snapshot)=>{
+        const data = snapshot.exists() ? snapshot.val() : {};
+
+        listenFn(data);
+    })
+}
+
 export const deleteMember = (dmId, member) => {
     const updateMember = {};
     updateMember[`/users/${member}/groupDMs/${dmId}`] = null;
@@ -65,3 +86,19 @@ export const deleteMember = (dmId, member) => {
 
     return update(ref(db), updateMember);
 }
+
+
+export const getLiveDmMembers = (listenFn, dmId) => {
+    return onValue(
+        ref(db, `dms/${dmId}/members`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
+}
+
+
+
