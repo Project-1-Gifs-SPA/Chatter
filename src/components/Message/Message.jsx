@@ -1,8 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import AppContext from '../../context/AppContext'
-import { getLiveUserInfo } from '../../services/users.service';
+import { getLiveUserInfo, getUserByHandle } from '../../services/users.service';
 
 const Message = ({ message }) => {
+	const{user} = useContext(AppContext)
+
+	const[ownerPic, setOwnerPic] = useState('');
+
+	useEffect(()=>{
+		console.log('user msg')
+		getLiveUserInfo(user=> setOwnerPic(user.photoURL), message.owner)
+		
+	},[user])
+
 
 	const { userData } = useContext(AppContext);
 	const hOptions = {
@@ -24,7 +34,7 @@ const Message = ({ message }) => {
 		<div className={userData.handle == message.owner ? "chat chat-end" : "chat chat-start"}>
 			<div className="chat-image avatar">
 				<div className="w-10 rounded-full">
-					<img alt="Tailwind CSS chat bubble component" src={message.avatar} className="cursor-pointer w-10 h-10 rounded-3xl mr-3" />
+					<img alt="Tailwind CSS chat bubble component" src={ownerPic} className="cursor-pointer w-10 h-10 rounded-3xl mr-3" />
 				</div>
 			</div>
 			<div className="chat-header">

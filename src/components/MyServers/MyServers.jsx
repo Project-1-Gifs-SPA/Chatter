@@ -212,7 +212,7 @@ const MyServers = () => {
 					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
 					:(
 						<>
-						{dms && dms.map(([partner,dmId]) => <TeamMember key={dmId} dmPartner={partner} dmId={dmId} />)}
+						{dms && dms.map(([partner,dmId]) =><div key={dmId} className='hover:bg-gray-300 cursor-pointer'> <TeamMember  dmPartner={partner} dmId={dmId} /></div>)}
 						{groupDMs && groupDMs.map(groupDmId=> <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
 						</>
 					)}

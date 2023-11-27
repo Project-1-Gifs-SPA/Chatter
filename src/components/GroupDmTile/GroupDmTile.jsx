@@ -73,7 +73,7 @@ const GroupDmTile = ({groupDmId}) => {
 		<div className="tooltip tooltip-top" data-tip={partners.map(partner=> partner.firstName)}>
         <div className="flex p-3 mb-0 relative hover:bg-gray-300 cursor-pointer" onClick={()=> navigate(`/dms/${groupDmId}`)}>
 				
-        <div className="w-10 rounded-full bg-gray-200 mr-3">
+        <div className="w-10 rounded-full bg-green-700 mr-3">
         <IoIosPeople className="w-10 h-10"/>			
 		</div>
 		<div className="truncate">
