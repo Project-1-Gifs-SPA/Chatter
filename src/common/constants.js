@@ -39,3 +39,5 @@ export const reactions = {
     sad:'🙁',
     angry: '😠'
 }
+
+//+1 when clicked

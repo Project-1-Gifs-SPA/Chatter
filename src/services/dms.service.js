@@ -73,3 +73,8 @@ export const editDMmessage = (content, dmId, msgId) => {
         }
       )
 }
+
+export const getDMbyId = (dmId) => {
+    return get(ref(db,`dms/${dmId}`))
+    .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+}

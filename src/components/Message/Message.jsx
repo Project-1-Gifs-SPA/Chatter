@@ -138,9 +138,9 @@ const Message = ({ message, channelId, dmId }) => {
 				)}
 			</div >
 
-			<div className="chat-footer text-gray-400 flex items-center">
+			{/* <div className="chat-footer text-gray-400 flex items-center">
 				Delivered
-			</div>
+			</div> */}
 		</div>
 
 	)
