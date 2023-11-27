@@ -117,7 +117,7 @@ const ChatBox = () => {
 				<Message /> */}
 				{messages.length
 					? messages.map((message) => (
-						<Message key={message.id} message={message} />
+						<Message key={message.id} message={message} channelId={channelId} dmId={dmId} />
 					))
 					: null}
 			</div>

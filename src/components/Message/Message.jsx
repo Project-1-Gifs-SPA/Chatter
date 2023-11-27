@@ -3,8 +3,11 @@ import AppContext from '../../context/AppContext'
 import { getLiveUserInfo } from '../../services/users.service';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { FaRegEdit } from "react-icons/fa";
+import { Textarea } from 'daisyui';
+import { editChannelMessage } from '../../services/channel.service';
+import { editDMmessage } from '../../services/dms.service';
 
-const Message = ({ message }) => {
+const Message = ({ message, channelId, dmId }) => {
 
 	const { userData } = useContext(AppContext);
 	const hOptions = {
@@ -23,7 +26,28 @@ const Message = ({ message }) => {
 	};
 
 	const [isOpen, setIsOpen] = useState(false);
+
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedMessage, setEditedMessage] = useState(message.body);
+
 	const dropdownRef = useRef(null);
+
+	const handleSaveChanges = () => {
+		if (channelId) {
+			editChannelMessage(editedMessage, channelId, message.id);
+		}
+
+		if (dmId) {
+			editDMmessage(editedMessage, dmId, message.id);
+		}
+
+		setIsEditing(false);
+	}
+
+	const handleDiscardChanges = () => {
+		setEditedMessage(message.body);
+		setIsEditing(false);
+	}
 
 	const toggleDropdown = () => {
 		setIsOpen(!isOpen);
@@ -46,6 +70,15 @@ const Message = ({ message }) => {
 			document.removeEventListener('mousedown', closeDropdown);
 		};
 	}, [isOpen]);
+
+	const handleEditClick = () => {
+		setIsEditing(true);
+		setIsOpen(false)
+	};
+
+	const handleInputChange = (e) => {
+		setEditedMessage(e.target.value);
+	};
 
 	return (
 		<div className={userData.handle == message.owner ? "chat chat-end" : "chat chat-start"}>
@@ -84,6 +117,7 @@ const Message = ({ message }) => {
 										className="block flex items-center w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
 										href="#"
 										data-te-dropdown-item-ref
+										onClick={handleEditClick}
 									>
 										<FaRegEdit className='mr-2 text-[18px]' /> Edit Message
 									</a>
@@ -112,18 +146,31 @@ const Message = ({ message }) => {
 				}
 			</div>
 			<div className="chat-bubble">
-				<div className='tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
-					{message.body}
-				</div>
-			</div>
+				{isEditing ? (
+					<div>
+						<textarea
+							type="text"
+							className='textarea textarea-accent textarea-md bg-gray-700 border-none-active px-4 py-2 text-white rounded-md w-[800px]'
+							value={editedMessage}
+							onChange={handleInputChange}
+							autoFocus // Autofocus on the input field when editing starts
+						/>
+						<br />
+						<div className='flex'>
+							<p className='text-sm text-green-500 mr-5 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={handleSaveChanges}>Save</p>
+							<p className='text-sm text-red-500 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={handleDiscardChanges}>Discard</p>
+						</div>
+					</div>
+				) : (
+					<div className='tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
+						{message.body}
+					</div>
+				)}
+			</div >
 			<div className="chat-footer text-gray-400">
 				Delivered
 			</div>
-
-
-
-
-		</div >
+		</div>
 
 	)
 }

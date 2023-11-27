@@ -29,7 +29,6 @@ export const addDmMember = (newMember, dmId) => {
     return update(ref(db), addDmMember);
 }
 
-
 export const createGroupDM = (partner, handle, newMember, dmId ) => {
     const updates = {};
 
@@ -64,4 +63,13 @@ export const deleteMember = (dmId, member) => {
     updateMember[`dms/${dmId}/members/${member}`] = null;
 
     return update(ref(db), updateMember);
+}
+
+export const editDMmessage = (content, dmId, msgId) => {
+    return update(
+        ref(db,`dms/${dmId}/msgs/${msgId}`),
+        {
+          body:content
+        }
+      )
 }
