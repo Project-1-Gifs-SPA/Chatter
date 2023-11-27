@@ -17,6 +17,7 @@ import AppContext from "../../context/AppContext";
 import { FaRegSmile } from "react-icons/fa";
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
+import { IoDocumentAttachOutline } from "react-icons/io5";
 
 
 const ChatBox = () => {
@@ -32,6 +33,7 @@ const ChatBox = () => {
 	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
+	const [picURL, setPicURL] = useState([]);
 
 	const scrollToBottom = () => {
 		const chat = document.getElementById("chat");
@@ -47,24 +49,9 @@ const ChatBox = () => {
 		}
 	};
 
-
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-	const handleWindowSizeChange = () => {
-		setWindowWidth(window.innerWidth);
-	};
-
-	useEffect(() => {
-		window.addEventListener('resize', handleWindowSizeChange);
-		return () => {
-			window.removeEventListener('resize', handleWindowSizeChange);
-		};
-	}, []);
-
 	useEffect(() => {
 		scroll();
 	}, [messages]);
-
 
 
 	useEffect(() => {
@@ -84,7 +71,6 @@ const ChatBox = () => {
 	useEffect(() => {
 		console.log("live msg");
 
-
 		if (channelId) {
 			const unsubscribe = getLiveMessages((snapshot) => {
 				setMessages(Object.values(snapshot.val()));
@@ -99,8 +85,6 @@ const ChatBox = () => {
 
 			return () => unsubscribe;
 		}
-
-
 	}, [channelId, dmId]);
 
 	const handleMsg = (e) => {
@@ -116,7 +100,7 @@ const ChatBox = () => {
 				.then(() => setMsg(''));
 		}
 	};
-	console.log(isPickerVisible)
+
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -138,14 +122,14 @@ const ChatBox = () => {
 			</div>
 
 			{channelId || dmId ?
-				<div className='flex items-center bg-gray-800 rounded-xl ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
+				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
 						<form
 							style={{
 								backgroundColor: "gray 900",
 								color: "white",
 								border: "none",
-								padding: "10px 20px",
+								padding: "2px 20px",
 							}}
 							onSubmit={handleMsg}
 						>
@@ -154,6 +138,7 @@ const ChatBox = () => {
 								style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
 								type="text"
 								value={msg}
+								placeholder={`Type something...`}
 								onChange={(e) => setMsg(e.target.value)}
 							/>
 
@@ -163,7 +148,7 @@ const ChatBox = () => {
 					<div className="relative inline-block pr-5">
 						<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
 							style={{
-								bottom: '30px',
+								bottom: '42px',
 								left: 'auto',
 								right: '0'
 							}}>
@@ -173,18 +158,34 @@ const ChatBox = () => {
 									setMsg(msg + e.native);
 								}} />
 						</div>
-						<button style={{
-							//transform: 'translateY(-50%)',
-							background: 'transparent',
-							border: 'none',
-							outline: 'none',
-							cursor: 'pointer',
-							color: 'white',
-						}} className='btn btn-xs rounded-full w-8 h-8' onClick={() => setPickerVisible(!isPickerVisible)}>
-							<FaRegSmile className="w-6 h-6" />
-						</button>
+						<div className="flex items-center justify-between">
+							<button style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}} className='btn btn-xs rounded-full' onClick={() => setPickerVisible(!isPickerVisible)}>
+								<FaRegSmile className="w-6 h-6" />
+							</button>
+							<label style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}}
+								htmlFor='pic'>
+								<IoDocumentAttachOutline className='w-6 h-6 text-white cursor-pointer' />
+								{/* <input className='upl hidden' id='pic' type='file' onChange={addImage} /> */}
+							</label>
+						</div>
 					</div>
 				</div> : null}
+
+
 		</div>
 	);
 };
