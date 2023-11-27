@@ -41,6 +41,7 @@ export const removeChannel = (teamId, channelName) => {
 }
 
 export const createDefaultChannel = (teamId, members) => {
+    if(!teamId) return;
     return addChannel(teamId, members, 'General');
 }
 
