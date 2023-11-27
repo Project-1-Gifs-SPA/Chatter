@@ -41,7 +41,7 @@ const Message = ({ message, channelId, dmId }) => {
 			toast.error('Cannot send empty message!', {
 				position: "top-center",
 				autoClose: 2000,
-				hideProgressBar: false,
+				hideProgressBar: true,
 				closeOnClick: true,
 				pauseOnHover: true,
 				draggable: true,
