@@ -142,3 +142,12 @@ export const getChannelInTeamByName = (teamId, channelName) => {
 //             return filtered.length ? filtered[0] : 'No such channel';
 //         });
 // }
+
+export const editChannelMessage = (content, channelId, msgId) => {
+    return update(
+        ref(db,`channels/${channelId}/msgs/${msgId}`),
+        {
+          body:content
+        }
+      )
+}

@@ -29,7 +29,6 @@ export const addDmMember = (newMember, dmId) => {
     return update(ref(db), addDmMember);
 }
 
-
 export const createGroupDM = (partner, handle, newMember, dmId ) => {
     const updates = {};
 
@@ -87,6 +86,19 @@ export const deleteMember = (dmId, member) => {
     return update(ref(db), updateMember);
 }
 
+export const editDMmessage = (content, dmId, msgId) => {
+    return update(
+        ref(db,`dms/${dmId}/msgs/${msgId}`),
+        {
+          body:content
+        }
+      )
+}
+
+export const getDMbyId = (dmId) => {
+    return get(ref(db,`dms/${dmId}`))
+    .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+}
 
 export const getLiveDmMembers = (listenFn, dmId) => {
     return onValue(
@@ -99,6 +111,3 @@ export const getLiveDmMembers = (listenFn, dmId) => {
         }
     )
 }
-
-
-
