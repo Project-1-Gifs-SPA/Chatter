@@ -9,6 +9,8 @@ import { editDMmessage } from '../../services/dms.service';
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { FaRegSmile } from "react-icons/fa";
+import { FaPen } from "react-icons/fa";
+import { BsEmojiSmile } from "react-icons/bs";
 
 const Message = ({ message, channelId, dmId }) => {
 
@@ -28,22 +30,17 @@ const Message = ({ message, channelId, dmId }) => {
 		hour12: true
 	};
 
-	const [isOpen, setIsOpen] = useState(false);
 	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedMessage, setEditedMessage] = useState(message.body);
-
-	const dropdownRef = useRef(null);
 
 	const handleSaveChanges = () => {
 		if (channelId) {
 			editChannelMessage(editedMessage, channelId, message.id);
 		}
-
 		if (dmId) {
 			editDMmessage(editedMessage, dmId, message.id);
 		}
-
 		setIsEditing(false);
 	}
 
@@ -52,31 +49,8 @@ const Message = ({ message, channelId, dmId }) => {
 		setIsEditing(false);
 	}
 
-	const toggleDropdown = () => {
-		setIsOpen(!isOpen);
-	};
-
-	const closeDropdown = (event) => {
-		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-			setIsOpen(false);
-		}
-	};
-
-	useEffect(() => {
-		if (isOpen) {
-			document.addEventListener('mousedown', closeDropdown);
-		} else {
-			document.removeEventListener('mousedown', closeDropdown);
-		}
-
-		return () => {
-			document.removeEventListener('mousedown', closeDropdown);
-		};
-	}, [isOpen]);
-
 	const handleEditClick = () => {
 		setIsEditing(true);
-		setIsOpen(false)
 	};
 
 	const handleInputChange = (e) => {
@@ -90,62 +64,13 @@ const Message = ({ message, channelId, dmId }) => {
 					<img alt="Tailwind CSS chat bubble component" src={message.avatar} className="cursor-pointer w-10 h-10 rounded-3xl mr-3" />
 				</div>
 			</div>
-			<div className="chat-header flex items-center">
-
+			<div className="chat-header flex items-center mb-1">
 				<span className='font-bold text-[13pt] text-red-300 cursor-pointer hover:underline'>{message.owner}</span>
 				<time className="text-[8pt] font-bold text-gray-400 pl-2">{(new Date(message.createdOn)).toLocaleTimeString('en-US', hOptions)}</time>
 				{userData.handle === message.owner &&
-					<>
-						<button
-							className="bg-none text-gray-400 pl-2 text-[20pt]"
-							type="button"
-							id="dropdownMenuButton1"
-							data-te-dropdown-toggle-ref
-							aria-expanded={isOpen}
-							onClick={toggleDropdown}
-							data-te-ripple-init
-							data-te-ripple-color="light"
-						>
-							<BiDotsHorizontalRounded />
-						</button>
-						<div className="relative" data-te-dropdown-ref ref={dropdownRef}>
-							<ul
-								className={`absolute z-50 float-left m-0 ${isOpen ? 'block' : 'hidden'}  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700`}
-								style={{ right: '0', top: 'calc(100% + 10px)' }}
-								aria-labelledby="dropdownMenuButton1"
-								data-te-dropdown-menu-ref
-							>
-								<li>
-									<a
-										className="block flex items-center w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-										href="#"
-										data-te-dropdown-item-ref
-										onClick={handleEditClick}
-									>
-										<FaRegEdit className='mr-2 text-[18px]' /> Edit Message
-									</a>
-								</li>
-								{/* <li>
-									<a
-										className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-										href="#"
-										data-te-dropdown-item-ref
-									>
-										Another action
-									</a>
-								</li>
-								<li>
-									<a
-										className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-										href="#"
-										data-te-dropdown-item-ref
-									>
-										Something else here
-									</a>
-								</li> */}
-							</ul>
-						</div>
-					</>
+					<div className="tooltip tooltip-top" data-tip='Edit message'>
+						<FaRegEdit className='ml-2 text-[17px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
+					</div>
 				}
 			</div>
 			<div className="chat-bubble">
@@ -154,25 +79,26 @@ const Message = ({ message, channelId, dmId }) => {
 						<div>
 							<textarea
 								type="text"
-								className='textarea textarea-info textarea-md bg-gray-700 border-none-active px-4 py-2 text-white rounded-md w-[800px]'
+								className='textarea textarea-info textarea-md max-w-[800px] bg-gray-700 border-none-active px-4 py-2 text-white rounded-md xs:w-[30%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[800px]'
 								value={editedMessage}
 								onChange={handleInputChange}
 								autoFocus // Autofocus on the input field when editing starts
 							/>
-							<button style={{
-								//transform: 'translateY(-50%)',
-								background: 'transparent',
-								border: 'none',
-								outline: 'none',
-								cursor: 'pointer',
-								color: 'white',
-							}} className='btn btn-xs rounded-full pl-3' onClick={() => setPickerVisible(!isPickerVisible)}>
+							<button
+								style={{
+									//transform: 'translateY(-50%)',
+									background: 'transparent',
+									border: 'none',
+									outline: 'none',
+									cursor: 'pointer',
+									color: 'white',
+								}} className='btn btn-xs rounded-full pl-3' onClick={() => setPickerVisible(!isPickerVisible)}>
 								<FaRegSmile className="w-6 h-6" />
 							</button>
-							<div className="relative inline-block pr-5">
+							<div className="inline-block pr-5">
 								<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
 									style={{
-										bottom: '42px',
+										bottom: '60px',
 										left: 'auto',
 										right: '0'
 									}}>
@@ -195,7 +121,8 @@ const Message = ({ message, channelId, dmId }) => {
 					</div>
 				)}
 			</div >
-			<div className="chat-footer text-gray-400">
+
+			<div className="chat-footer text-gray-400 flex items-center">
 				Delivered
 			</div>
 		</div>
@@ -204,3 +131,8 @@ const Message = ({ message, channelId, dmId }) => {
 }
 
 export default Message
+
+
+{/* <div className="tooltip tooltip-top" data-tip='Add reaction'>
+						<BsEmojiSmile className='ml-2 text-[17px] text-gray-400 cursor-pointer' />
+					</div> */}
