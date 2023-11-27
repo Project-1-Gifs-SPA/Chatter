@@ -46,4 +46,4 @@ const ProfileBar = () => {
 		</>
 	)
 }
-export default ProfileBar
+export default ProfileBar;

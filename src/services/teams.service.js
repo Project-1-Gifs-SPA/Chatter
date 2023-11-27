@@ -131,3 +131,12 @@ export const addTeamMember = (handle, teamId) => {
             return Promise.reject("Error adding team member");
         });
 }
+
+
+
+export const updateTeamPhoto = (teamId, photoURL) => {
+    const changePicture = {};
+    changePicture[`/teams/${teamId}/photoURL`] = photoURL;
+  
+    return update(ref(db), changePicture);
+  }
