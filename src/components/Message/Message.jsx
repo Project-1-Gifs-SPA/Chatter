@@ -11,6 +11,8 @@ import data from '@emoji-mart/data'
 import { FaRegSmile } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
 import { BsEmojiSmile } from "react-icons/bs";
+import { toast } from 'react-toastify';
+import { MIN_MESSAGE_LENGTH } from '../../common/constants';
 
 const Message = ({ message, channelId, dmId }) => {
 
@@ -35,12 +37,26 @@ const Message = ({ message, channelId, dmId }) => {
 	const [editedMessage, setEditedMessage] = useState(message.body);
 
 	const handleSaveChanges = () => {
+		if (editedMessage.length < MIN_MESSAGE_LENGTH) {
+			toast.error('Cannot send empty message!', {
+				position: "top-center",
+				autoClose: 2000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			})
+			throw new Error('Cannot send empty message!')
+		}
 		if (channelId) {
 			editChannelMessage(editedMessage, channelId, message.id);
 		}
 		if (dmId) {
 			editDMmessage(editedMessage, dmId, message.id);
 		}
+
 		setIsEditing(false);
 	}
 

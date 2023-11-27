@@ -11,6 +11,11 @@ export const MIN_CHANNEL_LENGTH = 3;
 
 export const MAX_CHANNEL_LENGTH = 40;
 
+export const MIN_TEAMNAME_LENGTH = 3;
+
+export const MAX_TEAMNAME_LENGTH = 40;
+
+export const MIN_MESSAGE_LENGTH = 1;
 export const defaultPicURL = 'gs://chatter-app-52b85.appspot.com/Png.png'
 export const groupDefaultPicURL = 'gs://chatter-app-52b85.appspot.com/groupDefault.png'
 
@@ -25,9 +30,6 @@ export const isValidPhoneNumber = (phoneNumber) =>{
 	return regex.test(phoneNumber);
 }
 
-export const MIN_TEAMNAME_LENGTH = 3;
-
-export const MAX_TEAMNAME_LENGTH = 40;
 
 export const reactions = {
 	like: '👍',
