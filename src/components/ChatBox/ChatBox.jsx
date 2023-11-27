@@ -34,6 +34,7 @@ const ChatBox = () => {
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
 	const [picURL, setPicURL] = useState([]);
+	const [showMenu, setShowMenu] = useState(false)
 
 	const scrollToBottom = () => {
 		const chat = document.getElementById("chat");
