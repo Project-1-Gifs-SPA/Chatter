@@ -56,7 +56,7 @@ export const sendDirectMessage = (dmId, handle, msg, picURL) => {
 export const getDMChat = (dmId) => {
     return get(ref(db, `dms/${dmId}/msgs`))
     .then(snapshot =>{
-        const data = snapshot.exists() ? snapshot.val() : [];
+        const data = snapshot.exists() ? snapshot.val() : {};
         return data;
     })
 };

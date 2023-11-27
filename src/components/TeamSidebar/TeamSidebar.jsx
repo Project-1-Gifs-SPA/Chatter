@@ -9,14 +9,16 @@ import SearchBar from '../SearchBar/SearchBar';
 import AppContext from '../../context/AppContext';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { MdPersonAddDisabled } from "react-icons/md";
+import { getLiveDMs } from '../../services/dms.service';
 
 const TeamSidebar = () => {
 	const { userData } = useContext(AppContext)
 	const [expanded, setExpanded] = useState(false)
 	const [currentTeam, setCurrentTeam] = useState({});
 	const [members, setMembers] = useState([]);
-	const { teamId } = useParams();
+	const { teamId, dmId } = useParams();
 	const [currentUser, setCurrentUser] = useState({});
+	const [currentDM, setCurrentDm] = useState({})
 
 	useEffect(
 		() => {
@@ -31,13 +33,26 @@ const TeamSidebar = () => {
 		}, [userData]);
 
 	useEffect(() => {
-		const unsubscribe = getLiveTeamInfo(data => {
-			setCurrentTeam({ ...data })
-		}, teamId)
+		console.log('get team or dm')
+			const unsubscribe = getLiveTeamInfo(data => {
+				setCurrentTeam({ ...data })
+			}, teamId)
+			return () => {
+				unsubscribe();
+			}
+	
+	}, [teamId])
+
+	useEffect(()=>{
+		const unsubscribe = getLiveDMs(data => {
+			setCurrentDm({ ...data })
+			console.log(data);
+		}, dmId)
 		return () => {
 			unsubscribe();
 		}
-	}, [teamId])
+	},[dmId])
+
 
 	useEffect(() => {
 		if (currentTeam.members) {
@@ -56,7 +71,28 @@ const TeamSidebar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentTeam.members])
+
+		if (currentDM.members) {
+			const promises = Object.keys(currentDM.members).map(member => {
+				return getUserByHandle(member)
+					.then((snapshot) => {
+						return snapshot.val();
+					});
+			});
+
+			Promise.all(promises)
+				.then((membersData) => {
+					setMembers(membersData);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, [currentTeam.members,currentDM.members])
+
+	
+
+	
 
 	const handleSendFriendRequest = (user) => {
 		sendFriendRequest(userData.handle, user)
@@ -88,7 +124,7 @@ const TeamSidebar = () => {
           `}
 				>
 					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-						<SearchBar team={currentTeam} />
+						<SearchBar team={currentTeam} dm={currentDM} />
 						{/* Everything in the sidebar */}
 						{members.length ?
 							(members.map(member => {
