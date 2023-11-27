@@ -23,3 +23,7 @@ export const isValidPhoneNumber = (phoneNumber) =>{
 export const MIN_TEAMNAME_LENGTH = 3;
 
 export const MAX_TEAMNAME_LENGTH = 40;
+
+export const MIN_CHANNELNAME_LENGTH = 3;
+
+export const MAX_CHANNELNAMELENGTH = 40;

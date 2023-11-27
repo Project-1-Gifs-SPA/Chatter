@@ -14,6 +14,7 @@ import { BsPersonFillAdd } from 'react-icons/bs';
 import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
+import { MAX_CHANNELNAMELENGTH, MIN_CHANNELNAME_LENGTH } from '../../common/constants';
 
 const MyServers = () => {
 
@@ -51,6 +52,8 @@ const MyServers = () => {
 	}, []);
 
 	useEffect(() => {
+		if (!teamId) { return; }
+
 		const unsubscribe = getLiveTeamInfo(data => {
 
 			setCurrentTeam({ ...data })
@@ -70,7 +73,7 @@ const MyServers = () => {
 
 	const createChannel = (e) => {
 		e.preventDefault();
-		if (channelName.length < 3 || channelName > 40) { //magic numbers
+		if (channelName.length < MIN_CHANNELNAME_LENGTH || channelName > MAX_CHANNELNAMELENGTH) {
 			setChannelError('Channel name must be between 3 and 40 characters');
 			throw new Error('Channel name must be between 3 and 40 characters');
 
@@ -124,7 +127,7 @@ const MyServers = () => {
 					<div className='text-xl mr-4'>
 						Channels
 					</div>
-					<div
+					{teamId && <div
 						className="cursor-pointer"
 
 						onClick={() => document.getElementById("create-channel").showModal()}
@@ -132,7 +135,7 @@ const MyServers = () => {
 						<div className="bg-white opacity-25 h-8 w-8 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl mb-1 overflow-hidden">
 							<GoPlus className="h-10 w-10" />
 						</div>
-					</div>
+					</div>}
 				</div>
 
 				<dialog ref={modalRef} id="create-channel" className="modal">
@@ -155,7 +158,7 @@ const MyServers = () => {
 				</dialog>
 
 				{currentTeam?.channels
-					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} generalId={generalId} />)
+					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelTileId={channelId} generalId={generalId} />)
 					: null}
 				<div className="flex-grow"></div>
 
