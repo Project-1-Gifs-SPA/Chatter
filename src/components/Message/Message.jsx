@@ -6,6 +6,9 @@ import { FaRegEdit } from "react-icons/fa";
 import { Textarea } from 'daisyui';
 import { editChannelMessage } from '../../services/channel.service';
 import { editDMmessage } from '../../services/dms.service';
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
+import { FaRegSmile } from "react-icons/fa";
 
 const Message = ({ message, channelId, dmId }) => {
 
@@ -26,7 +29,7 @@ const Message = ({ message, channelId, dmId }) => {
 	};
 
 	const [isOpen, setIsOpen] = useState(false);
-
+	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedMessage, setEditedMessage] = useState(message.body);
 
@@ -148,17 +151,42 @@ const Message = ({ message, channelId, dmId }) => {
 			<div className="chat-bubble">
 				{isEditing ? (
 					<div>
-						<textarea
-							type="text"
-							className='textarea textarea-accent textarea-md bg-gray-700 border-none-active px-4 py-2 text-white rounded-md w-[800px]'
-							value={editedMessage}
-							onChange={handleInputChange}
-							autoFocus // Autofocus on the input field when editing starts
-						/>
-						<br />
-						<div className='flex'>
-							<p className='text-sm text-green-500 mr-5 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={handleSaveChanges}>Save</p>
-							<p className='text-sm text-red-500 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={handleDiscardChanges}>Discard</p>
+						<div>
+							<textarea
+								type="text"
+								className='textarea textarea-info textarea-md bg-gray-700 border-none-active px-4 py-2 text-white rounded-md w-[800px]'
+								value={editedMessage}
+								onChange={handleInputChange}
+								autoFocus // Autofocus on the input field when editing starts
+							/>
+							<button style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}} className='btn btn-xs rounded-full pl-3' onClick={() => setPickerVisible(!isPickerVisible)}>
+								<FaRegSmile className="w-6 h-6" />
+							</button>
+							<div className="relative inline-block pr-5">
+								<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
+									style={{
+										bottom: '42px',
+										left: 'auto',
+										right: '0'
+									}}>
+									<Picker
+										data={data} previewPosition='none' onEmojiSelect={(e) => {
+											setPickerVisible(!isPickerVisible);
+											setEditedMessage(editedMessage + e.native);
+										}} />
+								</div>
+							</div>
+							<div className='flex'>
+								<p className='text-sm text-green-500 mr-5 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={handleSaveChanges}>Save</p>
+								<p className='text-sm text-red-500 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={handleDiscardChanges}>Discard</p>
+							</div>
 						</div>
 					</div>
 				) : (
