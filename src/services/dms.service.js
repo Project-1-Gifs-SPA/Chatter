@@ -79,7 +79,7 @@ export const getLiveGroupDMsMembers = (listenFn, dmId) =>{
     })
 }
 
-export const deleteMember = (dmId, member) => {
+export const deleteGroupMember = (dmId, member) => {
     const updateMember = {};
     updateMember[`/users/${member}/groupDMs/${dmId}`] = null;
     updateMember[`dms/${dmId}/members/${member}`] = null;
@@ -99,6 +99,4 @@ export const getLiveDmMembers = (listenFn, dmId) => {
         }
     )
 }
-
-
 
