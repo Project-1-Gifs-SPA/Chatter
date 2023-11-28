@@ -162,3 +162,10 @@ export const removeTeamMember = (teamId, handle) => {
                 }))
 
 };
+
+export const updateTeamName = (teamId, newName) =>{
+    const nameUpdate = {};
+    nameUpdate[`/teams/${teamId}/name`] = newName;
+   
+    return update(ref(db), nameUpdate);
+}
