@@ -142,3 +142,31 @@ export const getChannelInTeamByName = (teamId, channelName) => {
 //             return filtered.length ? filtered[0] : 'No such channel';
 //         });
 // }
+
+export const editChannelMessage = (content, channelId, msgId) => {
+    return update(
+        ref(db,`channels/${channelId}/msgs/${msgId}`),
+        {
+          body:content
+        }
+      )
+}
+
+export const addChannelMsgStatusEdited = (channelId, msgId) => {
+    const ChannelMsgStatus = {};
+    ChannelMsgStatus[`channels/${channelId}/msgs/${msgId}/edited`] = true;
+
+    return update(ref(db), ChannelMsgStatus);
+}
+
+export const addChannelReaction = (reaction,userHandle, channelId, msgId) => {
+    const channelReaction = {};
+    channelReaction[`channels/${channelId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = true;
+    return update(ref(db), channelReaction);
+}
+
+export const removeChannelReaction = (reaction,userHandle, channelId, msgId) => {
+    const channelReaction = {};
+    channelReaction[`channels/${channelId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
+    return update(ref(db), channelReaction);
+}

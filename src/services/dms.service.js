@@ -29,7 +29,6 @@ export const addDmMember = (newMember, dmId) => {
     return update(ref(db), addDmMember);
 }
 
-
 export const createGroupDM = (partner, handle, newMember, dmId ) => {
     const updates = {};
 
@@ -87,6 +86,19 @@ export const deleteGroupMember = (dmId, member) => {
     return update(ref(db), updateMember);
 }
 
+export const editDMmessage = (content, dmId, msgId) => {
+    return update(
+        ref(db,`dms/${dmId}/msgs/${msgId}`),
+        {
+          body:content
+        }
+      )
+}
+
+export const getDMbyId = (dmId) => {
+    return get(ref(db,`dms/${dmId}`))
+    .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+}
 
 export const getLiveDmMembers = (listenFn, dmId) => {
     return onValue(
@@ -98,5 +110,25 @@ export const getLiveDmMembers = (listenFn, dmId) => {
             listenFn(result);
         }
     )
+}
+
+
+export const addDMstatusEdited = (dmId, msgId) => {
+    const DmStatus = {};
+    DmStatus[`dms/${dmId}/msgs/${msgId}/edited`] = true;
+
+    return update(ref(db), DmStatus);
+}
+
+export const addDmReaction = (reaction,userHandle, dmId, msgId) => {
+    const dmReaction = {};
+    dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = true;
+    return update(ref(db), dmReaction);
+}
+
+export const removeDMReaction = (reaction,userHandle, dmId, msgId) => {
+    const dmReaction = {};
+    dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
+    return update(ref(db), dmReaction);
 }
 
