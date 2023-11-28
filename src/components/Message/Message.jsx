@@ -10,11 +10,12 @@ import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { FaRegSmile } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
-import { BsEmojiSmile } from "react-icons/bs";
+
 import { toast } from 'react-toastify';
 import { MIN_MESSAGE_LENGTH } from '../../common/constants';
 import { getUserByHandle } from '../../services/users.service';
 import { useParams } from 'react-router';
+import MessageReactions from '../MessageReactions/MessageReactions';
 
 const Message = ({ message }) => {
 	const { user } = useContext(AppContext)
@@ -85,7 +86,7 @@ const Message = ({ message }) => {
 		setEditedMessage(e.target.value);
 	};
 
-	return (
+	return (<>
 		<div className={userData.handle == message.owner ? "chat chat-end" : "chat chat-start"}>
 			<div className="chat-image avatar">
 				<div className="w-10 rounded-full">
@@ -100,6 +101,9 @@ const Message = ({ message }) => {
 						<FaRegEdit className='ml-2 text-[15px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
 					</div>
 				}
+				<div>
+					<MessageReactions msg={message} />
+				</div>
 			</div>
 			<div className="chat-bubble">
 				{isEditing ? (
@@ -150,10 +154,10 @@ const Message = ({ message }) => {
 				)}
 			</div >
 			{message.edited && <div className="chat-footer text-[9pt] text-gray-400 flex items-center">
-				Еdited
+				edited
 			</div>}
 		</div>
-
+	</>
 	)
 }
 
