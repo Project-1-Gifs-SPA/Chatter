@@ -9,6 +9,7 @@ import { addDmReaction } from '../../services/dms.service';
 const MessageReactions = ({ msg }) => {
 	const { channelId, dmId } = useParams();
 	const { userData } = useContext(AppContext);
+	const reactionWords = Object.keys(reactions)
 
 	return (<>
 		<div className='dropdown dropdown-hover dropdown-top'>
@@ -22,10 +23,10 @@ const MessageReactions = ({ msg }) => {
 				<li>
 					<a className="tooltip text-[22px] cursor-pointer" data-tip="Like" onClick={() => {
 						if (channelId) {
-							addChannelReaction('like', userData.handle, channelId, msg.id)
+							addChannelReaction(reactionWords[0], userData.handle, channelId, msg.id)
 						}
 						if (dmId) {
-							addDmReaction('like', userData.handle, dmId, msg.id)
+							addDmReaction(reactionWords[0], userData.handle, dmId, msg.id)
 						}
 					}}>
 						{reactions.like}
@@ -34,10 +35,10 @@ const MessageReactions = ({ msg }) => {
 				<li>
 					<a className="tooltip text-[22px] cursor-pointer" data-tip="Love" onClick={() => {
 						if (channelId) {
-							addChannelReaction('love', userData.handle, channelId, msg.id)
+							addChannelReaction(reactionWords[1], userData.handle, channelId, msg.id)
 						}
 						if (dmId) {
-							addDmReaction('love', userData.handle, dmId, msg.id)
+							addDmReaction(reactionWords[1], userData.handle, dmId, msg.id)
 						}
 					}}>
 						{reactions.love}
@@ -46,10 +47,10 @@ const MessageReactions = ({ msg }) => {
 				<li>
 					<a className="tooltip text-[22px] cursor-pointer" data-tip="Haha" onClick={() => {
 						if (channelId) {
-							addChannelReaction('haha', userData.handle, channelId, msg.id)
+							addChannelReaction(reactionWords[2], userData.handle, channelId, msg.id)
 						}
 						if (dmId) {
-							addDmReaction('haha', userData.handle, dmId, msg.id)
+							addDmReaction(reactionWords[2], userData.handle, dmId, msg.id)
 						}
 					}}>
 						{reactions.haha}
@@ -58,10 +59,10 @@ const MessageReactions = ({ msg }) => {
 				<li>
 					<a className="tooltip text-[22px] cursor-pointer" data-tip="Wow" onClick={() => {
 						if (channelId) {
-							addChannelReaction('wow', userData.handle, channelId, msg.id)
+							addChannelReaction(reactionWords[3], userData.handle, channelId, msg.id)
 						}
 						if (dmId) {
-							addDmReaction('wow', userData.handle, dmId, msg.id)
+							addDmReaction(reactionWords[3], userData.handle, dmId, msg.id)
 						}
 					}}>
 						{reactions.wow}
@@ -70,10 +71,10 @@ const MessageReactions = ({ msg }) => {
 				<li>
 					<a className="tooltip text-[22px] cursor-pointer" data-tip="Sad" onClick={() => {
 						if (channelId) {
-							addChannelReaction('sad', userData.handle, channelId, msg.id)
+							addChannelReaction(reactionWords[4], userData.handle, channelId, msg.id)
 						}
 						if (dmId) {
-							addDmReaction('sad', userData.handle, dmId, msg.id)
+							addDmReaction(reactionWords[4], userData.handle, dmId, msg.id)
 						}
 					}}>
 						{reactions.sad}
@@ -82,10 +83,10 @@ const MessageReactions = ({ msg }) => {
 				<li>
 					<a className="tooltip text-[22px] cursor-pointer" data-tip="Angry" onClick={() => {
 						if (channelId) {
-							addChannelReaction('angry', userData.handle, channelId, msg.id)
+							addChannelReaction(reactionWords[5], userData.handle, channelId, msg.id)
 						}
 						if (dmId) {
-							addDmReaction('angry', userData.handle, dmId, msg.id)
+							addDmReaction(reactionWords[5], userData.handle, dmId, msg.id)
 						}
 					}}>
 						{reactions.angry}
