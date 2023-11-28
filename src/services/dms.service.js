@@ -118,3 +118,15 @@ export const addDMstatusEdited = (dmId, msgId) => {
 
     return update(ref(db), DmStatus);
 }
+
+export const addDmReaction = (reaction,userHandle, dmId, msgId) => {
+    const dmReaction = {};
+    dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = true;
+    return update(ref(db), dmReaction);
+}
+
+export const removeDMReaction = (reaction,userHandle, dmId, msgId) => {
+    const dmReaction = {};
+    dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
+    return update(ref(db), dmReaction);
+}

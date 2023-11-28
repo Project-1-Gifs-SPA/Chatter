@@ -158,3 +158,15 @@ export const addChannelMsgStatusEdited = (channelId, msgId) => {
 
     return update(ref(db), ChannelMsgStatus);
 }
+
+export const addChannelReaction = (reaction,userHandle, channelId, msgId) => {
+    const channelReaction = {};
+    channelReaction[`channels/${channelId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = true;
+    return update(ref(db), channelReaction);
+}
+
+export const removeChannelReaction = (reaction,userHandle, channelId, msgId) => {
+    const channelReaction = {};
+    channelReaction[`channels/${channelId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
+    return update(ref(db), channelReaction);
+}
