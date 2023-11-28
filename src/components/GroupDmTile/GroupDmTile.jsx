@@ -4,6 +4,7 @@ import { getUserByHandle } from "../../services/users.service";
 import { useNavigate} from 'react-router';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { IoIosPeople } from "react-icons/io";
+import ContextMenu from "../ContextMenu/ContextMenu";
 
 
 const GroupDmTile = ({groupDmId}) => {
@@ -12,6 +13,7 @@ const GroupDmTile = ({groupDmId}) => {
 
     const [partners, setPartners] = useState([]);
 	const [partnersCount, setPartnersCount] = useState('')
+	const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
     useEffect(() => {
 		if (groupDmId) {
@@ -68,9 +70,15 @@ const GroupDmTile = ({groupDmId}) => {
 
 	},[groupDmId])
 
+	const handleContextMenu =(e)=>{	
+		e.preventDefault();
+		setContextMenuVisible(true);
+}
+
+
 	console.log(partners)
     return (
-		<div className="tooltip tooltip-top" data-tip={partners.map(partner=> partner.firstName)}>
+		<div className="tooltip tooltip-top" data-tip={partners.map(partner=> partner.firstName)} onContextMenu={handleContextMenu}>
         <div className="flex p-3 mb-0 relative hover:bg-gray-300 cursor-pointer" onClick={()=> navigate(`/dms/${groupDmId}`)}>
 				
         <div className="w-10 rounded-full bg-green-700 mr-3">
@@ -90,6 +98,7 @@ const GroupDmTile = ({groupDmId}) => {
 		<span className="text-xs justify-center text-white hidden sm:flex">{partners.length} members</span>
 		</div>
 		</div>
+		{contextMenuVisible ? <ContextMenu groupDmId={groupDmId} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible}  />: null}
         </div>
 		
     )

@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router';
 import { getLiveAllTeams } from '../../services/teams.service';
 import { getLiveUserInfo, getUserByHandle } from '../../services/users.service';
 import FriendsRequests from '../FriendsRequests/FriendsRequests';
+import ContextMenu from '../ContextMenu/ContextMenu';
 
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
@@ -16,6 +17,7 @@ const SideBar = () => {
 	const [allTeams, setAllTeams] = useState([]);
 	const [currentUser, setCurrentUser] = useState({});
 	const [requests, setRequests] = useState([]);
+	
 
 	useEffect(() => {
 		console.log('live teams')
@@ -35,6 +37,10 @@ const SideBar = () => {
 	}, [userData])
 
 	console.log(currentUser)
+
+	
+
+
 
 	useEffect(() => {
 		console.log('getting teams');
@@ -87,6 +93,7 @@ const SideBar = () => {
 					}
 					<AddTeam />
 				</div>
+				
 				<button onClick={() => setShowModal(true)}
 					className="btn mb-2 bg-gray-800 border-none text-white text-sm"
 					style={{ width: '80px', height: '70px', padding: '4px 8px' }}

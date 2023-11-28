@@ -78,7 +78,7 @@ export const getLiveGroupDMsMembers = (listenFn, dmId) =>{
     })
 }
 
-export const deleteMember = (dmId, member) => {
+export const deleteGroupMember = (dmId, member) => {
     const updateMember = {};
     updateMember[`/users/${member}/groupDMs/${dmId}`] = null;
     updateMember[`dms/${dmId}/members/${member}`] = null;
@@ -112,6 +112,7 @@ export const getLiveDmMembers = (listenFn, dmId) => {
     )
 }
 
+
 export const addDMstatusEdited = (dmId, msgId) => {
     const DmStatus = {};
     DmStatus[`dms/${dmId}/msgs/${msgId}/edited`] = true;
@@ -130,3 +131,4 @@ export const removeDMReaction = (reaction,userHandle, dmId, msgId) => {
     dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
     return update(ref(db), dmReaction);
 }
+

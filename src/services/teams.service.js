@@ -1,5 +1,6 @@
 import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, startAt, onValue } from 'firebase/database';
 import { db } from '../config/firebase-config';
+import { getAllChannelsByTeam, getChannelById } from './channel.service';
 
 const fromTeamsDocument = (snapshot) => {
     const teamsDocument = snapshot.val();
@@ -117,7 +118,7 @@ export const addTeamMember = (handle, teamId) => {
     return get(teamRef)
         .then((teamSnapshot) => {
             if (teamSnapshot.exists()) {
-                return Promise.reject(alert ("User is already a member of this team!"));
+                return Promise.reject(alert ("User is already a member of this team!")); //handle alert with toast notification?
             } else {
                 const updateTeam = {};
                 updateTeam[`/teams/${teamId}/members/${handle}`] = true;
@@ -130,4 +131,41 @@ export const addTeamMember = (handle, teamId) => {
             console.error("Error adding team member:", error);
             return Promise.reject("Error adding team member");
         });
+}
+
+
+
+export const updateTeamPhoto = (teamId, photoURL) => {
+    const changePicture = {};
+    changePicture[`/teams/${teamId}/photoURL`] = photoURL;
+  
+    return update(ref(db), changePicture);
+  }
+
+
+export const removeTeamMember = (teamId, handle) => {
+    const memberToRemove = {};
+
+    memberToRemove[`/teams/${teamId}/members/${handle}`] = null;
+    memberToRemove[`/users/${handle}/teams/${teamId}`] = null;
+    return update(ref(db), memberToRemove)
+    .then(()=> getAllChannelsByTeam(teamId)
+                .then(channelsArr => {
+                    return Promise.all(channelsArr.map(channel=>getChannelById(channel)))
+                })
+                .then(channelsInfoArr=>{
+                    const memberToRemove = {};
+                    channelsInfoArr.map(channel=>
+                    memberToRemove[`/channels/${channel.id}/members/${handle}`] = null
+                    )
+                    return update(ref(db), memberToRemove);
+                }))
+
+};
+
+export const updateTeamName = (teamId, newName) =>{
+    const nameUpdate = {};
+    nameUpdate[`/teams/${teamId}/name`] = newName;
+   
+    return update(ref(db), nameUpdate);
 }
