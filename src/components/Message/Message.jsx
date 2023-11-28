@@ -14,10 +14,11 @@ import { BsEmojiSmile } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import { MIN_MESSAGE_LENGTH } from '../../common/constants';
 import { getUserByHandle } from '../../services/users.service';
+import { useParams } from 'react-router';
 
 const Message = ({ message }) => {
 	const { user } = useContext(AppContext)
-
+	const { channelId, dmId } = useParams()
 	const [ownerPic, setOwnerPic] = useState('');
 
 	useEffect(() => {
@@ -45,6 +46,7 @@ const Message = ({ message }) => {
 	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedMessage, setEditedMessage] = useState(message.body);
+	const [isMessageEdited, setIsMessageEdited] = useState(false)
 
 	const handleSaveChanges = () => {
 		if (editedMessage.length < MIN_MESSAGE_LENGTH) {
@@ -68,6 +70,7 @@ const Message = ({ message }) => {
 		}
 
 		setIsEditing(false);
+		setIsMessageEdited(true);
 	}
 
 	const handleDiscardChanges = () => {
@@ -147,6 +150,9 @@ const Message = ({ message }) => {
 					</div>
 				)}
 			</div >
+			{isMessageEdited && <div className="chat-footer text-gray-400 flex items-center">
+				Edited
+			</div>}
 
 			{/* <div className="chat-footer text-gray-400 flex items-center">
 				Delivered
