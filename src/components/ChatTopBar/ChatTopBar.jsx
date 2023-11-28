@@ -36,7 +36,7 @@ const ChatTopBar = () => {
 				}
 				{dmId &&
 					<h3 className="text-white mb-1 font-bold text-xl text-gray-100">
-						{members.join(', ')}
+						{members.length > 1 ? members.join(', ') : members}
 					</h3>
 				}
 			</div>
