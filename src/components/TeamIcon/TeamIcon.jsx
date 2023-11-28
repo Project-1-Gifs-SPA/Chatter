@@ -62,7 +62,7 @@ const TeamIcon = ({ id }) => {
 			</div>
 			
 		</div >
-		{contextMenuVisible &&  <ContextMenu teamId={id} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} 
+		{contextMenuVisible &&  <ContextMenu teamId={id} owner={currentTeam.owner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} 
 		showModal={showModal} setShowModal={setShowModal}/>}
 		{showModal ?<EditTeamModal teamId={id} name={currentTeam.name} onClose={()=>setShowModal(false)} teamPic={currentTeam.photoURL}/> : null}
 		</>

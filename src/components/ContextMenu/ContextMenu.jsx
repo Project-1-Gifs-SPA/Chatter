@@ -8,7 +8,7 @@ import { sendEmailVerification } from "firebase/auth";
 import { removeTeamMember } from "../../services/teams.service";
 
 
-const ContextMenu = ({teamId, contextMenuVisible, setContextMenuVisible, showModal, setShowModal}) => {
+const ContextMenu = ({teamId, owner, contextMenuVisible, setContextMenuVisible, showModal, setShowModal, channelId, member}) => {
 
 	const {userData} = useContext(AppContext)
 
@@ -27,28 +27,33 @@ const ContextMenu = ({teamId, contextMenuVisible, setContextMenuVisible, showMod
 	}, [setContextMenuVisible]);
 
 
-	const handleLeave = (e) =>{
+	const handleLeave = (e, teamMember) =>{
 		e.preventDefault()
 		console.log('remove from team')
-		removeTeamMember(teamId, userData.handle)
+		removeTeamMember(teamId, teamMember)
 		.then(()=>setContextMenuVisible(false));
 	}
     return (
         < >
 		<div id="context-menu" > 
         <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box" >
-        {( userData.myTeams? Object.keys(userData.myTeams).includes(teamId):null)  ? <li onClick={()=>{
+        {( userData.handle===owner && !channelId)  
+		? <li onClick={()=>{
 					setShowModal(true);
 					setContextMenuVisible(false);
-					console.log(showModal)
-					
-		}} ><a>Edit Team</a></li> : null}
-		{( userData.teams? Object.keys(userData.teams).includes(teamId):null) ? <li onClick={handleLeave}><a>Leave Team</a></li> : null}
+					console.log(showModal)				
+		}} ><a>Edit Team</a></li> 
+		: null}
+		{( userData.teams? Object.keys(userData.teams).includes(teamId):null) 
+		? <li onClick={(e)=>handleLeave(e,userData.handle)}><a>Leave Team</a></li> 
+		: null}
+		{(( userData.myTeams? Object.keys(userData.myTeams).includes(teamId):null) && channelId && userData.handle!==member) 
+		? <li onClick={(e)=>handleLeave(e,member)}><a>Remove from Team</a></li> 
+		: null}
+		
         </ul>
 		</div>
         </>
-
-
     )
 
 }
