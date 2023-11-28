@@ -111,3 +111,10 @@ export const getLiveDmMembers = (listenFn, dmId) => {
         }
     )
 }
+
+export const addDMstatusEdited = (dmId, msgId) => {
+    const DmStatus = {};
+    DmStatus[`dms/${dmId}/msgs/${msgId}/edited`] = true;
+
+    return update(ref(db), DmStatus);
+}

@@ -4,8 +4,8 @@ import { getLiveUserInfo } from '../../services/users.service';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { FaRegEdit } from "react-icons/fa";
 import { Textarea } from 'daisyui';
-import { editChannelMessage } from '../../services/channel.service';
-import { editDMmessage } from '../../services/dms.service';
+import { addChannelMsgStatusEdited, editChannelMessage } from '../../services/channel.service';
+import { addDMstatusEdited, editDMmessage } from '../../services/dms.service';
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { FaRegSmile } from "react-icons/fa";
@@ -46,7 +46,6 @@ const Message = ({ message }) => {
 	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedMessage, setEditedMessage] = useState(message.body);
-	const [isMessageEdited, setIsMessageEdited] = useState(false)
 
 	const handleSaveChanges = () => {
 		if (editedMessage.length < MIN_MESSAGE_LENGTH) {
@@ -64,13 +63,13 @@ const Message = ({ message }) => {
 		}
 		if (channelId) {
 			editChannelMessage(editedMessage, channelId, message.id);
+			addChannelMsgStatusEdited(channelId, message.id);
 		}
 		if (dmId) {
 			editDMmessage(editedMessage, dmId, message.id);
+			addDMstatusEdited(dmId, message.id);
 		}
-
 		setIsEditing(false);
-		setIsMessageEdited(true);
 	}
 
 	const handleDiscardChanges = () => {
@@ -98,7 +97,7 @@ const Message = ({ message }) => {
 				<time className="text-[8pt] font-bold text-gray-400 pl-2">{(new Date(message.createdOn)).toLocaleTimeString('en-US', hOptions)}</time>
 				{userData.handle === message.owner &&
 					<div className="tooltip tooltip-top" data-tip='Edit message'>
-						<FaRegEdit className='ml-2 text-[17px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
+						<FaRegEdit className='ml-2 text-[15px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
 					</div>
 				}
 			</div>
@@ -150,13 +149,9 @@ const Message = ({ message }) => {
 					</div>
 				)}
 			</div >
-			{isMessageEdited && <div className="chat-footer text-gray-400 flex items-center">
-				Edited
+			{message.edited && <div className="chat-footer text-[9pt] text-gray-400 flex items-center">
+				Еdited
 			</div>}
-
-			{/* <div className="chat-footer text-gray-400 flex items-center">
-				Delivered
-			</div> */}
 		</div>
 
 	)

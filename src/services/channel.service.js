@@ -151,3 +151,10 @@ export const editChannelMessage = (content, channelId, msgId) => {
         }
       )
 }
+
+export const addChannelMsgStatusEdited = (channelId, msgId) => {
+    const ChannelMsgStatus = {};
+    ChannelMsgStatus[`channels/${channelId}/msgs/${msgId}/edited`] = true;
+
+    return update(ref(db), ChannelMsgStatus);
+}
