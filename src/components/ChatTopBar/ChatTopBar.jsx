@@ -29,12 +29,12 @@ const ChatTopBar = () => {
 		<div className="border-b border-gray-600 flex px-6 py-2 items-center justify-between shadow-xl">
 			<div className="flex flex-col">
 				{/* <h3>Hard coded</h3> */}
-				{channelName &&
+				{channelId &&
 					<h3 className="text-white mb-1 font-bold text-xl text-gray-100">
 						<span className="text-gray-400">#</span> {channelName}
 					</h3>
 				}
-				{members &&
+				{dmId &&
 					<h3 className="text-white mb-1 font-bold text-xl text-gray-100">
 						{members.join(', ')}
 					</h3>
