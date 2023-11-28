@@ -16,6 +16,7 @@ import { MIN_MESSAGE_LENGTH } from '../../common/constants';
 import { getUserByHandle } from '../../services/users.service';
 import { useParams } from 'react-router';
 import MessageReactions from '../MessageReactions/MessageReactions';
+import Reactions from '../Reactions/Reactions';
 
 const Message = ({ message }) => {
 	const { user } = useContext(AppContext)
@@ -87,7 +88,7 @@ const Message = ({ message }) => {
 	};
 
 	return (<>
-		<div className={userData.handle == message.owner ? "chat chat-end" : "chat chat-start"}>
+		<div className={userData.handle == message.owner ? "chat chat-end" : "chat chat-start mb-2"}>
 			<div className="chat-image avatar">
 				<div className="w-10 rounded-full">
 					<img alt="Tailwind CSS chat bubble component" src={ownerPic} className="cursor-pointer w-10 h-10 rounded-3xl mr-3" />
@@ -148,14 +149,22 @@ const Message = ({ message }) => {
 						</div>
 					</div>
 				) : (
-					<div className='tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
-						{message.body}
-					</div>
+					<>
+						<div className='tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
+							{message.body}
+						</div>
+						{message.edited && <div className="chat-footer text-[7pt] text-gray-400 flex items-center">
+							(edited)
+						</div>}
+						{<div className={`absolute flex ${message.owner === userData.handle && 'right-2'}`}>
+							{message.reactions && Object.keys(message.reactions).map((reaction, i) => {
+								return <Reactions key={i} msg={message} reaction={reaction} count={Object.keys(message.reactions[reaction]).length} />
+							})}
+						</div>
+						}
+					</>
 				)}
 			</div >
-			{message.edited && <div className="chat-footer text-[9pt] text-gray-400 flex items-center">
-				edited
-			</div>}
 		</div>
 	</>
 	)
@@ -167,3 +176,4 @@ export default Message
 {/* <div className="tooltip tooltip-top" data-tip='Add reaction'>
 						<BsEmojiSmile className='ml-2 text-[17px] text-gray-400 cursor-pointer' />
 					</div> */}
+
