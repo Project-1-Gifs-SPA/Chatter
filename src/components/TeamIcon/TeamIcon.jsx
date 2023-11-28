@@ -5,25 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import { getGeneralChannel } from '../../services/channel.service';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import AppContext from '../../context/AppContext';
+import EditTeamModal from '../EditTeamModal/EditTeamModal';
 
 const TeamIcon = ({ id }) => {
 
 	const{userData} = useContext(AppContext)
 	const [currentTeam, setCurrentTeam] = useState({});
 	const [contextMenuVisible, setContextMenuVisible] = useState(false);
+	const[showModal, setShowModal] = useState(false);
 	
 	const navigate = useNavigate();
 	
 
-	const handleContextMenu =(e)=>{
-		
-
-		
+	const handleContextMenu =(e)=>{	
 		e.preventDefault();
 		setContextMenuVisible(true);
-
-	
-
 }
 
 	useEffect(() => {
@@ -66,7 +62,9 @@ const TeamIcon = ({ id }) => {
 			</div>
 			
 		</div >
-		{contextMenuVisible &&  <ContextMenu teamId={id} onClick={()=>setContextMenuVisible(false)} />}
+		{contextMenuVisible &&  <ContextMenu teamId={id} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} 
+		showModal={showModal} setShowModal={setShowModal}/>}
+		{showModal ?<EditTeamModal teamId={id} onClose={()=>setShowModal(false)}/> : null}
 		</>
 	)
 }

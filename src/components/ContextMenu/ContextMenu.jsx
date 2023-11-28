@@ -1,46 +1,54 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ProfileModal from "../ProfileModal/ProfileModal";
 import AddTeam from "../AddTeam/AddTeam";
 import { uploadTeamPhoto } from "../../services/storage.service";
 import EditTeamModal from "../EditTeamModal/EditTeamModal";
+import AppContext from "../../context/AppContext";
+import { sendEmailVerification } from "firebase/auth";
+import { removeTeamMember } from "../../services/teams.service";
 
 
-const ContextMenu = ({ onClose, teamId}) => {
+const ContextMenu = ({teamId, contextMenuVisible, setContextMenuVisible, showModal, setShowModal}) => {
 
-	const[showModal, setShowModal] = useState(false);
+	
+	const [showMenu, setShowMenu] = useState(false)
+	const {userData} = useContext(AppContext)
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			const modal = document.getElementById('context-menu');
+			if (modal && !modal.contains(event.target)) {
+				setContextMenuVisible(false);
+			}
+		};
 
-   
-
-
-	// useEffect(() => {
-	// 	const handleClickOutside = (event) => {
-	// 		const modal = document.getElementById('context-menu');
-	// 		if (modal && !modal.contains(event.target)) {
-	// 			onClose();
-	// 		}
-	// 	};
-
-	// 	document.addEventListener('mousedown', handleClickOutside);
-	// 	return () => {
-	// 		document.removeEventListener('mousedown', handleClickOutside);
-	// 	};
-	// }, [onClose]);
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [setContextMenuVisible]);
 
 
-	const handleClick = (e) =>{
-		e.preventDefault();
-		setShowModal(true);
+	const handleLeave = (e) =>{
+		e.preventDefault()
+		console.log('remove from team')
+		removeTeamMember(teamId, userData.handle)
+		.then(()=>setContextMenuVisible(false));
 	}
-
-
     return (
-        <>
-        <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box" id="context-menu" >
-        <li onClick={handleClick} ><a>Edit Team</a></li>
+        < >
+		<div id="context-menu" > 
+        <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box" >
+        {Object.keys(userData.myTeams).includes(teamId) &&<li onClick={()=>{
+					setShowModal(true);
+					setContextMenuVisible(false);
+					console.log(showModal)
+					
+		}} ><a>Edit Team</a></li>}
+		{Object.keys(userData.teams).includes(teamId) && <li onClick={handleLeave}><a>Leave Team</a></li>}
         </ul>
-		{showModal && <EditTeamModal isVisible={showModal} teamId={teamId} onClose={()=> setShowModal(false)} />}
-
+		</div>
+		
         </>
 
 

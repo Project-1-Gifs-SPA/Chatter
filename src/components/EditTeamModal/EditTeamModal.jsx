@@ -3,9 +3,7 @@ import { uploadTeamPhoto } from "../../services/storage.service";
 
 
 
-const EditTeamModal = ({isVisible, teamId, onClose}) =>{
-
-
+const EditTeamModal = ({teamId, onClose}) =>{
 
     
 	useEffect(() => {
@@ -25,16 +23,9 @@ const EditTeamModal = ({isVisible, teamId, onClose}) =>{
 
 
     const inputRef = useRef(null);
-    const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [fileName, setFileName] = useState('');
-
-
-    const handleEditTeam = (e)=>{
-        e.preventDefault();
-        setShowModal(true)
-    }
 
     const handlePhoto = () =>{
         uploadTeamPhoto(photo, teamId, setLoading)
@@ -57,7 +48,6 @@ const EditTeamModal = ({isVisible, teamId, onClose}) =>{
 	}
 
 
-    if(!isVisible) return null;
 
     return (
 
