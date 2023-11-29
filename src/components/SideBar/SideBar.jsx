@@ -17,7 +17,7 @@ const SideBar = () => {
 	const [allTeams, setAllTeams] = useState([]);
 	const [currentUser, setCurrentUser] = useState({});
 	const [requests, setRequests] = useState([]);
-	
+
 
 	useEffect(() => {
 		console.log('live teams')
@@ -38,7 +38,7 @@ const SideBar = () => {
 
 	console.log(currentUser)
 
-	
+
 
 
 
@@ -46,14 +46,14 @@ const SideBar = () => {
 		console.log('getting teams');
 		const teamArr = [];
 		if (currentUser.teams) {
-	
-			(Object.keys(currentUser.teams)).forEach(id=>teamArr.push(id));
+
+			(Object.keys(currentUser.teams)).forEach(id => teamArr.push(id));
 		}
 
 		if (currentUser.myTeams) {
-	
 
-			(Object.keys(currentUser.myTeams)).forEach(id=>teamArr.push(id));
+
+			(Object.keys(currentUser.myTeams)).forEach(id => teamArr.push(id));
 		}
 		setTeams(teamArr);
 	}, [allTeams, currentUser])
@@ -88,12 +88,24 @@ const SideBar = () => {
 					<DMIcon />
 					{teams.length ?
 						teams.map(teamId => {
-							return <TeamIcon key={teamId} id={teamId} />
+							return <div key={teamId} >
+								<div className="relative group cursor-pointer">
+									<div
+										className="absolute -inset-1 bg-gradient-to-r from-red-600 to-violet-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
+									</div>
+									{/* <div
+										className="relative px-7 py-6 bg-white ring-1 ring-gray-900/5 rounded-lg leading-none flex items-top justify-start space-x-6"> */}
+									<div className="space-y-2">
+										<TeamIcon id={teamId} />
+										{/* </div> */}
+									</div>
+								</div>
+							</div>
 						}) : null
 					}
 					<AddTeam />
-				</div>
-				
+				</div >
+
 				<button onClick={() => setShowModal(true)}
 					className="btn mb-2 bg-gray-800 border-none text-white text-sm"
 					style={{ width: '80px', height: '70px', padding: '4px 8px' }}

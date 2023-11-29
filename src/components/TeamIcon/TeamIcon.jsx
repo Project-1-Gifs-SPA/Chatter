@@ -46,7 +46,7 @@ const TeamIcon = ({ id }) => {
 
 				<div className="tooltip tooltip-right" data-tip={currentTeam.name}>
 					<div
-						className="bg-orange-500 h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden hover:rounded-md">
+						className="bg-purple-500 h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden hover:rounded-md">
 						{currentTeam.photoURL ?
 
 							<img src={currentTeam.photoURL} />
