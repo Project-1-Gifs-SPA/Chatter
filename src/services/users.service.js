@@ -177,5 +177,14 @@ export const declineFriendRequest = (handle, friendHandle) => {
     updateFriendsRequest[`/users/${handle}/friendRequests/${friendHandle}`] = null;
 
     return update(ref(db), updateFriendsRequest)
-    .then(() => alert("Friend request was declined"));
+    .then(() => toast.success("Friend request was declined", {
+      position: "top-center",
+      autoClose: 3500,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    }));
 }
