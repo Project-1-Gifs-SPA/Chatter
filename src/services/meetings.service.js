@@ -57,7 +57,7 @@ export const fromMeetingsDocument = (snapshot) => {
         return{
             ...meeting,
             id: key,
-            members: meeting.members? Object.keys(meeting.members) : [];
+            members: meeting.members? Object.keys(meeting.members) : [],
         }
 
     })
@@ -111,3 +111,9 @@ export const getLiveMeetingMembers = (listenFn, meetingId) => {
     )
 }
 
+export const deleteMeeting = (meetingId) => {
+    const deleteMeeting = {};
+    deleteMeeting[`meetings/${meetingId}`] = null;
+
+    return update(ref(db), deleteMeeting);
+}
