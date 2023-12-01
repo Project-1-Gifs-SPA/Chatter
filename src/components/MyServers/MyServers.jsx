@@ -23,6 +23,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
 import CreateMeetingModal from '../CreateMeetingModal/CreateMeetingModal';
 import { BsCalendarEvent } from "react-icons/bs";
+import MeetingTile from '../MeetingTile/MeetingTile';
 
 
 const MyServers = () => {
@@ -232,6 +233,14 @@ const MyServers = () => {
 						</>
 					)}
           </div>
+		  <div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
+				{currentTeam.meetings
+				?Object.keys(currentTeam.meetings). map((meetingId)=><MeetingTile key={meetingId} meetingId={meetingId} />)
+				: null
+				
+				}		
+
+		  </div>
 
 				<div className="flex-grow"></div>
 				<div className={`${expanded ? '' : 'hidden'}`}>
