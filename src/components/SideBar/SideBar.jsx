@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import TeamIcon from '../TeamIcon/TeamIcon';
 import DMIcon from '../DMIcon/DMIcon';
 import AddTeam from '../AddTeam/AddTeam';
-import { logoutUser } from '../../services/auth.service';
 import AppContext from '../../context/AppContext';
 import { useNavigate, useParams } from 'react-router';
 import { getLiveAllTeams } from '../../services/teams.service';
 import { getLiveUserInfo, getUserByHandle } from '../../services/users.service';
 import FriendsRequests from '../FriendsRequests/FriendsRequests';
 import ContextMenu from '../ContextMenu/ContextMenu';
+import { MdOutlineWbTwilight } from "react-icons/md";
+
+
 
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
@@ -18,10 +20,7 @@ const SideBar = () => {
 	const [currentUser, setCurrentUser] = useState({});
 	const [requests, setRequests] = useState([]);
 
-
 	useEffect(() => {
-		console.log('live teams')
-
 		const u = getLiveUserInfo((data) => {
 			setCurrentUser(data)
 		}, userData?.handle)
@@ -29,30 +28,18 @@ const SideBar = () => {
 		const unsubscribe = getLiveAllTeams((result) => {
 			setAllTeams(result);
 		})
-
 		return () => {
 			unsubscribe();
 			u();
 		}
 	}, [userData])
 
-	console.log(currentUser)
-
-
-
-
-
 	useEffect(() => {
-		console.log('getting teams');
 		const teamArr = [];
 		if (currentUser.teams) {
-
 			(Object.keys(currentUser.teams)).forEach(id => teamArr.push(id));
 		}
-
 		if (currentUser.myTeams) {
-
-
 			(Object.keys(currentUser.myTeams)).forEach(id => teamArr.push(id));
 		}
 		setTeams(teamArr);
@@ -75,10 +62,7 @@ const SideBar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentUser.friendRequests])
-
-	console.log(requests)
-
+	}, [currentUser.friendRequests]);
 
 	return (
 		<>
@@ -88,18 +72,10 @@ const SideBar = () => {
 					<DMIcon />
 					{teams.length ?
 						teams.map(teamId => {
-							return <div key={teamId} >
-								<div className="relative group cursor-pointer">
-									<div
-										className="absolute -inset-1 bg-gradient-to-r from-red-600 to-violet-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
-									</div>
-									{/* <div
-										className="relative px-7 py-6 bg-white ring-1 ring-gray-900/5 rounded-lg leading-none flex items-top justify-start space-x-6"> */}
-									<div className="space-y-2">
-										<TeamIcon id={teamId} />
-										{/* </div> */}
-									</div>
-								</div>
+							return <div key={teamId}>
+
+								<TeamIcon id={teamId} />
+
 							</div>
 						}) : null
 					}
@@ -116,7 +92,8 @@ const SideBar = () => {
 					Friends requests
 				</button>
 			</div >
-			{showModal && <FriendsRequests friendsRequests={currentUser.friendRequests} onClose={() => setShowModal(false)} />}
+			{showModal && <FriendsRequests friendsRequests={currentUser.friendRequests} onClose={() => setShowModal(false)} />
+			}
 			{/* </div > */}
 		</>
 	)
