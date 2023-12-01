@@ -8,7 +8,7 @@ import ProfileBar from '../ProfileBar/ProfileBar';
 import App from '../../App';
 import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
-import { addChannel, addChannelUser, getChannelById, getChannelInTeamByName, getGeneralChannel } from '../../services/channel.service';
+import { addChannel, addChannelUser, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { BsPersonFillAdd } from 'react-icons/bs';
 import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
@@ -86,7 +86,7 @@ const MyServers = () => {
 					throw new Error(`Channel ${channelName} already exists`);
 				}
 
-				addChannel(teamId, channelMembers, channelName)
+				addChannel(teamId, channelName, true,channelMembers)
 					.then(channelId => {
 						navigate(`/teams/${teamId}/channels/${channelId}`);
 					});
@@ -156,9 +156,13 @@ const MyServers = () => {
 						</div>
 					</div>
 				</dialog>
-
-				{currentTeam?.channels
-					? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelTileId={channelId} generalId={generalId} />)
+				{currentTeam?.channels && generalId
+					? getChannelIdsInTeamByUser(teamId, userData.handle)
+						.then(channelIds => channelIds.map(channelId => {
+							console.log(channelId);
+							<ChannelTile key={channelId} channelTileId={channelId} generalId={generalId} />
+						}
+						))
 					: null}
 				<div className="flex-grow"></div>
 
