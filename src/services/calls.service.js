@@ -35,7 +35,7 @@ export const addMemberToCall = (listenFn, roomId, userData) => {
         `{
         "name":"${userData.handle}",
         "picture":"${userData.photoURL}",
-        "preset_name":"group_call_participant",
+        "preset_name":"group_call_host",
         "custom_participant_id":"${userData.uid}"
          }`
       };
@@ -49,6 +49,22 @@ export const addMemberToCall = (listenFn, roomId, userData) => {
         } )
         .catch(err => console.error(err));
     
+}
+
+export const removeMemberFromCall = (roomId, participantId) => {
+
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${DYTE_AUTH_KEY}`
+    }
+  };
+
+  fetch(`${DYTE_BASE_URL}/meetings/${roomId}/participants/${participantId}`, options)
+  .then(response => response.json())
+  .then(response => console.log(response))
+  .catch(err => console.error(err));
 
 }
   

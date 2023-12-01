@@ -75,8 +75,6 @@ const GroupDmTile = ({groupDmId}) => {
 		setContextMenuVisible(true);
 }
 
-
-	console.log(partners)
     return (
 		<div className="tooltip tooltip-top" data-tip={partners.map(partner=> partner.firstName)} onContextMenu={handleContextMenu}>
         <div className="flex p-3 mb-0 relative hover:bg-gray-300 cursor-pointer" onClick={()=> navigate(`/dms/${groupDmId}`)}>

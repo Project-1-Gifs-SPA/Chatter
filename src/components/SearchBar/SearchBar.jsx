@@ -95,7 +95,7 @@ const SearchBar = ({ team, dm }) => {
 				</form>
 			</div>
 
-			{searchedUsers && <div className='w-[300px] rounded bg-gray-700 bg-opacity-90 absolute  top-24 right-9 z-50'>
+			{searchedUsers && <div className='w-[auto] rounded bg-gray-700 bg-opacity-90 relative  z-50'> {/* top-24 right-9 w-[300px]*/}
 				{searchedUsers.map(regUser => {
 					return (
 						<div key={regUser.uid} className='flex items-center'>

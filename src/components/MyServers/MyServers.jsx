@@ -21,6 +21,8 @@ import { getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveUserDMs } from '.
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
+import CreateMeetingModal from '../CreateMeetingModal/CreateMeetingModal';
+import { BsCalendarEvent } from "react-icons/bs";
 
 
 const MyServers = () => {
@@ -45,6 +47,7 @@ const MyServers = () => {
 
 	const [channelName, setChannelName] = useState('');
 	const [channelMembers, setChannelMembers] = useState('');
+	const [createMeetingModal, setCreateMeetingModal] = useState(false);
 
 	const [channelError, setChannelError] = useState('');
 
@@ -169,8 +172,20 @@ const MyServers = () => {
 				</div>
 
 				{teamId? <>
-
+				{expanded?
+					<>
+        <button className="btn bg-gray-800 border-none" onClick={()=>setCreateMeetingModal(true)}>{
+        <>
+        <BsCalendarEvent /> 
+        Create Meeting
+        </>}</button>
+        <div className="divider mt-auto"></div>
+        </>
+				
+		: null}
+		{createMeetingModal ? <CreateMeetingModal setShowModal={setCreateMeetingModal} /> : null}
 				<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
+				
 					<div className='text-xl mr-4 text-white'
 						style={{ fontFamily: 'Rockwell, sans-serif' }}>
 

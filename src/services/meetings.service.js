@@ -2,7 +2,7 @@ import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, start
 import { db } from '../config/firebase-config';
 
 
-export const createMeeting = (handle, participants, topic, start,end, ) => {
+export const createMeeting = (handle, participants, topic, start,end, teamId ) => {
     return push(ref(db, 'meetings'),{})
     .then(response => {
         
@@ -20,6 +20,7 @@ export const createMeeting = (handle, participants, topic, start,end, ) => {
             });
         return update(ref(db),{
             [`users/${handle}/meetings/${response.key}`]: true,
+            [`teams/${teamId}/meetings/${response.key}`]: true,
         })
         .then(()=> response.key);
 
@@ -71,10 +72,6 @@ export const getAllMeetings = () => {
 
     return fromMeetingsDocument(data);
 });
-}
-
-export const getMeetingsByHandle = (handle) => {
-    
 }
 
 
