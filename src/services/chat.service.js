@@ -16,17 +16,14 @@ export const sendMessage = (channelId, handle, msg, picURL) => {
         });
     })
 }
-
 export const getLiveMessages = (listenFn,channelId) => {
     const q = query(
         ref(db, `/channels/${channelId}/msgs`),
         orderByChild('createdOn'),
         limitToFirst(50)
     )
-
     return onValue(q, listenFn);
 };
-
 
 export const getChat = (channelId) => {
     return get(ref(db, `channels/${channelId}/msgs`))
@@ -35,8 +32,6 @@ export const getChat = (channelId) => {
         return data;
     })
 };
-
-
 
 export const sendDirectMessage = (dmId, handle, msg, picURL) => {
 
@@ -69,7 +64,6 @@ export const getLiveDirectMessages = (listenFn,dmId) => {
     )
     return onValue(q, listenFn)
 };
-
 
 export const getLiveGroupDmMembers = (listenFn, dmId) => {
     
@@ -109,4 +103,29 @@ export const getLiveGroupDmMembers = (listenFn, dmId) => {
 //     })
 // }
 
+export const setChannelSeenBy = (channelId, user) => {
+    const updates = {};
+      updates[`channels/${channelId}/seenBy/${user}`] = true;
+      return update(ref(db), updates);
+  };
 
+  export const setNotSeenChannel = (channelId, teamId) => {
+      const updates = {};
+      updates[`channels/${channelId}/seenBy/`] = null;
+      updates[`teams/${teamId}/seenBy/`] = null;
+      return update(ref(db), updates);
+    }
+    
+    export const setTeamSeenBy = (teamId, user) => {
+      const updates = {};
+    
+        updates[`teams/${teamId}/seenBy/${user}`] = true;
+        return update(ref(db), updates);
+    }
+  
+    export const setTeamsNotSeenBy = (teamId, user) => {
+      const updates = {};
+    
+      updates[`teams/${teamId}/seenBy/${user}`] = null;
+      return update(ref(db), updates);
+    }

@@ -169,3 +169,16 @@ export const updateTeamName = (teamId, newName) =>{
    
     return update(ref(db), nameUpdate);
 }
+
+export const getLiveTeamSeenBy = (listenFn, teamId) => {
+    return onValue(
+        ref(db, `teams/${teamId}/seenBy`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
+}
+
