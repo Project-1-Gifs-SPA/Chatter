@@ -11,6 +11,8 @@ import {
 	getLiveMessages,
 	sendDirectMessage,
 	sendMessage,
+	setChannelSeenBy,
+	setNotSeenChannel,
 } from "../../services/chat.service";
 import { useParams } from "react-router";
 import AppContext from "../../context/AppContext";
@@ -22,7 +24,7 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId, dmId } = useParams();
+	const { channelId, dmId, teamId } = useParams();
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -34,7 +36,12 @@ const ChatBox = () => {
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
 	const [picURL, setPicURL] = useState([]);
-	const [showMenu, setShowMenu] = useState(false)
+	const [showMenu, setShowMenu] = useState(false);
+	const [currentChannelId, setCurrentChannelId] = useState('')
+
+	useEffect(() => {
+		setCurrentChannelId(channelId)
+	}, [channelId])
 
 	const scrollToBottom = () => {
 		const chat = document.getElementById("chat");
@@ -52,56 +59,56 @@ const ChatBox = () => {
 
 	useEffect(() => {
 		scroll();
+		setChannelSeenBy(channelId, userData.handle);
+		//setNotSeenChannel(currentChannelId, teamId)
 	}, [messages]);
 
 
 	useEffect(() => {
-		console.log("live msg");
+		if (currentChannelId) {
 
-		if (channelId) {
-			getChat(channelId)
-				.then((response) => setMessages(Object.values(response)))
+			getChat(currentChannelId)
+				.then((response) => {
+					setMessages(Object.values(response))
+					console.log('generating at ', currentChannelId)
+				})
 				.then(() => scrollToBottom());
 
 		}
 		if (dmId) {
 			getDMChat(dmId)
-
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
-
 		}
-	}, [channelId, dmId]);
+	}, [currentChannelId, dmId]);
 
 	useEffect(() => {
-		console.log("live msg");
-
-		if (channelId) {
+		if (currentChannelId) {
 			const unsubscribe = getLiveMessages((snapshot) => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
-			}, channelId);
+			}, currentChannelId);
 
-			return () => unsubscribe;
+			return () => unsubscribe();
 		}
 
-		if(dmId){
-			const unsubscribe = getLiveDirectMessages((snapshot)=>{
+		if (dmId) {
+			const unsubscribe = getLiveDirectMessages((snapshot) => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
 
 			}, dmId);
 
-			return () => unsubscribe;
+			return () => unsubscribe();
 		}
-	}, [channelId, dmId]);
+	}, [currentChannelId, dmId]);
 
 	const handleMsg = (e) => {
 		e.preventDefault();
-
-		if (channelId) {
-			sendMessage(channelId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(""));
+		if (currentChannelId) {
+			sendMessage(currentChannelId, userData.handle, msg, userData.photoURL)
+				.then(() => setMsg(""))
+				.then(() => setNotSeenChannel(currentChannelId, teamId))
 		}
 
 		if (dmId) {
@@ -109,7 +116,6 @@ const ChatBox = () => {
 				.then(() => setMsg(''));
 		}
 	};
-
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -125,12 +131,12 @@ const ChatBox = () => {
 				<Message /> */}
 				{messages.length
 					? messages.map((message) => (
-						<Message key={message.id} message={message} channelId={channelId} dmId={dmId} />
+						<Message key={message.id} message={message} channelId={currentChannelId} dmId={dmId} />
 					))
 					: null}
 			</div>
 
-			{channelId || dmId ?
+			{currentChannelId || dmId ?
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
 						<form
@@ -193,8 +199,6 @@ const ChatBox = () => {
 						</div>
 					</div>
 				</div> : null}
-
-
 		</div>
 	);
 };
