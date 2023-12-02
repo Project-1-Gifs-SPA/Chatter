@@ -4,8 +4,9 @@ import { useParams } from 'react-router'
 import { getChannelById } from '../../services/channel.service';
 import AppContext from '../../context/AppContext';
 import { getDMbyId } from '../../services/dms.service';
+import { BsCalendarEvent } from 'react-icons/bs';
 
-const ChatTopBar = () => {
+const ChatTopBar = ({meeting}) => {
 	const { channelId, dmId } = useParams();
 	const { userData } = useContext(AppContext)
 	const [channelName, setChannelName] = useState('');
@@ -37,6 +38,11 @@ const ChatTopBar = () => {
 				{dmId &&
 					<h3 className="text-white mb-1 font-bold text-xl text-gray-100">
 						{members.length > 1 ? members.join(', ') : members}
+					</h3>
+				}
+				{meeting &&
+					<h3 className="text-white mb-1 font-bold text-xl text-gray-100 flex">
+						<span className="text-gray-400 mr-3 pt-1">{<BsCalendarEvent />}</span> {meeting.topic}
 					</h3>
 				}
 			</div>

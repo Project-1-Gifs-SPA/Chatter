@@ -5,6 +5,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import { useParams } from "react-router";
 import AppContext from "../../context/AppContext";
 import { createMeeting } from "../../services/meetings.service";
+import { createDyteCallRoom } from "../../services/calls.service";
 
 
 const CreateMeetingModal = ({setShowModal}) => {
@@ -22,7 +23,7 @@ const CreateMeetingModal = ({setShowModal}) => {
         e.preventDefault();
 
         createMeeting(userData.handle,members, meetingTopic,startDate, endDate, teamId)
-        .then(response=>console.log(response))
+        .then(meetingId=>createDyteCallRoom(meetingId, meetingTopic))
         .then(()=> setShowModal(false))
     }
 

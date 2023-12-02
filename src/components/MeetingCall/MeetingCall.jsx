@@ -7,11 +7,10 @@ import AppContext from "../../context/AppContext";
 import Loader from "../Loader/Loader";
 import {useNavigate} from "react-router"
 
-const MeetingCall = () => {
+const MeetingCall = ({token}) => {
     const [client, initClient] = useDyteClient();
     const[showMeeting, setShowMeeting] = useState(false)
-    const[loading, setLoading] = useState(false)
-    const[token, setToken] = useState('')
+
     const{userData} = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -28,7 +27,7 @@ const MeetingCall = () => {
     
         }
         setShowMeeting(true)
-    },[token]);
+    },[]);
 
     
   const handleClick=(e)=>{
@@ -39,17 +38,7 @@ const MeetingCall = () => {
   } 
 
 
-    useEffect(()=>{
-        if(loading){
-    
-          addMemberToCall(data=> {
-            setToken(data)
-           
-          }   
-            ,"bbb16ea4-99e9-4d33-9e64-285a751d32b2", userData)
-        }
-    
-      },[loading])
+
 
 
 
@@ -57,19 +46,19 @@ const MeetingCall = () => {
         <>
         <div className="flex-1 flex flex-col bg-gray-700">
 
+
+
             {client? 
                  <DyteProvider value={client}>
               
                 <MyMeeting />
                
                  </DyteProvider>
-             : <div className="px-6 py-4 flex-1">
-                <p>You haven't join the meeting yet</p> {/* make an info component for the meeting */}
-             </div>
+             : <div style={{height:'50vh', width:'auto'}}><Loader  /> </div>
                 }    
         
         <div>
-        <button className="btn" onClick={handleClick}>Join Call</button>
+       
         </div>
         </div>
        

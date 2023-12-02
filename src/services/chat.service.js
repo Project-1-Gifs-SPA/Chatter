@@ -76,37 +76,38 @@ export const getLiveGroupDmMembers = (listenFn, dmId) => {
     return onValue(ref(`dms/${dmId}/members`), listenFn);
 };
 
-// export const sendMessageTest = (teamId, handle, msg, picURL) => { ////delete when testing is done!
 
-//     return push(ref(db, `teams/${teamId}/msgs`),{})
-//     .then(response => {
+export const sendMeetingMessage = (meetingId, handle, msg, picURL) => {
 
-//         set(ref(db,`teams/${teamId}/msgs/${response.key}`), {
-//             body:msg,
-//             id: response.key,
-//             owner:handle,
-//             createdOn: serverTimestamp(),
-//             avatar: picURL,
-//         });
-//     })
-// }
+    return push(ref(db, `meetings/${meetingId}/msgs`),{})
+    .then(response => {
 
+        set(ref(db,`meetings/${meetingId}/msgs/${response.key}`), {
+            body:msg,
+            id: response.key,
+            owner:handle,
+            createdOn: serverTimestamp(),
+            avatar: picURL
+        });
+    })
+}
 
-// export const getLiveMessagesTest = (listenFn,teamId) => {  //delete when testing is done!
-//     const q= query(
-//         ref(db, `/teams/${teamId}/msgs`),
-//         orderByChild('createdOn'),
-//         limitToFirst(50)
-//     )
-//     return onValue(q, listenFn)
-// }
+export const getLiveMeetingMessages = (listenFn,meetingId) => {
+    const q = query(
+        ref(db, `/meetings/${meetingId}/msgs`),
+        orderByChild('createdOn'),
+        limitToFirst(50)
+    )
 
-// export const getChatTest = (teamId) => {
-//     return get(ref(db, `teams/${teamId}/msgs`))
-//     .then(snapshot =>{
-//         const data = snapshot.exists() ? snapshot.val() : [];
-//         return Object.values(data);
-//     })
-// }
+    return onValue(q, listenFn);
+};
 
 
+
+export const getMeetingChat = (meetingId) => {
+    return get(ref(db, `meetings/${meetingId}/msgs`))
+    .then(snapshot =>{
+        const data = snapshot.exists() ? snapshot.val() : [];
+        return data;
+    })
+};

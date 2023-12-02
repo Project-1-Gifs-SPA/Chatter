@@ -31,7 +31,7 @@ const MyServers = () => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const { userData } = useContext(AppContext);
-	const { teamId, dmId } = useParams();
+	const { teamId, dmId, meetingId } = useParams();
 
 	const navigate = useNavigate();
 
@@ -172,7 +172,7 @@ const MyServers = () => {
 					</div>
 				</div>
 
-				{teamId? <>
+				{teamId || meetingId? <>
 				{expanded?
 					<>
         <button className="btn bg-gray-800 border-none" onClick={()=>setCreateMeetingModal(true)}>{
@@ -233,6 +233,7 @@ const MyServers = () => {
 						</>
 					)}
           </div>
+		  <br />
 		  <div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
 				{currentTeam.meetings
 				?Object.keys(currentTeam.meetings). map((meetingId)=><MeetingTile key={meetingId} meetingId={meetingId} />)

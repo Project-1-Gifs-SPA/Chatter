@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react"
 import { getMeetingById } from "../../services/meetings.service";
-import { useNavigate} from 'react-router';
+import { useNavigate, useParams} from 'react-router';
 import { BsCalendarEvent } from "react-icons/bs";
 import moment from "moment";
 
 
 const MeetingTile = ({meetingId}) => {
+    const{teamId} = useParams();
 
     const[currentMeeting, setCurrentMeeting] = useState({});
     const navigate = useNavigate();
 
     useEffect(()=>{
+        console.log('getting meetingId')
 
         getMeetingById(meetingId)
         .then(meeting=> setCurrentMeeting({...meeting}))

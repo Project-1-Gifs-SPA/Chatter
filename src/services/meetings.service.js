@@ -85,6 +85,15 @@ export const getAllMeetingsByHandle = (handle) => {
 }
 
 
+export const getLiveMeetingInfo = (listenFn, meetingId) => {
+    return onValue(
+        ref(db, `meetings/${meetingId}`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            listenFn(data);
+        });
+};
+
 
 export const getLiveAllMeetings = (listenFn) => {
     return onValue(

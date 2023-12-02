@@ -28,7 +28,7 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 
 	
 
-	console.log(partner)
+	console.log(member)
 
 	return (
 		<>

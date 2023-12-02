@@ -8,8 +8,11 @@ import {
 	getChat,
 	getDMChat,
 	getLiveDirectMessages,
+	getLiveMeetingMessages,
 	getLiveMessages,
+	getMeetingChat,
 	sendDirectMessage,
+	sendMeetingMessage,
 	sendMessage,
 } from "../../services/chat.service";
 import { useParams } from "react-router";
@@ -22,7 +25,7 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId, dmId } = useParams();
+	const { channelId, dmId, meetingId } = useParams();
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -69,9 +72,19 @@ const ChatBox = () => {
 
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
+		}
+
+		if(meetingId) {
+
+			getMeetingChat(meetingId)
+			.then((response) => setMessages(Object.values(response)))
+			.then(() => scrollToBottom())
+
 
 		}
-	}, [channelId, dmId]);
+
+
+	}, [channelId, dmId, meetingId]);
 
 	useEffect(() => {
 		console.log("live msg");
@@ -94,7 +107,19 @@ const ChatBox = () => {
 
 			return () => unsubscribe;
 		}
-	}, [channelId, dmId]);
+
+		if(meetingId){
+
+			const unsubscribe = getLiveMeetingMessages(snapshot=>{
+				const msgData = snapshot.exists() ? snapshot.val() : {};
+				setMessages(Object.values(msgData));
+			}, meetingId);
+
+			return () => unsubscribe;
+
+
+		}
+	}, [channelId, dmId, meetingId]);
 
 	const handleMsg = (e) => {
 		e.preventDefault();
@@ -107,6 +132,11 @@ const ChatBox = () => {
 		if (dmId) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
 				.then(() => setMsg(''));
+		}
+
+		if(meetingId){
+			sendMeetingMessage(meetingId, userData.handle, msg, userData.photoURL)
+				.then(()=> setMsg(''));
 		}
 	};
 
@@ -130,7 +160,7 @@ const ChatBox = () => {
 					: null}
 			</div>
 
-			{channelId || dmId ?
+			{channelId || dmId || meetingId ?
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
 						<form
