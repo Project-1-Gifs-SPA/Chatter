@@ -5,7 +5,11 @@ import { getAllTeamMembers } from './teams.service';
 export const addChannel = (teamId, channelName, isPublic, members) => {
 
     const formattedMembers = {};
-    members.map(member => (formattedMembers[member.handle] = true)); // get all members if isPublic
+    isPublic 
+    ? getAllTeamMembers(teamId).then(teamMembers => teamMembers.map(teamMember => (formattedMembers[teamMember] = true)))
+    : members.map(member => (formattedMembers[member.handle] = true));
+
+    console.log(formattedMembers);
 
     return push(ref(db, 'channels'), {})
         .then(response => {
@@ -43,17 +47,16 @@ export const removeChannel = (teamId, channelId) => {
     console.log(set(ref(db, `channels/${channelId}`), {}));
 }
 
-export const createDefaultChannel = (teamId, members) => {
-    return addChannel(teamId, members, 'General');
+export const createDefaultChannel = (teamId) => {
+    return addChannel(teamId, 'General', true);
 }
 
 export const getGeneralChannel = (teamId) => {
     return getChannelInTeamByName(teamId, 'General')
         .then(answer => answer !== 'No such channel'
             ? answer
-            : getAllTeamMembers(teamId)
-                .then(members => createDefaultChannel(teamId, members)
-                    .then(channel => ({ ...channel, isPublic: true })))
+            : createDefaultChannel(teamId)
+                    .then(channel => channel)
         );
 }
 
@@ -122,5 +125,5 @@ export const getChannelIdsInTeamByUser = (teamId, userHandle) => getAllChannelsB
     .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
         .then(channels => channels.filter(channel => channel?.members
             ? channel.members[userHandle] || channel.isPublic
-                ? true : false
+                ? channel : false
             : false).map(channel => channel.id)));
