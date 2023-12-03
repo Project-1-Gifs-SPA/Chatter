@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router"
-import { addMeetingDescription, getLiveMeetingInfo, getMeetingById } from "../../services/meetings.service";
+import { addMeetingDescription, deleteMeeting, getLiveMeetingInfo, getMeetingById } from "../../services/meetings.service";
 import { getUserByHandle } from "../../services/users.service";
 import { defaultPicURL } from "../../common/constants";
 import ChatTopBar from "../ChatTopBar/ChatTopBar";
@@ -87,7 +87,14 @@ const handleDescription = (e)=>{
 	.then(()=>setIsAddDescription(false))
 }
 
-console.log(url)
+
+const handleDelete  = (e)=> {
+    e.preventDefault();
+    deleteMeeting(meetingId, currentMeeting.team);
+}
+
+
+
 return (
 
 
@@ -131,6 +138,7 @@ return (
 <p className="font-bold">Meeting End:</p> <span>{moment(currentMeeting.end).calendar()}</span>
 <br />
 <button className="btn w-40" onClick={()=> setLoading(true)}>Join Call</button>
+<button className="btn w-40" onClick={handleDelete}>Remove meeting</button>
 </div>
 
 <br />

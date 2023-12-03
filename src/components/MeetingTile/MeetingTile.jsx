@@ -6,7 +6,7 @@ import moment from "moment";
 
 
 const MeetingTile = ({meetingId}) => {
-    const{teamId} = useParams();
+   
 
     const[currentMeeting, setCurrentMeeting] = useState({});
     const navigate = useNavigate();

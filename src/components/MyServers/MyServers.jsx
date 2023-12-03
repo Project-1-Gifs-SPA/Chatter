@@ -24,6 +24,7 @@ import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
 import CreateMeetingModal from '../CreateMeetingModal/CreateMeetingModal';
 import { BsCalendarEvent } from "react-icons/bs";
 import MeetingTile from '../MeetingTile/MeetingTile';
+import { getLiveMeetingsByHandle } from '../../services/meetings.service';
 
 
 const MyServers = () => {
@@ -49,11 +50,13 @@ const MyServers = () => {
 	const [channelName, setChannelName] = useState('');
 	const [channelMembers, setChannelMembers] = useState('');
 	const [createMeetingModal, setCreateMeetingModal] = useState(false);
-
 	const [channelError, setChannelError] = useState('');
-
 	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
-	const[groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs): []);
+	const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs): []);
+	const [meetings, setMeetings] = useState([]);
+	const [currentUserMeetings, setCurrentUserMeetings] = useState([]);
+
+
 
 	useEffect(() => {
 		getAllUsers()
@@ -61,6 +64,24 @@ const MyServers = () => {
 				setChannelMembers([...r].sort((a, b) => b.createdOn - a.createdOn));
 			})
 	}, []);
+
+
+	useEffect(()=>{
+		if(currentTeam.meetings && currentUserMeetings) {
+	
+		const teamMeetings = Object.keys(currentTeam.meetings)
+		
+		const filteredMeetings = teamMeetings.filter(meetingId=> currentUserMeetings.includes(meetingId)? meetingId : null);
+
+		setMeetings(filteredMeetings)
+
+		} else{
+			setMeetings([]);
+		}
+
+	}, [currentTeam?.meetings, currentUserMeetings])
+
+
 
 	useEffect(() => {
 		console.log('get team info');
@@ -70,8 +91,21 @@ const MyServers = () => {
 			setCurrentTeam({ ...data })
 
 		}, teamId)
+
+		const unsub = getLiveMeetingsByHandle(data => {
+
+			// if(currentTeam.meetings){
+			// const filterMeetings = Object.keys(currentTeam.meetings).filter((meetingId=> data.includes(meetingId)? meetingId:null))
+			// console.log(filterMeetings)
+			// setMeetings([...filterMeetings]);
+			// }
+
+			setCurrentUserMeetings(data)
+		
+		}, userData?.handle)
 		return () => {
 			unsubscribe();
+			unsub();
 		}
 
 	}, [teamId]);
@@ -96,6 +130,8 @@ const MyServers = () => {
 
 
 	},[dmId,userData])
+
+
 
 
 	const createChannel = (e) => {
@@ -228,8 +264,8 @@ const MyServers = () => {
           </div>
 		  <br />
 		  <div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
-				{currentTeam.meetings
-				?Object.keys(currentTeam.meetings). map((meetingId)=><MeetingTile key={meetingId} meetingId={meetingId} />)
+				{(meetings.length && teamId)
+				?meetings.map((meetingId)=><MeetingTile key={meetingId} meetingId={meetingId} />)
 				: null
 				
 				}		

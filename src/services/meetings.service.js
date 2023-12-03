@@ -1,5 +1,6 @@
 import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, startAt, onValue } from 'firebase/database';
 import { db } from '../config/firebase-config';
+import { getUserByHandle } from './users.service';
 
 
 export const createMeeting = (handle, participants, topic, start,end, teamId ) => {
@@ -17,10 +18,16 @@ export const createMeeting = (handle, participants, topic, start,end, teamId ) =
                 owner: handle,
                 start,
                 end,
+                team: teamId
             });
         return update(ref(db),{
             [`users/${handle}/meetings/${response.key}`]: true,
             [`teams/${teamId}/meetings/${response.key}`]: true,
+        })
+        .then(()=>{
+            if(participants.length!==1){
+             return  Promise.all(participants.map(participantHandle=> addMemberToMeeting(response.key, participantHandle)));
+            }
         })
         .then(()=> response.key);
 
@@ -84,6 +91,18 @@ export const getAllMeetingsByHandle = (handle) => {
     })
 }
 
+export const getLiveMeetingsByHandle = (listenFn, handle) => {
+
+    return onValue(
+        ref(db, `users/${handle}/meetings`),
+
+        snapshot=>{
+            const data = snapshot.exists() ? snapshot.val() : {};
+            listenFn(Object.keys(data));
+        }
+    )
+}
+
 
 export const getLiveMeetingInfo = (listenFn, meetingId) => {
     return onValue(
@@ -117,11 +136,52 @@ export const getLiveMeetingMembers = (listenFn, meetingId) => {
     )
 }
 
-export const deleteMeeting = (meetingId) => {
-    const deleteMeeting = {};
-    deleteMeeting[`meetings/${meetingId}`] = null;
+export const getMeetingMembers = (meetingId) => {
+    return get(ref(db, `meetings/${meetingId}/members`))
+    .then(snapshot=>{
+        const data = snapshot.exists() ? snapshot.val() : {};
 
-    return update(ref(db), deleteMeeting);
+        return Object.keys(data);
+    })
+    .catch(e=>console.log(e))
+
+
+}
+
+export const deleteMeeting = (meetingId, teamId) => {
+
+    getMeetingMembers(meetingId)
+    .then(membersArr => {
+        console.log(membersArr)
+
+        const getMembers = membersArr.map(member=>{
+            
+        return  getUserByHandle(member)
+            .then(snapshot=> snapshot.exists()? snapshot.val(): {})
+        
+        })
+        
+        return Promise.all(getMembers)
+        .then(responseArr=>{
+
+            // console.log(responseArr)
+            const removeMeeting = {};
+            responseArr.map(user=> removeMeeting[`users/${user.handle}/meetings/${meetingId}`] = null )
+
+            return update(ref(db), removeMeeting)
+        })
+        .then(() => {
+
+            const deleteMeeting = {};
+            deleteMeeting[`meetings/${meetingId}`] = null;
+            deleteMeeting[`teams/${teamId}/meetings/${meetingId}`] = null;
+        
+            return update(ref(db), deleteMeeting);
+        })
+        .catch(e=>console.log(e))
+       
+    })
+    
 }
 
 export const addRecordingToMeeting =(meetingId, recordingURL) => {
