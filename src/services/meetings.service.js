@@ -123,3 +123,17 @@ export const deleteMeeting = (meetingId) => {
 
     return update(ref(db), deleteMeeting);
 }
+
+export const addRecordingToMeeting =(meetingId, recordingURL) => {
+    const addRecording = {};
+    addRecording[`meetings/${meetingId}/recording`] = recordingURL;
+
+    return update(ref(db), addRecording)
+}
+
+export const addMeetingDescription = (meetingId, description) => {
+    const addDescription = {};
+    addDescription[`meetings/${meetingId}/description`] = description;
+
+    return update(ref(db), addDescription)
+}

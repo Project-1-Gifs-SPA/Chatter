@@ -98,13 +98,6 @@ const MyServers = () => {
 	},[dmId,userData])
 
 
-
-
-
-
-
-
-
 	const createChannel = (e) => {
 		e.preventDefault();
 

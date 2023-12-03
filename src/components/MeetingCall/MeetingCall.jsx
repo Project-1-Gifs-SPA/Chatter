@@ -54,7 +54,7 @@ const MeetingCall = ({token}) => {
                 <MyMeeting />
                
                  </DyteProvider>
-             : <div style={{height:'50vh', width:'auto'}}><Loader  /> </div>
+             : <div style={{height:'30vh', width:'auto'}}><Loader  /> </div>
                 }    
         
         <div>

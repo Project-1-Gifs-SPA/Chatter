@@ -1,20 +1,24 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router"
-import { getLiveMeetingInfo, getMeetingById } from "../../services/meetings.service";
+import { addMeetingDescription, getLiveMeetingInfo, getMeetingById } from "../../services/meetings.service";
 import { getUserByHandle } from "../../services/users.service";
 import { defaultPicURL } from "../../common/constants";
 import ChatTopBar from "../ChatTopBar/ChatTopBar";
 import TeamMember from "../TeamMember/TeamMember";
 import MeetingCall from "../MeetingCall/MeetingCall";
-import { addMemberToCall } from "../../services/calls.service";
+import { addMemberToCall, getCallRecordingDownloadURL } from "../../services/calls.service";
 import AppContext from "../../context/AppContext";
 import ChatBox from "../ChatBox/ChatBox";
+import { uploadCallRecording } from "../../services/storage.service";
+import moment from "moment";
+import { FaRegEdit, FaRegSmile } from "react-icons/fa";
+import { Picker } from "emoji-mart";
 
 
 const Meeting = () => {
 
 const{userData} = useContext(AppContext);
-const {meetingId} = useParams();
+const {meetingId, teamId, channelId} = useParams();
 const [currentMeeting, setCurrentMeeting] = useState({});
 const [members, setMembers] = useState([]);
 const[startMeeting, setStartMeeting] = useState(false);
@@ -22,6 +26,10 @@ const[loading, setLoading] = useState(false)
 const[token, setToken] = useState('')
 const navigate = useNavigate();
 const{roomId} = useParams();
+const[isAddDescription, setIsAddDescription] = useState(false);
+const[url, setUrl] = useState('');
+const [description, setDescription ] = useState(currentMeeting?.description)
+
 
 useEffect(()=> {
 
@@ -73,8 +81,13 @@ useEffect(() => {
 }, [currentMeeting.members])
 
 
-console.log(members[0])
+const handleDescription = (e)=>{
+	e.preventDefault();
+	addMeetingDescription(meetingId, description)
+	.then(()=>setIsAddDescription(false))
+}
 
+console.log(url)
 return (
 
 
@@ -87,19 +100,49 @@ return (
 <MeetingCall  token={token} />
 </div>
 
-:<div>
+:<div className="flex gap-24">
+    <div>
 <h1 className="font-bold">Description</h1>
-<p>A test description for the meeting.</p>
+{currentMeeting.description ? <p>{currentMeeting.description}</p> :<div className="tooltip tooltip-top" data-tip='Add description'>
+                       <div className="flex">
+					    <p> Add description for what's to come in this meeting</p>
+						<FaRegEdit className='ml-2 mt-1 text-[15px] text-gray-400 cursor-pointer' onClick={()=> setIsAddDescription(true)} />
+						</div>
+					</div> }
+                    {isAddDescription &&
+					<div>
+						<div>
+							<textarea
+								type="text"
+								className='textarea textarea-info textarea-md max-w-[800px] bg-gray-700 border-none-active px-4 py-2 text-white rounded-md xs:w-[30%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[800px]'
+								value={description}
+								onChange={(e)=> setDescription(e.target.value)}
+								autoFocus // Autofocus on the input field when editing starts
+							/>
+				
+							<div className='flex'>
+								<p className='text-sm text-green-500 mr-5 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={handleDescription}>Save</p>
+								<p className='text-sm text-red-500 cursor-pointer' style={{ fontWeight: 'bold' }} onClick={()=> setIsAddDescription(false)}>Discard</p>
+							</div>
+						</div>
+					</div>}                    
+<br />
+<p className="font-bold">Meeting Start:</p> <span>{moment(currentMeeting.start).calendar()}</span>
+<p className="font-bold">Meeting End:</p> <span>{moment(currentMeeting.end).calendar()}</span>
+<br />
+<button className="btn w-40" onClick={()=> setLoading(true)}>Join Call</button>
+</div>
+
 <br />
 <div>
-    <h1 className="font-bold">Participants</h1>
+    <h1 className="font-bold">Invited</h1>
     <div>
         {members.map(member=> <TeamMember key={member.uid} member={member} />)}
     </div>
-    <button className="btn w-40" onClick={()=> setLoading(true)}>Join Call</button>
+    
 </div>
    
-  
+
 </div>}
 
 <ChatBox />

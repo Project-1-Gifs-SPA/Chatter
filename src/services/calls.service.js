@@ -68,5 +68,24 @@ export const removeMemberFromCall = (roomId, participantId) => {
 
 }
   
+export const getCallRecordingDownloadURL = (listenFn, callId) => {
 
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${DYTE_AUTH_KEY}`
+    }
+  };
+  
+  fetch(`${DYTE_BASE_URL}/recordings/?meeting_id=${callId}`, options)
+    .then(response => response.json())
+    .then(response => {
+      const callData = Object.values(response.data)[0];
+      const downloadURL = callData.download_url;
+      
+   listenFn(downloadURL); 
+    })
+    .catch(err => console.error(err));
+}
 
