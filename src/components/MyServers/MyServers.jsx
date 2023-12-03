@@ -207,7 +207,7 @@ const MyServers = () => {
 					</div>
 				</dialog>
 				{currentTeam?.channels && generalId
-					? currentChannels.map(channelId => <ChannelTile key={channelId} channelTileId={channelId} generalId={generalId} />)
+					? currentChannels.map(channelId => <ChannelTile key={channelId} channelTileId={channelId} generalId={generalId} isOwner={currentTeam.owner === userData.handle} />)
 					: null}
 				<div className="flex-grow"></div>
 

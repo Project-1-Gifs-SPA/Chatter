@@ -3,13 +3,15 @@ import { getChannelById, getGeneralChannel, removeChannel } from "../../services
 import { useNavigate, useParams } from "react-router";
 import { AiOutlineClose } from "react-icons/ai";
 import SearchBar from "../SearchBar/SearchBar";
+import ChannelModal from "../ChannelModal/ChannelModal";
 
-const ChannelTile = ({ channelTileId, generalId }) => {
+const ChannelTile = ({ channelTileId, generalId, isOwner }) => {
 
     const { teamId } = useParams();
 
     const [channelName, setChannelName] = useState('');
     const [channelIdKept, setChannelIdKept] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
     const navigate = useNavigate();
     const modalRef = useRef(null);
@@ -29,14 +31,14 @@ const ChannelTile = ({ channelTileId, generalId }) => {
             >
                 {channelName}
             </button >
-            {channelTileId !== generalId && <button
-                onClick={() => { document.getElementById("delete-channel").showModal() }}
+            {channelTileId !== generalId && isOwner && <button
+                onClick={() => setShowModal(!showModal) }
             >
                 <AiOutlineClose />
-                <dialog ref={modalRef} id="delete-channel" className="modal">
+                {showModal && <ChannelModal isVisible={showModal} onClose={() => setShowModal(false)} channelId={channelTileId} teamId={teamId} />}
+                {/* <dialog ref={modalRef} id="delete-channel" className="modal">
                     <div className="modal-box">
                         <h3 className="font-bold text-lg">Are you sure you want to remove this channel?</h3>
-                        {/* <span className="bg-red">{ }</span> */}
 
                         <div className="modal-action">
 
@@ -48,7 +50,7 @@ const ChannelTile = ({ channelTileId, generalId }) => {
 
                         </div>
                     </div>
-                </dialog>
+                </dialog> */}
             </button>}
         </div>
     )
