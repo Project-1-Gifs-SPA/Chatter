@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ProfileModal from '../ProfileModal/ProfileModal';
 import { getUserByHandle } from '../../services/users.service';
 import { useNavigate, useParams } from 'react-router';
-import { getDMById } from '../../services/dms.service';
+import { getDMById, getLiveDMs } from '../../services/dms.service';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import { IoMdReturnLeft } from 'react-icons/io';
 
@@ -10,7 +10,6 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [partner, setPartner] = useState({})
 	const [contextMenuVisible, setContextMenuVisible] = useState(false);
-
 	const { teamId, channelId } = useParams();
 	const navigate = useNavigate();
 

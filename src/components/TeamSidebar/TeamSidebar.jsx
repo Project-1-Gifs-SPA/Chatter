@@ -53,7 +53,6 @@ const TeamSidebar = () => {
 		}
 	}, [dmId])
 
-
 	useEffect(() => {
 		if (currentTeam.members) {
 			const promises = Object.keys(currentTeam.members).map(member => {

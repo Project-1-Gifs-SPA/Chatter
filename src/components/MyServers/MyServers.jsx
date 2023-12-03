@@ -16,17 +16,16 @@ import { IoIosArrowDown } from 'react-icons/io';
 import SearchBar from '../SearchBar/SearchBar';
 
 import GroupDmTile from '../GroupDmTile/GroupDmTile';
-import { getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveUserDMs } from '../../services/dms.service';
+import { getDMById, getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveIsDMSeen, getLiveUserDMs } from '../../services/dms.service';
 
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
 import { setChannelSeenBy, setTeamSeenBy, setTeamsNotSeenBy } from '../../services/chat.service';
+import './MyServers.css'
 
 
 const MyServers = () => {
-
-	const [isOpen, setIsOpen] = useState(false);
 
 	const { userData } = useContext(AppContext);
 	const { teamId, dmId } = useParams();
@@ -39,12 +38,11 @@ const MyServers = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
 	const [expanded, setExpanded] = useState(true)
-	const [areChannelsSeenBy, setAreChannelsSeenBy] = useState({})
 	const [checkedChannels, setCheckedChannels] = useState(0);
+	const [allDms, setAllDms] = useState([])
+	const [isDmSeen, setIsDmSeen] = useState([])
 
 	const modalRef = useRef(null);
-
-	// const { userData } = useContext(AppContext);
 
 	const [channelName, setChannelName] = useState('');
 	const [channelMembers, setChannelMembers] = useState('');
@@ -147,7 +145,27 @@ const MyServers = () => {
 		}
 	}, [checkedChannels, currentTeam?.channels, teamId])
 
-	console.log('Checked channels: ', checkedChannels)
+	useEffect(() => {
+		if (dms) {
+			const promises = dms.map(([_, dmId]) => {
+				return getDMById(dmId)
+					.then((snapshot) => {
+						return snapshot.val();
+					});
+			});
+
+			Promise.all(promises)
+				.then((dmData) => {
+					setAllDms(dmData);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, [dms])
+
+
+	console.log(dms)
 
 	return (
 
@@ -216,7 +234,16 @@ const MyServers = () => {
 							updateCheckedChannels={updateCheckedChannels} />)
 						: (
 							<>
-								{dms && dms.map(([partner, dmId]) => <div key={dmId} className='hover:bg-gray-300 cursor-pointer'> <TeamMember dmPartner={partner} dmId={dmId} /></div>)}
+								{dms && allDms.map((dm) => {
+									const partner = Object.keys(dm.members).find(member => member !== userData.handle)
+									return <div key={dm.id}
+										className={`hover:bg-gray-300 cursor-pointer 
+											${!dm.seenBy || !Object.keys(dm.seenBy).includes(userData.handle) && 'animate-blink'}
+										`}>
+										<TeamMember dmPartner={partner} dmId={dm.id} /></div>
+								})
+								}
+
 								{groupDMs && groupDMs.map(groupDmId => <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
 							</>
 						)}
@@ -233,3 +260,5 @@ const MyServers = () => {
 }
 
 export default MyServers;
+
+// animate-blink

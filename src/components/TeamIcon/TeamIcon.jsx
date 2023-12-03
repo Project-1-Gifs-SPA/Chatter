@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { getLiveTeamInfo, getLiveTeamSeenBy } from '../../services/teams.service';
 import { useNavigate } from 'react-router-dom';
-import { getAllChannelsByTeam, getChannelById, getGeneralChannel, getLiveChannelsByTeam } from '../../services/channel.service';
+import { getGeneralChannel } from '../../services/channel.service';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import EditTeamModal from '../EditTeamModal/EditTeamModal';
 import { RiCheckboxBlankCircleFill } from "react-icons/ri";

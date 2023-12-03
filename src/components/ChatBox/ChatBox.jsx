@@ -20,6 +20,7 @@ import { FaRegSmile } from "react-icons/fa";
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { IoDocumentAttachOutline } from "react-icons/io5";
+import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
 
 
 const ChatBox = () => {
@@ -60,6 +61,7 @@ const ChatBox = () => {
 	useEffect(() => {
 		scroll();
 		setChannelSeenBy(channelId, userData.handle);
+		setDmSeenBy(dmId, userData.handle);
 		//setNotSeenChannel(currentChannelId, teamId)
 	}, [messages]);
 
@@ -113,7 +115,8 @@ const ChatBox = () => {
 
 		if (dmId) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(''));
+				.then(() => setMsg(''))
+				.then(() => setNotSeenDm(dmId, teamId))
 		}
 	};
 
