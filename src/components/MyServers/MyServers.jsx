@@ -40,6 +40,7 @@ const MyServers = () => {
 	const [searchedUsers, setSearchedUsers] = useState([]);
 	const [expanded, setExpanded] = useState(true)
 	const [areChannelsSeenBy, setAreChannelsSeenBy] = useState({})
+	const [checkedChannels, setCheckedChannels] = useState(0);
 
 	const modalRef = useRef(null);
 
@@ -126,6 +127,27 @@ const MyServers = () => {
 	// const handleAddMember = (user) => {
 	// 	addChannelUser(channelId, user);
 	// }
+	const updateCheckedChannels = (newValue) => {
+		if (newValue >= 0 && newValue <= Object.keys(currentTeam.channels).length) {
+			setCheckedChannels(newValue);
+		}
+	};
+
+	useEffect(() => {
+		setCheckedChannels(0);
+	}, [teamId]);
+
+	useEffect(() => {
+		if (currentTeam.channels) {
+			if (checkedChannels === Object.keys(currentTeam.channels).length) {
+				setTeamSeenBy(teamId, userData.handle)
+			} else {
+				setTeamsNotSeenBy(teamId, userData.handle)
+			}
+		}
+	}, [checkedChannels, currentTeam?.channels, teamId])
+
+	console.log('Checked channels: ', checkedChannels)
 
 	return (
 
@@ -190,7 +212,8 @@ const MyServers = () => {
 					: null}
 				<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
 					{currentTeam.channels
-						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} />)
+						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} checkedChannels={checkedChannels}
+							updateCheckedChannels={updateCheckedChannels} />)
 						: (
 							<>
 								{dms && dms.map(([partner, dmId]) => <div key={dmId} className='hover:bg-gray-300 cursor-pointer'> <TeamMember dmPartner={partner} dmId={dmId} /></div>)}

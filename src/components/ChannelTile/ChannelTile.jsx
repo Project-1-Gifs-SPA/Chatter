@@ -2,9 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { getChannelById, getLiveChannelSeenBy } from "../../services/channel.service";
 import { useNavigate, useParams } from "react-router";
 import AppContext from "../../context/AppContext";
-import { setChannelSeenBy, setTeamSeenBy, setTeamsNotSeenBy } from "../../services/chat.service";
+import { setTeamSeenBy, setTeamsNotSeenBy } from "../../services/chat.service";
+import { update } from "firebase/database";
 
-const ChannelTile = ({ channelId }) => {
+const ChannelTile = ({ channelId, checkedChannels, updateCheckedChannels }) => {
 
     const { teamId } = useParams();
     const { userData } = useContext(AppContext);
@@ -32,14 +33,16 @@ const ChannelTile = ({ channelId }) => {
         }
     }, [channelId])
 
-    console.log('channel ', channelId, ' ', isChannelSeen)
+    //console.log('channel ', channelId, ' is seen by ', isChannelSeen)
 
     useEffect(() => {
-        if (!isChannelSeen.includes(userData.handle)) {
-            setTeamsNotSeenBy(teamId, userData.handle);
-        } else {
-            setTeamSeenBy(teamId, userData.handle)
+        console.log('is working? ', isChannelSeen)
+        if (isChannelSeen.includes(userData.handle)) {
+            updateCheckedChannels(checkedChannels + 1)
         }
+        // else {
+        //     updateCheckedChannels(checkedChannels - 1)
+        // }
     }, [isChannelSeen])
 
     return (
