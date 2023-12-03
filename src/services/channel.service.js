@@ -4,10 +4,12 @@ import { getAllTeamMembers } from './teams.service';
 
 export const addChannel = (teamId, channelName, isPublic, members) => {
 
+    console.table(members);
+
     const formattedMembers = {};
-    isPublic 
-    ? getAllTeamMembers(teamId).then(teamMembers => teamMembers.map(teamMember => (formattedMembers[teamMember] = true)))
-    : members.map(member => (formattedMembers[member.handle] = true));
+    isPublic
+        ? getAllTeamMembers(teamId).then(teamMembers => teamMembers.map(teamMember => (formattedMembers[teamMember] = true)))
+        : members.map(memberHandle => (formattedMembers[memberHandle] = true));
 
     console.log(formattedMembers);
 
@@ -56,7 +58,7 @@ export const getGeneralChannel = (teamId) => {
         .then(answer => answer !== 'No such channel'
             ? answer
             : createDefaultChannel(teamId)
-                    .then(channel => channel)
+                .then(channel => channel)
         );
 }
 
@@ -101,10 +103,10 @@ export const getChannelById = (channelId) => {
 export const getChannelInTeamByName = (teamId, channelName) =>
     getAllChannelsByTeam(teamId)
         .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
-                .then(channels => {
-                    const filtered = channels.filter(channel => channel.name === channelName)
-                    return filtered.length ? filtered[0].id : 'No such channel';
-                }));
+            .then(channels => {
+                const filtered = channels.filter(channel => channel.name === channelName)
+                return filtered.length ? filtered[0].id : 'No such channel';
+            }));
 
 // export const getChannelInTeamByName = (teamId, channelName) =>
 //     getAllChannelsByTeam(teamId)
