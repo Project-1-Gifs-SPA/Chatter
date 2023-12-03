@@ -22,8 +22,6 @@ import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
 import { setChannelSeenBy, setTeamSeenBy, setTeamsNotSeenBy } from '../../services/chat.service';
-import './MyServers.css'
-
 
 const MyServers = () => {
 
@@ -67,7 +65,6 @@ const MyServers = () => {
 		return () => {
 			unsubscribe();
 		}
-
 	}, [teamId]);
 
 
@@ -164,9 +161,6 @@ const MyServers = () => {
 		}
 	}, [dms])
 
-
-	console.log(dms)
-
 	return (
 
 		<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
@@ -237,9 +231,7 @@ const MyServers = () => {
 								{dms && allDms.map((dm) => {
 									const partner = Object.keys(dm.members).find(member => member !== userData.handle)
 									return <div key={dm.id}
-										className={`hover:bg-gray-300 cursor-pointer 
-											${!dm.seenBy || !Object.keys(dm.seenBy).includes(userData.handle) && 'animate-blink'}
-										`}>
+										className={`hover:bg-gray-300 cursor-pointer`}>
 										<TeamMember dmPartner={partner} dmId={dm.id} /></div>
 								})
 								}

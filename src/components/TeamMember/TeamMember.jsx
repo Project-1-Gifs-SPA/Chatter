@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import ProfileModal from '../ProfileModal/ProfileModal';
 import { getUserByHandle } from '../../services/users.service';
 import { useNavigate, useParams } from 'react-router';
-import { getDMById, getLiveDMs } from '../../services/dms.service';
+import { getDMById, getLiveDMs, getLiveIsDMSeen } from '../../services/dms.service';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import { IoMdReturnLeft } from 'react-icons/io';
+import { getLiveTeamSeenBy } from '../../services/teams.service';
+import AppContext from '../../context/AppContext';
+import './TeamMember.css'
 
 const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [partner, setPartner] = useState({})
 	const [contextMenuVisible, setContextMenuVisible] = useState(false);
+	const { userData } = useContext(AppContext)
 	const { teamId, channelId } = useParams();
+	const [isDmSeen, setIsDmSeen] = useState([]);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -24,9 +29,19 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 		setContextMenuVisible(true);
 	}
 
+	useEffect(() => {
+		const unsubscribe = getLiveIsDMSeen(data => {
+			setIsDmSeen(data)
+		}, dmId)
+
+		return () => {
+			unsubscribe();
+		}
+	}, [dmId]);
+
 	return (
 		<>
-			<div className="flex p-3 relative" onClick={dmId ? () => navigate(`/dms/${dmId}`) : null}
+			<div className={`flex p-3 relative ${(dmId && !isDmSeen.includes(userData.handle)) && 'animate-blink'}`} onClick={dmId ? () => navigate(`/dms/${dmId}`) : null}
 				onContextMenu={handleContextMenu}>
 				{member ? member.handle === owner && (<p className="absolute top-2 left-8 transform -translate-x-1/2 -translate-y-1/2 tooltip tooltip-right" data-tip='Team owner'>👑</p>) : null}
 				<div className={`avatar ${member ? member.availability : partner.availability} relative z-[0]`}>

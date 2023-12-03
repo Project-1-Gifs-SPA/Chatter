@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import { getDMById, getLiveGroupDMsMembers } from "../../services/dms.service";
+import { useEffect, useState, useContext } from "react";
+import { getDMById, getLiveGroupDMsMembers, getLiveIsDMSeen } from "../../services/dms.service";
 import { getUserByHandle } from "../../services/users.service";
 import { useNavigate } from 'react-router';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { IoIosPeople } from "react-icons/io";
 import ContextMenu from "../ContextMenu/ContextMenu";
+import AppContext from "../../context/AppContext";
+import './GroupDmTile.css'
 
 
 const GroupDmTile = ({ groupDmId }) => {
@@ -14,6 +16,18 @@ const GroupDmTile = ({ groupDmId }) => {
 	const [partners, setPartners] = useState([]);
 	const [partnersCount, setPartnersCount] = useState('')
 	const [contextMenuVisible, setContextMenuVisible] = useState(false);
+	const { userData } = useContext(AppContext);
+	const [isDmSeen, setIsDmSeen] = useState([]);
+
+	useEffect(() => {
+		const unsubscribe = getLiveIsDMSeen(data => {
+			setIsDmSeen(data)
+		}, groupDmId)
+
+		return () => {
+			unsubscribe();
+		}
+	}, [groupDmId]);
 
 	useEffect(() => {
 		if (groupDmId) {
@@ -75,7 +89,7 @@ const GroupDmTile = ({ groupDmId }) => {
 
 	return (
 		<div className="tooltip tooltip-top" data-tip={partners.map(partner => partner.firstName)} onContextMenu={handleContextMenu}>
-			<div className="flex p-3 mb-0 relative hover:bg-gray-300 cursor-pointer" onClick={() => navigate(`/dms/${groupDmId}`)}>
+			<div className={`flex p-3 mb-0 relative hover:bg-gray-300 cursor-pointer ${(groupDmId && !isDmSeen.includes(userData.handle)) && 'animate-blink'}`} onClick={() => navigate(`/dms/${groupDmId}`)}>
 
 				<div className="w-10 rounded-full bg-green-700 mr-3">
 					<IoIosPeople className="w-10 h-10" />
