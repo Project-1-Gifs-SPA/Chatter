@@ -72,7 +72,6 @@ const ChatBox = () => {
 			getChat(currentChannelId)
 				.then((response) => {
 					setMessages(Object.values(response))
-					console.log('generating at ', currentChannelId)
 				})
 				.then(() => scrollToBottom());
 
