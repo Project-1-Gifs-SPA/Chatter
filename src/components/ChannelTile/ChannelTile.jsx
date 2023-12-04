@@ -32,7 +32,7 @@ const ChannelTile = ({ channelTileId, generalId, isOwner }) => {
                 {channelName}
             </button >
             {channelTileId !== generalId && isOwner && <button
-                onClick={() => setShowModal(!showModal) }
+                onClick={() => setShowModal(!showModal)}
             >
                 <AiOutlineClose />
                 {showModal && <ChannelModal isVisible={showModal} onClose={() => setShowModal(false)} channelId={channelTileId} teamId={teamId} />}

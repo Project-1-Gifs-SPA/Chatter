@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
-import { GoChevronDown, GoChevronUp, GoPlus } from "react-icons/go";
+import { useState, useEffect, useContext, useRef } from 'react'
+import { GoPlus } from "react-icons/go";
 
 import { getAllTeamMembers, getLiveTeamInfo, getTeamById } from '../../services/teams.service';
-import { useLocation, useNavigate, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 
 import ProfileBar from '../ProfileBar/ProfileBar';
-import App from '../../App';
 import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
-import { addChannel, addChannelUser, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel } from '../../services/channel.service';
+import { addChannel, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
-import { BsPersonFillAdd } from 'react-icons/bs';
-import { getAllUsers, getUserByHandle, getUsersBySearchTerm } from '../../services/users.service';
+import { getUserByHandle, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
-import SearchBar from '../SearchBar/SearchBar';
 import { MAX_CHANNELNAMELENGTH, MIN_CHANNELNAME_LENGTH } from '../../common/constants';
 // import CleanSearchBar from '../CleanSearchBar/CleanSearchBar';
 import { IoAdd, IoRemove } from 'react-icons/io5';
@@ -117,9 +114,9 @@ const MyServers = () => {
 	};
 
 	const handleAddMember = (userHandle) => setChannelMembers({
-			...channelMembers,
-			[userHandle]: !channelMembers[userHandle],
-		});
+		...channelMembers,
+		[userHandle]: !channelMembers[userHandle],
+	});
 
 	return (
 		<div className="bg-gray-800 h-screen text-purple-lighter flex-col md:flex-col w-64 pb-6 md:block">
