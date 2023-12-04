@@ -39,7 +39,7 @@ const TeamIcon = ({ id }) => {
 		}
 	}, [id])
 
-	console.log('Team is seen by ', isTeamSeen)
+	//console.log('Team is seen by ', isTeamSeen)
 
 	return (
 		<>
@@ -48,7 +48,7 @@ const TeamIcon = ({ id }) => {
 					.then(channelId => navigate(`/teams/${currentTeam.id}/channels/${channelId}`))}
 				onContextMenu={handleContextMenu}
 			>
-				{!isTeamSeen.includes(userData.handle) && <div className='absolute left-[20px]'>
+				{!isTeamSeen.includes(userData.handle) && <div className='absolute left-[20px] animate-blink-icon'>
 					<RiCheckboxBlankCircleFill style={{ color: 'white' }} />
 				</div>
 				}

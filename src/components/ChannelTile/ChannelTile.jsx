@@ -26,7 +26,7 @@ const ChannelTile = ({ channelId, checkedChannels, updateCheckedChannels }) => {
 
     useEffect(() => {
         const unsubscribe = getLiveChannelSeenBy(data => {
-            setIsChannelSeen([...data])
+            setIsChannelSeen(data)
         }, channelId)
         return () => {
             unsubscribe();
