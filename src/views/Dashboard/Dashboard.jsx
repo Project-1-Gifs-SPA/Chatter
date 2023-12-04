@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import FriendsRequests from '../../components/FriendsRequests/FriendsRequests'
+import FriendsRequestsDashboard from '../../components/FriendsRequestsDashboard/FriendsRequestsDashboard'
 
 const Dashboard = () => {
 
@@ -27,7 +29,7 @@ const Dashboard = () => {
 					<div>
 						{show==='online' ? <p>online friends</p>: null}
 						{show==='all'? <p> all friends</p>: null}
-						{show==='requests'? <p> friends request</p>: null}
+						{show==='requests'? <FriendsRequestsDashboard />: null}
 						{show==='meetings'? <p> meetings</p>: null}   
 					</div>
 			
