@@ -188,3 +188,13 @@ export const declineFriendRequest = (handle, friendHandle) => {
       theme: "colored",
     }));
 }
+
+export const getLiveUserFriends = (listener, handle) => {
+  return onValue(
+    ref(db, `users/${handle}/friends`),
+    snapshot => {
+      const data = snapshot.exists() ? snapshot.val() : {};
+
+      listener(data);
+    });
+};
