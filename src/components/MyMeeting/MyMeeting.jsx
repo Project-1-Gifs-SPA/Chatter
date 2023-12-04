@@ -1,4 +1,4 @@
-import { DyteButton, DyteGrid, DyteMeeting, DyteRecordingIndicator, DyteRecordingToggle, DyteSetupScreen } from "@dytesdk/react-ui-kit";
+import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { useDyteMeeting, useDyteSelector } from "@dytesdk/react-web-core"
 import { useEffect } from "react";
 import {useNavigate, useParams} from "react-router"
@@ -36,12 +36,13 @@ const MyMeeting = () => {
     
     return(
 
-        <div style={{height:'50vh', width:'auto'}}>
+        <div style={{height:'50vh', width:'auto'}}  >
            
             <DyteMeeting 
             mode='fill'
             meeting={meeting}
             showSetupScreen={false}
+            className="bg-gray-700"    
              />
             
            
