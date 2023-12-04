@@ -95,7 +95,7 @@ const SearchBar = ({ team, dm }) => {
 				</form>
 			</div>
 
-			{searchedUsers && <div className='w-[300px] rounded bg-gray-700 bg-opacity-90 absolute  top-24 right-9 z-50'>
+			{searchedUsers && <div className='w-[300px] rounded bg-gray-700 bg-opacity-90 relative z-50'>
 				{searchedUsers.map(regUser => {
 					return (
 						<div key={regUser.uid} className='flex items-center'>
@@ -103,7 +103,8 @@ const SearchBar = ({ team, dm }) => {
 							{dmId && <div className='tooltip' data-tip='Add to chat'>
 									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
 								</div>}
-							{currentUser.handle !== regUser.handle && (team.owner === currentUser.handle && (
+								
+							{teamId && (team.owner === currentUser.handle && (
 								<div className='tooltip' data-tip='Add to team'>
 									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
 								</div>)
