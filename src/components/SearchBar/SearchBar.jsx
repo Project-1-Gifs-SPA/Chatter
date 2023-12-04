@@ -11,12 +11,14 @@ import { addDmMember, createGroupDM } from '../../services/dms.service';
 import { useParams } from 'react-router';
 
 const SearchBar = ({ team, dm, channel }) => {
+
 	const { userData } = useContext(AppContext)
 	const [allUsers, setAllUsers] = useState([]);
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchedUsers, setSearchedUsers] = useState([]);
 	const [currentUser, setCurrentUser] = useState({});
+  
 	const { dmId, teamId } = useParams();
 
 	useEffect(

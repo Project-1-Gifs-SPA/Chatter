@@ -11,13 +11,21 @@ import {
 	getLiveMessages,
 	sendDirectMessage,
 	sendMessage,
+	setChannelSeenBy,
+	setNotSeenChannel,
 } from "../../services/chat.service";
 import { useParams } from "react-router";
 import AppContext from "../../context/AppContext";
+import { FaRegSmile } from "react-icons/fa";
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
+
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId, dmId } = useParams();
+	const { channelId, dmId, teamId } = useParams();
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -25,9 +33,16 @@ const ChatBox = () => {
 	// }
 
 	// useEffect(()=> scrollToBottom, [messages]);
-
+	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
+	const [picURL, setPicURL] = useState([]);
+	const [showMenu, setShowMenu] = useState(false);
+	const [currentChannelId, setCurrentChannelId] = useState('')
+
+	useEffect(() => {
+		setCurrentChannelId(channelId)
+	}, [channelId])
 
 	const scrollToBottom = () => {
 		const chat = document.getElementById("chat");
@@ -45,49 +60,88 @@ const ChatBox = () => {
 
 	useEffect(() => {
 		scroll();
+		setChannelSeenBy(channelId, userData.handle);
+		setDmSeenBy(dmId, userData.handle);
+		//setNotSeenChannel(currentChannelId, teamId)
 	}, [messages]);
 
+// <<<<<<< team-channel
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			getChat(channelId)
+// 				.then((response) => setMessages(Object.values(response)))
+// 				.then(() => scrollToBottom());
+// =======
+
 	useEffect(() => {
-		if (channelId) {
-			getChat(channelId)
-				.then((response) => setMessages(Object.values(response)))
+		if (currentChannelId) {
+
+			getChat(currentChannelId)
+				.then((response) => {
+					setMessages(Object.values(response))
+					console.log('generating at ', currentChannelId)
+				})
 				.then(() => scrollToBottom());
+
+// >>>>>>> main
 		}
 		if (dmId) {
 			getDMChat(dmId)
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
 		}
-	}, [channelId, dmId]);
+// <<<<<<< team-channel
+// 	}, [channelId, dmId]);
+
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			const unsubscribe = getLiveMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// 			}, channelId);
+
+// 			return () => unsubscribe;
+// 		}
+// 		if (dmId) {
+// 			const unsubscribe = getLiveDirectMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// =======
+	}, [currentChannelId, dmId]);
 
 	useEffect(() => {
-		if (channelId) {
+		if (currentChannelId) {
 			const unsubscribe = getLiveMessages((snapshot) => {
-				setMessages(Object.values(snapshot.val()));
-			}, channelId);
+				const msgData = snapshot.exists() ? snapshot.val() : {};
+				setMessages(Object.values(msgData));
+			}, currentChannelId);
 
-			return () => unsubscribe;
+			return () => unsubscribe();
 		}
+
 		if (dmId) {
 			const unsubscribe = getLiveDirectMessages((snapshot) => {
-				setMessages(Object.values(snapshot.val()));
+				const msgData = snapshot.exists() ? snapshot.val() : {};
+				setMessages(Object.values(msgData));
+
+// >>>>>>> main
 			}, dmId);
 
-			return () => unsubscribe;
+			return () => unsubscribe();
 		}
-	}, [channelId, dmId]);
+
+	}, [currentChannelId, dmId]);
 
 	const handleMsg = (e) => {
 		e.preventDefault();
-
-		if (channelId) {
-			sendMessage(channelId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(""));
+		if (currentChannelId) {
+			sendMessage(currentChannelId, userData.handle, msg, userData.photoURL)
+				.then(() => setMsg(""))
+				.then(() => setNotSeenChannel(currentChannelId, teamId))
 		}
 
 		if (dmId) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(''));
+				.then(() => setMsg(''))
+				.then(() => setNotSeenDm(dmId, teamId))
 		}
 	};
 
@@ -105,28 +159,74 @@ const ChatBox = () => {
 				<Message /> */}
 				{messages.length
 					? messages.map((message) => (
-						<Message key={message.id} message={message} />
+						<Message key={message.id} message={message} channelId={currentChannelId} dmId={dmId} />
 					))
 					: null}
 			</div>
-			{channelId || dmId ? <form
-				style={{
-					backgroundColor: "gray 900",
-					color: "white",
-					fontWeight: "bold",
-					border: "none",
-					padding: "10px 20px",
-				}}
-				onSubmit={handleMsg}
-			>
-				<input
-					style={{ padding: "10px 20px", width: "100%" }}
-					type="text"
-					value={msg}
-					onChange={(e) => setMsg(e.target.value)}
-				/>
-				{/* <button type='submit' className='ml-50'>Send</button> */}
-			</form> : null}
+
+			{currentChannelId || dmId ?
+				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
+					<div className='flex-grow'>
+						<form
+							style={{
+								backgroundColor: "gray 900",
+								color: "white",
+								border: "none",
+								padding: "2px 20px",
+							}}
+							onSubmit={handleMsg}
+						>
+							<input
+								className="bg-gray-800 border-none rounded"
+								style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
+								type="text"
+								value={msg}
+								placeholder={`Type something...`}
+								onChange={(e) => setMsg(e.target.value)}
+							/>
+
+							{/* <button type='submit' className='ml-50'>Send</button> */}
+						</form>
+					</div>
+					<div className="relative inline-block pr-5">
+						<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
+							style={{
+								bottom: '42px',
+								left: 'auto',
+								right: '0'
+							}}>
+							<Picker
+								data={data} previewPosition='none' onEmojiSelect={(e) => {
+									setPickerVisible(!isPickerVisible);
+									setMsg(msg + e.native);
+								}} />
+						</div>
+						<div className="flex items-center justify-between">
+							<button style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}} className='btn btn-xs rounded-full' onClick={() => setPickerVisible(!isPickerVisible)}>
+								<FaRegSmile className="w-6 h-6" />
+							</button>
+							<label style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}}
+								htmlFor='pic'>
+								<IoDocumentAttachOutline className='w-6 h-6 text-white cursor-pointer' />
+								{/* <input className='upl hidden' id='pic' type='file' onChange={addImage} /> */}
+							</label>
+						</div>
+					</div>
+				</div> : null}
 		</div>
 	);
 };

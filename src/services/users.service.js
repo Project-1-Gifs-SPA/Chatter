@@ -1,5 +1,6 @@
 import { get, set, ref, query, equalTo, orderByChild, update, onValue } from 'firebase/database';
 import { db } from '../config/firebase-config';
+import { toast } from 'react-toastify';
 
 
 export const getUserByHandle = (handle) => {
@@ -89,7 +90,6 @@ export const getUsersBySearchTerm = (users, searchParam, searchTerm) => {
     );
 };
 
-
 export const addFriends = (handle, friendHandle) => {
   const updateFriends = {};
   updateFriends[`/users/${handle}/friends/${friendHandle}`] = true;
@@ -97,7 +97,16 @@ export const addFriends = (handle, friendHandle) => {
   updateFriends[`users/${handle}/friendRequests/${friendHandle}`] = null;
 
   return update(ref(db), updateFriends)
-  .then(() => alert("Friend request was accepted"));
+  .then(() => toast.success("Friend request was accepted", {
+    position: "top-center",
+    autoClose: 3500,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  }));
 };
 
 export const removeFriends = (handle, friendHandle) => {
@@ -105,24 +114,56 @@ export const removeFriends = (handle, friendHandle) => {
   updateFriends[`/users/${handle}/friends/${friendHandle}`] = null;
   updateFriends[`/users/${friendHandle}/friends/${handle}`] = null;
 
-  return update(ref(db), updateFriends);
+  return update(ref(db), updateFriends)
+  .then(() => toast.success("Successfully removed from friends", {
+    position: "top-center",
+    autoClose: 3500,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  }));
 }
 
 export const sendFriendRequest = (senderHandle, receiverHandle) => {
   const receiverFriendRequestsRef = ref(db, `/users/${receiverHandle}/friendRequests/${senderHandle}`);
 
   return get(receiverFriendRequestsRef)
-    .then((friendRequestSnapshot) => {
-      if (friendRequestSnapshot.exists()) {
-        // If the friend request already exists, reject with a message
-        return Promise.reject(alert("Friend request already sent to this user"));
+  .then((friendRequestSnapshot) => {
+    if (friendRequestSnapshot.exists()) {
+      // If the friend request already exists, display error toast
+      toast.error("Friend request already sent to this user", {
+        position: "top-center",
+        autoClose: 3500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return Promise.reject("Friend request already sent to this user");
       } else {
         // If the friend request doesn't exist, proceed to send the request
         const sendRequest = {};
         sendRequest[`/users/${receiverHandle}/friendRequests/${senderHandle}`] = true;
 
         return update(ref(db), sendRequest)
-          .then(() => alert("Friend request sent successfully"))
+          .then(() => {
+            // Display success toast for sending friend request
+            toast.success("Friend request sent successfully", {
+              position: "top-center",
+              autoClose: 3500,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          })
           .catch((error) => Promise.reject(error));
       }
     })
@@ -136,5 +177,14 @@ export const declineFriendRequest = (handle, friendHandle) => {
     updateFriendsRequest[`/users/${handle}/friendRequests/${friendHandle}`] = null;
 
     return update(ref(db), updateFriendsRequest)
-    .then(() => alert("Friend request was declined"));
+    .then(() => toast.success("Friend request was declined", {
+      position: "top-center",
+      autoClose: 3500,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    }));
 }

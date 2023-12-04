@@ -9,14 +9,16 @@ import SearchBar from '../SearchBar/SearchBar';
 import AppContext from '../../context/AppContext';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { MdPersonAddDisabled } from "react-icons/md";
+import { getLiveDMs } from '../../services/dms.service';
 
 const TeamSidebar = () => {
 	const { userData } = useContext(AppContext)
-	const [expanded, setExpanded] = useState(true)
+	const [expanded, setExpanded] = useState(false)
 	const [currentTeam, setCurrentTeam] = useState({});
 	const [members, setMembers] = useState([]);
-	const { teamId } = useParams();
+	const { teamId, dmId } = useParams();
 	const [currentUser, setCurrentUser] = useState({});
+	const [currentDM, setCurrentDm] = useState({})
 
 	useEffect(
 		() => {
@@ -31,13 +33,25 @@ const TeamSidebar = () => {
 		}, [userData]);
 
 	useEffect(() => {
+		console.log('get team or dm')
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
 		}, teamId)
 		return () => {
 			unsubscribe();
 		}
+
 	}, [teamId])
+
+	useEffect(() => {
+		const unsubscribe = getLiveDMs(data => {
+			setCurrentDm({ ...data })
+			console.log(data);
+		}, dmId)
+		return () => {
+			unsubscribe();
+		}
+	}, [dmId])
 
 	useEffect(() => {
 		if (currentTeam.members) {
@@ -56,7 +70,24 @@ const TeamSidebar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentTeam.members])
+
+		if (currentDM.members) {
+			const promises = Object.keys(currentDM.members).map(member => {
+				return getUserByHandle(member)
+					.then((snapshot) => {
+						return snapshot.val();
+					});
+			});
+
+			Promise.all(promises)
+				.then((membersData) => {
+					setMembers(membersData);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, [currentTeam.members, currentDM.members])
 
 	const handleSendFriendRequest = (user) => {
 		sendFriendRequest(userData.handle, user)
@@ -69,9 +100,7 @@ const TeamSidebar = () => {
 	return (
 		<div className="h-screen flex flex-col md:flex md:block justify-end bg-gray-800">
 			<div className="h-full flex flex-col border-r shadow-sm bg-gray-800">
-				<div className="border-b border-gray-600 flex px-6 py-2 items-center justify-between shadow-xl">
-					<p className={`text-white overflow-hidden transition-all ${expanded ? "w-54" : "w-0"
-						}`}>Members</p>
+				<div className="border-b border-gray-600 flex px-6 py-2 items-center shadow-xl">
 					<button
 						onClick={() => setExpanded((curr) => !curr)}
 						className="p-0 p-0 rounded-lg focus:outline-none"
@@ -80,6 +109,8 @@ const TeamSidebar = () => {
 							<div className='tooltip tooltip-bottom' data-tip="Show members"><IoPeopleSharp className="text-purple-500 text-2xl" /></div>
 						}
 					</button>
+					<p className={`ml-3 text-white overflow-hidden transition-all ${expanded ? "w-54" : "w-0"
+						}`}>Members</p>
 				</div>
 				<div
 					className={`
@@ -88,7 +119,7 @@ const TeamSidebar = () => {
           `}
 				>
 					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-						<SearchBar team={currentTeam} />
+						<SearchBar team={currentTeam} dm={currentDM} />
 						{/* Everything in the sidebar */}
 						{members.length ?
 							(members.map(member => {

@@ -29,25 +29,37 @@ export const addDmMember = (newMember, dmId) => {
     return update(ref(db), addDmMember);
 }
 
-
 export const createGroupDM = (partner, handle, newMember, dmId ) => {
     const updates = {};
 
-    updates[`users/${handle}/DMs/${partner[0]}`] = null;
+    updates[`users/${handle}/DMs/${partner}`] = null;
     updates[`users/${handle}/groupDMs/${dmId}`] = true;
-    updates[`users/${partner[0]}/DMs/${handle}`] = null;
-    updates[`users/${partner[0]}/groupDMs/${dmId}`] = true;
+    updates[`users/${partner}/DMs/${handle}`] = null;
+    updates[`users/${partner}/groupDMs/${dmId}`] = true;
     updates[`users/${newMember}/groupDMs/${dmId}`] = true;
+    updates[`dms/${dmId}/members/${newMember}`] = true;
 
     return update(ref(db), updates);
 };
 
 export const getLiveGroupDMs = (listenFn, handle) => {
-    return onValue(ref(db, `users/${handle}/groupDMs`)).then((snapshot)=>{
+    return onValue(ref(db, `users/${handle}/groupDMs`), (snapshot)=>{
         const data = snapshot.exists() ? snapshot.val() : {};
 
         listenFn(data);
     });
+}
+
+export const getLiveUserDMs = (listenFn, handle) => {
+    return onValue(ref(db, `users/${handle}/DMs`), (snapshot)=>{
+        const data = snapshot.exists() ? snapshot.val() : {};
+
+        listenFn(data);
+    });
+}
+
+export const getDMById =(dmId) => {
+    return get(ref(db, `dms/${dmId}`));
 }
 
 export const getLiveDMs = (listenFn, dmId) => {
@@ -58,10 +70,88 @@ export const getLiveDMs = (listenFn, dmId) => {
     });
 }
 
-export const deleteMember = (dmId, member) => {
+export const getLiveGroupDMsMembers = (listenFn, dmId) =>{
+    return onValue(ref(db, `dms/${dmId}/members` ), (snapshot)=>{
+        const data = snapshot.exists() ? snapshot.val() : {};
+
+        listenFn(data);
+    })
+}
+
+export const deleteGroupMember = (dmId, member) => {
     const updateMember = {};
     updateMember[`/users/${member}/groupDMs/${dmId}`] = null;
     updateMember[`dms/${dmId}/members/${member}`] = null;
 
     return update(ref(db), updateMember);
 }
+
+export const editDMmessage = (content, dmId, msgId) => {
+    return update(
+        ref(db,`dms/${dmId}/msgs/${msgId}`),
+        {
+          body:content
+        }
+      )
+}
+
+export const getDMbyId = (dmId) => {
+    return get(ref(db,`dms/${dmId}`))
+    .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+}
+
+export const getLiveDmMembers = (listenFn, dmId) => {
+    return onValue(
+        ref(db, `dms/${dmId}/members`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
+}
+
+
+export const addDMstatusEdited = (dmId, msgId) => {
+    const DmStatus = {};
+    DmStatus[`dms/${dmId}/msgs/${msgId}/edited`] = true;
+
+    return update(ref(db), DmStatus);
+}
+
+export const addDmReaction = (reaction,userHandle, dmId, msgId) => {
+    const dmReaction = {};
+    dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = true;
+    return update(ref(db), dmReaction);
+}
+
+export const removeDMReaction = (reaction,userHandle, dmId, msgId) => {
+    const dmReaction = {};
+    dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
+    return update(ref(db), dmReaction);
+}
+
+export const setDmSeenBy = (dmId, user) => {
+    const updates = {};
+      updates[`dms/${dmId}/seenBy/${user}`] = true;
+      return update(ref(db), updates);
+  };
+
+  export const setNotSeenDm = (dmId) => {
+      const updates = {};
+      updates[`dms/${dmId}/seenBy/`] = null;
+      return update(ref(db), updates);
+    }
+
+    export const getLiveIsDMSeen = (listenFn, dmId) => {
+        return onValue(
+           ref(db,`dms/${dmId}/seenBy`),
+           snapshot => {
+               const data = snapshot.exists() ? snapshot.val() : {};
+               const result = Object.keys(data);
+        
+               listenFn(result);
+           }
+        )
+    }

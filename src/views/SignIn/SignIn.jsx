@@ -3,6 +3,7 @@ import AppContext from '../../context/AppContext';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { loginUser } from '../../services/auth.service';
+import { toast } from 'react-toastify';
 
 const SignIn = () => {
 	const [form, setForm] = useState({
@@ -27,11 +28,29 @@ const SignIn = () => {
 
 	const onLogin = () => {
 		if (!form.email) {
-			alert("Email is required");
+			toast.error("Email is required", {
+				position: "top-center",
+				autoClose: 3500,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 			return;
 		}
 		if (!form.password && form.password.length < 6) {
-			alert("Password is required and must be at least 6 characters long");
+			toast.error("Password is required and must be at least 6 characters long", {
+				position: "top-center",
+				autoClose: 3500,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
 			return;
 		}
 

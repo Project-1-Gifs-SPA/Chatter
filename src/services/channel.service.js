@@ -45,7 +45,36 @@ export const removeChannel = (teamId, channelId) => {
     set(ref(db, `channels/${channelId}`), {});
 }
 
-export const createDefaultChannel = (teamId) => addChannel(teamId, 'General', true);
+// export const createDefaultChannel = (teamId) => addChannel(teamId, 'General', true);
+
+export const createDefaultChannel = (teamId, members) => {
+    if(!teamId) return;
+    return addChannel(teamId, members, 'General');
+}
+
+export const getGeneralChannel = (teamId) => {
+    return getChannelInTeamByName(teamId, 'General')
+        .then(async answer =>  answer !== 'No such channel'
+                ? answer
+                : await createDefaultChannel(teamId, await getAllTeamMembers())
+        );
+    // return get(ref(db, `teams/${teamId}/channels`))
+    //     .then(async snapshot => {
+    //         const channelIds = Object.keys(snapshot.exists() ? snapshot.val() : [await createDefaultChannel(teamId, await getAllTeamMembers(teamId))]);
+    //         const channels = channelIds.map(async (channelId) => await getChannelById(channelId));
+    //         console.table(channelIds);
+    //         console.table(channels);
+
+    //         return channels.length === 1
+    //             ? channels[0]
+    //             : channels.filter(channel => channel.name === 'General' ? channel : false)[0];
+    //     });
+
+
+    // Object.keys(channelIds)
+    //     .filter(channelId => getChannelById(channelId)
+    //         .then(channel => channel.name === 'General' ? channel : null)
+}
 
 export const getGeneralChannel = (teamId) => getChannelInTeamByName(teamId, 'General')
     .then(answer => answer !== 'No such channel'
@@ -93,7 +122,7 @@ export const getAllPrivateChannelsByTeam = (teamId) => getAllChannelsByTeam(team
 export const getChannelById = (channelId) => get(ref(db, `channels/${channelId}`))
     .then(snapshot => snapshot.exists() ? snapshot.val() : {});
 
-export const getChannelInTeamByName = (teamId, channelName) => getAllChannelsByTeam(teamId)
+  export const getChannelInTeamByName = (teamId, channelName) => getAllChannelsByTeam(teamId)
     .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
         .then(channels => {
             const filtered = channels.filter(channel => channel.name === channelName)
@@ -112,3 +141,98 @@ export const getChannelIdsInTeamByUser = (teamId, userHandle) => getAllChannelsB
                 ? channel : false
             : false)
             .map(channel => channel.id)));
+}
+
+// export const getAllChannelsByTeam = (teamId) => {
+//     return get(ref(db, `teams/${teamId}/channels`))
+//         .then(snapshot => Object.keys(snapshot.exists() ? snapshot.val() : {})); // always true
+// }
+
+// export const getChannelById = (channelId) => {
+//     return get(ref(db, `channels/${channelId}`))
+//         .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+// }
+// export const getChannelInTeamByName = (teamId, channelName) => {
+//     return getAllChannelsByTeam(teamId)
+//         .then(async channelIds => {
+//             const channels = await Promise.all(channelIds.map(channelId => getChannelById(channelId)));
+//             // const channels = {};
+//             // await channelIds.map(async channelId => {
+//             //     const answer = await getChannelById(channelId);
+//             //     channels[answer.name] = answer;
+//             //     console.log(answer);
+//             //     console.log(channels[answer.name]);
+//             //     console.log(channels[channelName]);
+//             // });
+//             // console.log(channels[channelName]);
+//             console.log(channelIds);
+//             console.log(channels);
+//             console.table(channels);
+//             const filtered = channels.filter(channel => channel.name === channelName ? channel : false);
+//             console.log(filtered);
+//             // console.log(filtered ? filtered[0].id : 'No such channel');
+//             return filtered.length ? filtered[0].id : 'No such channel';
+//             // console.log(channelName);
+//             // console.log(`${channels}[${channelName}]`);
+//             // console.log(Object.keys(channels));
+//             // console.log(channels[channelName]);
+//             // return channels[channelName] ? channels[channelName] : 'No such channel';
+//         });
+// }
+
+// export const getChannelInTeamByName = (teamId, channelName) => {
+//     return getAllChannelsByTeam(teamId)
+//         .then(async channelIds => {
+//             const channels = await channelIds.map(async channelId => {
+//                 const answer = await getChannelById(channelId);
+//                 return answer;
+//             });
+//             const filtered = channels.filter(channel => channel.name === channelName ? channel : false);
+//             console.log(channels.id);
+//             console.log(channelIds);
+//             console.log(channels);
+//             console.log(filtered);
+//             console.log(filtered ? filtered[0] : 'No such channel');
+//             return filtered.length ? filtered[0] : 'No such channel';
+//         });
+// }
+
+export const editChannelMessage = (content, channelId, msgId) => {
+    return update(
+        ref(db,`channels/${channelId}/msgs/${msgId}`),
+        {
+          body:content
+        }
+      )
+}
+
+export const addChannelMsgStatusEdited = (channelId, msgId) => {
+    const ChannelMsgStatus = {};
+    ChannelMsgStatus[`channels/${channelId}/msgs/${msgId}/edited`] = true;
+
+    return update(ref(db), ChannelMsgStatus);
+}
+
+export const addChannelReaction = (reaction,userHandle, channelId, msgId) => {
+    const channelReaction = {};
+    channelReaction[`channels/${channelId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = true;
+    return update(ref(db), channelReaction);
+}
+
+export const removeChannelReaction = (reaction,userHandle, channelId, msgId) => {
+    const channelReaction = {};
+    channelReaction[`channels/${channelId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
+    return update(ref(db), channelReaction);
+}
+
+export const getLiveChannelSeenBy = (listenFn, channelId) => {
+    return onValue(
+        ref(db, `channels/${channelId}/seenBy`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
+}

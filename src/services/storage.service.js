@@ -1,6 +1,7 @@
 import { updateProfile } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { updateUserPhoto } from './users.service';
+import { updateTeamPhoto } from './teams.service';
 
 export const storage = getStorage();
 
@@ -45,3 +46,20 @@ export const setDefaultPic = (user, picURL,setLoading) => {
 }
 
 //setTeamDefaultPic
+export const uploadTeamPhoto = (file, teamId, setLoading) => {
+
+  const fileRef = ref(storage, teamId + '.png');
+
+  setLoading(true);
+
+  return uploadBytes(fileRef, file)
+    .then(() => getDownloadURL(fileRef))
+    .then((photoURL)=> updateTeamPhoto(teamId, photoURL))
+    .then(() => {
+      setLoading(false);
+      // alert('Uploaded file!');
+    })
+    .catch((error) => {
+      console.error('Error uploading file:', error);
+    });
+}
