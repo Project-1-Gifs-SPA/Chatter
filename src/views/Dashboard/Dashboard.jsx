@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import OnlineFriends from '../../components/OnlineFriends/OnlineFriends'
+import AllFriends from '../../components/AllFriends/AllFriends'
 
 const Dashboard = () => {
 
@@ -7,7 +9,7 @@ const Dashboard = () => {
 
 	return (
 		<div className='bg-gray-700 w-full'>
-			<div className="bg-gray-800 w-[1000px] h-[100vh] py-4 px-4 mx-auto">
+			<div className="bg-gray-800 w-[1000px] h-[100vh] pt-5 px-4 mx-auto">
 				<div className="flex flex-col lg:flex-row lg:items-center gap-4">
 					<p className="text-white mb-4 lg:mb-0 ml-4">Friends</p>
 					<div className="flex items-center lg:ml-4">
@@ -23,8 +25,8 @@ const Dashboard = () => {
 				</div>
 
 				<div>
-					{show === 'online' ? <p>online friends</p> : null}
-					{show === 'all' ? <p> all friends</p> : null}
+					{show === 'online' ? <OnlineFriends /> : null}
+					{show === 'all' ? <AllFriends /> : null}
 					{show === 'requests' ? <p> friends request</p> : null}
 					{show === 'meetings' ? <p> meetings</p> : null}
 				</div>
