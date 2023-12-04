@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import TeamIcon from '../TeamIcon/TeamIcon';
 import DMIcon from '../DMIcon/DMIcon';
 import AddTeam from '../AddTeam/AddTeam';
-import { logoutUser } from '../../services/auth.service';
 import AppContext from '../../context/AppContext';
 import { useNavigate, useParams } from 'react-router';
 import { getLiveAllTeams } from '../../services/teams.service';
 import { getLiveUserInfo, getUserByHandle } from '../../services/users.service';
 import FriendsRequests from '../FriendsRequests/FriendsRequests';
 import ContextMenu from '../ContextMenu/ContextMenu';
+import { MdOutlineWbTwilight } from "react-icons/md";
+
+
 
 const SideBar = () => {
 	const { user, userData, setContext } = useContext(AppContext);
@@ -17,11 +19,8 @@ const SideBar = () => {
 	const [allTeams, setAllTeams] = useState([]);
 	const [currentUser, setCurrentUser] = useState({});
 	const [requests, setRequests] = useState([]);
-	
 
 	useEffect(() => {
-		console.log('live teams')
-
 		const u = getLiveUserInfo((data) => {
 			setCurrentUser(data)
 		}, userData?.handle)
@@ -29,31 +28,19 @@ const SideBar = () => {
 		const unsubscribe = getLiveAllTeams((result) => {
 			setAllTeams(result);
 		})
-
 		return () => {
 			unsubscribe();
 			u();
 		}
 	}, [userData])
 
-	console.log(currentUser)
-
-	
-
-
-
 	useEffect(() => {
-		console.log('getting teams');
 		const teamArr = [];
 		if (currentUser.teams) {
-	
-			(Object.keys(currentUser.teams)).forEach(id=>teamArr.push(id));
+			(Object.keys(currentUser.teams)).forEach(id => teamArr.push(id));
 		}
-
 		if (currentUser.myTeams) {
-	
-
-			(Object.keys(currentUser.myTeams)).forEach(id=>teamArr.push(id));
+			(Object.keys(currentUser.myTeams)).forEach(id => teamArr.push(id));
 		}
 		setTeams(teamArr);
 	}, [allTeams, currentUser])
@@ -75,10 +62,7 @@ const SideBar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentUser.friendRequests])
-
-	console.log(requests)
-
+	}, [currentUser.friendRequests]);
 
 	return (
 		<>
@@ -88,12 +72,16 @@ const SideBar = () => {
 					<DMIcon />
 					{teams.length ?
 						teams.map(teamId => {
-							return <TeamIcon key={teamId} id={teamId} />
+							return <div key={teamId}>
+
+								<TeamIcon id={teamId} />
+
+							</div>
 						}) : null
 					}
 					<AddTeam />
-				</div>
-				
+				</div >
+
 				<button onClick={() => setShowModal(true)}
 					className="btn mb-2 bg-gray-800 border-none text-white text-sm"
 					style={{ width: '80px', height: '70px', padding: '4px 8px' }}
@@ -104,7 +92,8 @@ const SideBar = () => {
 					Friends requests
 				</button>
 			</div >
-			{showModal && <FriendsRequests friendsRequests={currentUser.friendRequests} onClose={() => setShowModal(false)} />}
+			{showModal && <FriendsRequests friendsRequests={currentUser.friendRequests} onClose={() => setShowModal(false)} />
+			}
 			{/* </div > */}
 		</>
 	)

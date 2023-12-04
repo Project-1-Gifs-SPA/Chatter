@@ -97,7 +97,6 @@ export const getChannelById = (channelId) => {
     return get(ref(db, `channels/${channelId}`))
         .then(snapshot => snapshot.exists() ? snapshot.val() : {});
 }
-
 export const getChannelInTeamByName = (teamId, channelName) => {
     return getAllChannelsByTeam(teamId)
         .then(async channelIds => {
@@ -169,4 +168,16 @@ export const removeChannelReaction = (reaction,userHandle, channelId, msgId) => 
     const channelReaction = {};
     channelReaction[`channels/${channelId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
     return update(ref(db), channelReaction);
+}
+
+export const getLiveChannelSeenBy = (listenFn, channelId) => {
+    return onValue(
+        ref(db, `channels/${channelId}/seenBy`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
 }

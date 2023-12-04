@@ -34,16 +34,16 @@ const TeamSidebar = () => {
 
 	useEffect(() => {
 		console.log('get team or dm')
-			const unsubscribe = getLiveTeamInfo(data => {
-				setCurrentTeam({ ...data })
-			}, teamId)
-			return () => {
-				unsubscribe();
-			}
-	
+		const unsubscribe = getLiveTeamInfo(data => {
+			setCurrentTeam({ ...data })
+		}, teamId)
+		return () => {
+			unsubscribe();
+		}
+
 	}, [teamId])
 
-	useEffect(()=>{
+	useEffect(() => {
 		const unsubscribe = getLiveDMs(data => {
 			setCurrentDm({ ...data })
 			console.log(data);
@@ -51,8 +51,7 @@ const TeamSidebar = () => {
 		return () => {
 			unsubscribe();
 		}
-	},[dmId])
-
+	}, [dmId])
 
 	useEffect(() => {
 		if (currentTeam.members) {
@@ -88,11 +87,7 @@ const TeamSidebar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentTeam.members,currentDM.members])
-
-	
-
-	
+	}, [currentTeam.members, currentDM.members])
 
 	const handleSendFriendRequest = (user) => {
 		sendFriendRequest(userData.handle, user)

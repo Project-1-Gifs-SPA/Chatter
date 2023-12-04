@@ -132,3 +132,26 @@ export const removeDMReaction = (reaction,userHandle, dmId, msgId) => {
     return update(ref(db), dmReaction);
 }
 
+export const setDmSeenBy = (dmId, user) => {
+    const updates = {};
+      updates[`dms/${dmId}/seenBy/${user}`] = true;
+      return update(ref(db), updates);
+  };
+
+  export const setNotSeenDm = (dmId) => {
+      const updates = {};
+      updates[`dms/${dmId}/seenBy/`] = null;
+      return update(ref(db), updates);
+    }
+
+    export const getLiveIsDMSeen = (listenFn, dmId) => {
+        return onValue(
+           ref(db,`dms/${dmId}/seenBy`),
+           snapshot => {
+               const data = snapshot.exists() ? snapshot.val() : {};
+               const result = Object.keys(data);
+        
+               listenFn(result);
+           }
+        )
+    }
