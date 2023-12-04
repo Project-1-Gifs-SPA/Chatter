@@ -1,7 +1,7 @@
 import { useParams } from "react-router"
-import ChatBox from "../../components/ChatBox/ChatBox"
-import MyServers from "../../components/MyServers/MyServers"
 import SideBar from "../../components/SideBar/SideBar"
+import MyServers from "../../components/MyServers/MyServers"
+import ChatBox from "../../components/ChatBox/ChatBox"
 import TeamSidebar from "../../components/TeamSidebar/TeamSidebar"
 
 const MainPage = () => {

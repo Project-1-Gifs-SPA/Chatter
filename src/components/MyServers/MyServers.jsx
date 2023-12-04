@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
-import { GoChevronDown, GoChevronUp, GoPlus } from "react-icons/go";
+import { useState, useEffect, useContext, useRef } from 'react'
+import { GoPlus } from "react-icons/go";
 
 import { getAllTeamMembers, getLiveTeamInfo, getTeamById } from '../../services/teams.service';
-import { useLocation, useNavigate, useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 
 import ProfileBar from '../ProfileBar/ProfileBar';
-import App from '../../App';
 import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
-import { addChannel, addChannelUser, getChannelById, getChannelInTeamByName, getLiveChannelSeenBy } from '../../services/channel.service';
+import { addChannel, addChannelUser, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel, getLiveChannelSeenBy } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
-import { BsPersonFillAdd } from 'react-icons/bs';
-import { getAllUsers, getUsersBySearchTerm } from '../../services/users.service';
+import { getUserByHandle, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
-import SearchBar from '../SearchBar/SearchBar';
+import { MAX_CHANNELNAMELENGTH, MIN_CHANNELNAME_LENGTH } from '../../common/constants';
+// import CleanSearchBar from '../CleanSearchBar/CleanSearchBar';
+import { IoAdd, IoRemove } from 'react-icons/io5';
+import SearchBarChoose from '../SearchBarChoose/SearchBarChoose';
 
 import GroupDmTile from '../GroupDmTile/GroupDmTile';
 import { getDMById, getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveIsDMSeen, getLiveUserDMs } from '../../services/dms.service';
@@ -25,8 +26,12 @@ import { setChannelSeenBy, setTeamSeenBy, setTeamsNotSeenBy } from '../../servic
 
 const MyServers = () => {
 
+	const [isOpen, setIsOpen] = useState(false);
+
 	const { userData } = useContext(AppContext);
 	const { teamId, dmId } = useParams();
+
+	const [team, setTeam] = useState('');
 
 	const navigate = useNavigate();
 
@@ -35,6 +40,12 @@ const MyServers = () => {
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
+
+	const [generalId, setGeneralId] = useState('');
+
+
+	// const { userData } = useContext(AppContext)
+
 	const [expanded, setExpanded] = useState(true)
 	const [checkedChannels, setCheckedChannels] = useState(0);
 	const [allDms, setAllDms] = useState([])
@@ -43,24 +54,46 @@ const MyServers = () => {
 	const modalRef = useRef(null);
 
 	const [channelName, setChannelName] = useState('');
-	const [channelMembers, setChannelMembers] = useState('');
+	const [isPublic, setIsPublic] = useState(true);
+	const [channelMembers, setChannelMembers] = useState({});
+	const [allTeamMembers, setAllTeamMembers] = useState([]);
 
 	const [channelError, setChannelError] = useState('');
 
 	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
 	const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs) : []);
 
-	useEffect(() => {
-		getAllUsers()
-			.then((r) => {
-				setChannelMembers([...r].sort((a, b) => b.createdOn - a.createdOn));
-			})
-	}, []);
+	const [dms, setDms] = useState(userData.DMs ? Object.values(userData.DMs) : [])
 
 	useEffect(() => {
+		if (!teamId) { return; }
+
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
-		}, teamId)
+		}, teamId);
+
+		getTeamById(teamId)
+			.then(team => setTeam(team));
+
+		getChannelIdsInTeamByUser(teamId, userData.handle)
+			.then(channels => setCurrentChannels(channels));
+
+		getGeneralChannel(teamId)
+			.then((r) => {
+				setGeneralId(r);
+			});
+
+		getAllTeamMembers(teamId)
+			.then(memberHandles => Promise.all(memberHandles.map(memberHandle => getUserByHandle(memberHandle)
+				.then(answer => answer.val())
+			))
+				.then(members => {
+					setAllTeamMembers(members);
+
+					const formattedMembers = {};
+					members.map(member => (formattedMembers[member.handle] = false));
+					setChannelMembers({ ...formattedMembers });
+				}));
 
 		return () => {
 			unsubscribe();
@@ -89,7 +122,7 @@ const MyServers = () => {
 
 		if (!teamId) return;
 
-		if (channelName.length < MIN_CHANNEL_LENGTH || channelName > MAX_CHANNEL_LENGTH) {
+		if (channelName.length < MIN_CHANNEL_LENGTH || channelName.length > MAX_CHANNEL_LENGTH) {
 			setChannelError('Channel name must be between 3 and 40 characters');
 			throw new Error('Channel name must be between 3 and 40 characters');
 		}
@@ -103,15 +136,18 @@ const MyServers = () => {
 					throw new Error(`Channel ${channelName} already exists`);
 				}
 
-				addChannel(teamId, channelMembers, channelName)
+				addChannel(teamId, channelName, isPublic, Object.keys(channelMembers).filter(member => channelMembers[member]))
 					.then(channelId => {
-						navigate(`/teams/${teamId}/channels/${channelId}`)
+						navigate(`/teams/${teamId}/channels/${channelId}`);
 					});
 			})
 			.catch(e => console.log(e)) //better error handling
-		// document.getElementById(modalRef.current.id).close();
-		// console.log(modalRef.current.id)
 	}
+
+	const handleAddMember = (userHandle) => setChannelMembers({
+		...channelMembers,
+		[userHandle]: !channelMembers[userHandle],
+	});
 
 	// const handleSearchTerm = async (e) => {
 	// 	setSearchTerm(e.target.value.toLowerCase());
@@ -167,6 +203,18 @@ const MyServers = () => {
 
 			<div className="flex flex-col h-screen">
 				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
+//<<<<<<< team-channel
+//					<div className="flex-auto">
+//						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
+//					</div>
+//				</div>
+//				<div className='flex mx-auto content-center items-center'>
+//					<div className='text-xl mr-4'>
+//						Channels
+//					</div>
+//					{teamId && <div
+//						className="cursor-pointer"
+//=======
 					<div className="flex justify-between items-center max-w-">
 						<h1
 							style={{ fontFamily: 'Rockwell, sans-serif' }}
@@ -188,6 +236,7 @@ const MyServers = () => {
 					<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
 						<div className='text-xl mr-4 text-white'
 							style={{ fontFamily: 'Rockwell, sans-serif' }}>
+//>>>>>>> main
 
 							Channels
 						</div>
@@ -200,7 +249,12 @@ const MyServers = () => {
 								<GoPlus className="h-10 w-10" />
 							</div>
 						</div>
+//<<<<<<< team-channel
+//					</div>}
+//				</div>
+//=======
 					</div>
+//>>>>>>> main
 
 					<dialog ref={modalRef} id="create-channel" className="modal">
 						<div className="modal-box">
@@ -212,20 +266,55 @@ const MyServers = () => {
 
 								<form method="dialog" >
 
-									{/* if there is a button in form, it will close the modal */}
-									<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
-									<button className="btn">Close</button>
-								</form>
+								{/* if there is a button in form, it will close the modal */}
+								<div className='flex-auto'>
+									<p>Create public channel</p>
+									<input type="checkbox" className="checkbox"
+										checked={isPublic ? "checked" : ""}
+										onClick={() => setIsPublic(!isPublic)} />
+								</div>
+
+								{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
+
+								<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
+								<button className="btn">Close</button>
+							</form>
 
 							</div>
 						</div>
+//<<<<<<< team-channel
+//					</div>
+//				</dialog>
+//				{currentTeam?.channels && generalId
+//					? currentChannels.map(channelId => <ChannelTile
+//						key={channelId}
+//						channelId={channelId}
+//						generalId={generalId}
+//						isOwner={currentTeam.owner === userData.handle}
+//						addMembers={handleAddMember}
+//						channelMembers={channelMembers}
+//						teamMembers={allTeamMembers}
+//            checkedChannels={checkedChannels}
+//            updateCheckedChannels={updateCheckedChannels}
+//					/>)
+//=======
 					</dialog>
 				</>
+//>>>>>>> main
 					: null}
 				<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
 					{currentTeam.channels
-						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile key={channelId} channelId={channelId} checkedChannels={checkedChannels}
-							updateCheckedChannels={updateCheckedChannels} />)
+						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile
+						key={channelId}
+						channelId={channelId}
+						generalId={generalId}
+						isOwner={currentTeam.owner === userData.handle}
+						addMembers={handleAddMember}
+						channelMembers={channelMembers}
+						teamMembers={allTeamMembers}
+            checkedChannels={checkedChannels}
+            updateCheckedChannels={updateCheckedChannels}
+					/>)
 						: (
 							<>
 								{dms && allDms.map((dm) => {

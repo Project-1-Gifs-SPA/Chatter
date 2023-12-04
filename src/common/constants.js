@@ -30,6 +30,11 @@ export const isValidPhoneNumber = (phoneNumber) =>{
 	return regex.test(phoneNumber);
 }
 
+export const MAX_TEAMNAME_LENGTH = 40;
+
+export const MIN_CHANNELNAME_LENGTH = 3;
+
+export const MAX_CHANNELNAMELENGTH = 40; // remove
 
 export const reactions = {
 	like: '👍',
@@ -41,3 +46,4 @@ export const reactions = {
 }
 
 //+1 when clicked
+

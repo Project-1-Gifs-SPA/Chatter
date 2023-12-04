@@ -32,7 +32,7 @@ const SideBar = () => {
 			unsubscribe();
 			u();
 		}
-	}, [userData])
+	}, [userData]);
 
 	useEffect(() => {
 		const teamArr = [];

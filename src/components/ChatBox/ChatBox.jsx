@@ -65,6 +65,13 @@ const ChatBox = () => {
 		//setNotSeenChannel(currentChannelId, teamId)
 	}, [messages]);
 
+// <<<<<<< team-channel
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			getChat(channelId)
+// 				.then((response) => setMessages(Object.values(response)))
+// 				.then(() => scrollToBottom());
+// =======
 
 	useEffect(() => {
 		if (currentChannelId) {
@@ -76,12 +83,28 @@ const ChatBox = () => {
 				})
 				.then(() => scrollToBottom());
 
+// >>>>>>> main
 		}
 		if (dmId) {
 			getDMChat(dmId)
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
 		}
+// <<<<<<< team-channel
+// 	}, [channelId, dmId]);
+
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			const unsubscribe = getLiveMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// 			}, channelId);
+
+// 			return () => unsubscribe;
+// 		}
+// 		if (dmId) {
+// 			const unsubscribe = getLiveDirectMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// =======
 	}, [currentChannelId, dmId]);
 
 	useEffect(() => {
@@ -99,10 +122,12 @@ const ChatBox = () => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
 
+// >>>>>>> main
 			}, dmId);
 
 			return () => unsubscribe();
 		}
+
 	}, [currentChannelId, dmId]);
 
 	const handleMsg = (e) => {
