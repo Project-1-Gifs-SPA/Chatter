@@ -7,16 +7,16 @@ import TeamMember from "../TeamMember/TeamMember";
 const FriendsRequestsDashboard = () => {
 
 
-    const {userData} = useContext(AppContext);
-    const [requests, setRequests] = useState([])
-    const [currentUser, setCurrentUser] = useState({});
+	const { userData } = useContext(AppContext);
+	const [requests, setRequests] = useState([])
+	const [currentUser, setCurrentUser] = useState({});
 
 
-    useEffect(() => {
+	useEffect(() => {
 		if (currentUser.friendRequests) {
 
 
-            console.log(Object.keys(currentUser.friendRequests))
+			console.log(Object.keys(currentUser.friendRequests))
 			const promises = Object.keys(currentUser.friendRequests).map(request => {
 				return getUserByHandle(request)
 					.then((snapshot) => {
@@ -32,21 +32,21 @@ const FriendsRequestsDashboard = () => {
 					console.error(error);
 				});
 		}
-        setRequests([]);
+		setRequests([]);
 	}, [currentUser.friendRequests])
 
 
-    useEffect(() => {
+	useEffect(() => {
 		const u = getLiveUserInfo((data) => {
 			setCurrentUser(data)
 		}, userData?.handle)
 
-        return () => u();
+		return () => u();
 
-    }, [userData]);
+	}, [userData]);
 
 
-    const handleAcceptRequest = (handle) => {
+	const handleAcceptRequest = (handle) => {
 		addFriends(userData.handle, handle)
 	}
 
@@ -54,23 +54,28 @@ const FriendsRequestsDashboard = () => {
 		declineFriendRequest(userData.handle, handle)
 	}
 
-    return (
+	return (
 
-<div>
-			<div className='w-[350px] flex flex-col'>
-				<div>
+		<div>
+			<div className='flex flex-col'>
+				<div className='flex'>
 					{requests.length ? requests.map(friendRequest => {
 						return <div className='flex items-center justify-center mt-5' key={friendRequest.uid}>
 							<TeamMember member={friendRequest} owner={null} />
 							<p className='pl-5 mr-1 ml-2 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Accept' onClick={() => handleAcceptRequest(friendRequest.handle)}>✅</p>
 							<p className='pl-5 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Decline' onClick={() => handleDeclineRequest(friendRequest.handle)}>❌</p>
-						</div>}) : <h1>You have no new friend requests</h1>}
+						</div>
+					}) : <div className='flex justify-center'>
+						<p className='text-gray-500 text-center mt-20 text-3xl'>
+							You do not have friend requests.
+						</p>
+					</div>}
 
-    
-</div>
-</div>
-</div>
-    )
+
+				</div>
+			</div>
+		</div>
+	)
 }
 
 export default FriendsRequestsDashboard;

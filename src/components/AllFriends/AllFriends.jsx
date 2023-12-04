@@ -32,7 +32,7 @@ const AllFriends = () => {
 					</div>
 				)}
 			</div>
-		</div>
+		</div >
 	)
 }
 

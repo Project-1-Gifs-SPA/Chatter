@@ -48,7 +48,7 @@ const OnlineFriends = () => {
 					return <Friends friend={friend.handle} key={id} />
 				}) : (
 					<div className='flex justify-center'>
-						<p className='text-gray-500 text-center mt-20 text-3xl'>
+						<p className='text-gray-500 text-center mt-20 text-3xl' >
 							Your friends list seems lonely.<br className="md:hidden lg:inline" /> Connect with friends to start chatting.
 						</p>
 					</div>
