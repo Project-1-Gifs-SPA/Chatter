@@ -129,3 +129,17 @@ export const setChannelSeenBy = (channelId, user) => {
       updates[`teams/${teamId}/seenBy/${user}`] = null;
       return update(ref(db), updates);
     }
+
+    export const sendPictureMessage = (channelId, handle, picURL) => {
+
+        return push(ref(db, `channels/${channelId}/msgs`),{})
+        .then(response => {
+    
+            set(ref(db,`channels/${channelId}/msgs/${response.key}`), {
+                pic: picURL,
+                id: response.key,
+                owner:handle,
+                createdOn: serverTimestamp(),
+            });
+        })
+    }

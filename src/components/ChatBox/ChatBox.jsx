@@ -11,6 +11,7 @@ import {
 	getLiveMessages,
 	sendDirectMessage,
 	sendMessage,
+	sendPictureMessage,
 	setChannelSeenBy,
 	setNotSeenChannel,
 } from "../../services/chat.service";
@@ -21,6 +22,7 @@ import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
+import { uploadMessagePhoto } from "../../services/storage.service";
 
 
 const ChatBox = () => {
@@ -39,6 +41,7 @@ const ChatBox = () => {
 	const [picURL, setPicURL] = useState([]);
 	const [showMenu, setShowMenu] = useState(false);
 	const [currentChannelId, setCurrentChannelId] = useState('')
+	const [pic, setPic] = useState({});
 
 	useEffect(() => {
 		setCurrentChannelId(channelId)
@@ -105,19 +108,37 @@ const ChatBox = () => {
 	}, [currentChannelId, dmId]);
 
 	const handleMsg = (e) => {
+		console.log('msg handle')
 		e.preventDefault();
-		if (currentChannelId) {
+
+		if (pic && !msg){
+			console.log('pic handling')
+			uploadMessagePhoto(currentChannelId, userData.handle, pic)
+			.then(()=> setPic({}))
+		}
+
+		if (currentChannelId && msg) {
 			sendMessage(currentChannelId, userData.handle, msg, userData.photoURL)
 				.then(() => setMsg(""))
 				.then(() => setNotSeenChannel(currentChannelId, teamId))
 		}
 
-		if (dmId) {
+		if (dmId && msg) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
 				.then(() => setMsg(''))
 				.then(() => setNotSeenDm(dmId, teamId))
 		}
 	};
+
+
+	const handlePic = (e) => {
+		e.preventDefault();
+		if (e.target.files[0] !== null) {
+			setPic(e.target.files[0]);
+			// setMsg(e.target.files[0].name)
+			console.log(pic);
+		}
+	}
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -160,7 +181,13 @@ const ChatBox = () => {
 							/>
 
 							{/* <button type='submit' className='ml-50'>Send</button> */}
+							<input className='upl hidden' id='pic' type='file'  accept="image/jpeg, image/png, image/jpg" onChange={handlePic} onKeyDown={handleMsg}/>
 						</form>
+						
+						
+			
+						
+						
 					</div>
 					<div className="relative inline-block pr-5">
 						<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
@@ -196,7 +223,7 @@ const ChatBox = () => {
 							}}
 								htmlFor='pic'>
 								<IoDocumentAttachOutline className='w-6 h-6 text-white cursor-pointer' />
-								{/* <input className='upl hidden' id='pic' type='file' onChange={addImage} /> */}
+								
 							</label>
 						</div>
 					</div>

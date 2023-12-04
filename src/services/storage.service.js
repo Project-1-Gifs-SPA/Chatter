@@ -2,6 +2,7 @@ import { updateProfile } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { updateUserPhoto } from './users.service';
 import { updateTeamPhoto } from './teams.service';
+import { sendPictureMessage } from './chat.service';
 
 export const storage = getStorage();
 
@@ -59,6 +60,18 @@ export const uploadTeamPhoto = (file, teamId, setLoading) => {
       setLoading(false);
       // alert('Uploaded file!');
     })
+    .catch((error) => {
+      console.error('Error uploading file:', error);
+    });
+}
+
+
+export const uploadMessagePhoto = (channelId, handle, file) => {
+  const fileRef = ref(storage, file.name);
+
+  return uploadBytes(fileRef, file)
+    .then(()=> getDownloadURL(fileRef))
+    .then((photoURL)=> sendPictureMessage(channelId, handle, photoURL))
     .catch((error) => {
       console.error('Error uploading file:', error);
     });
