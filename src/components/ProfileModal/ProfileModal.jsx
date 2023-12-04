@@ -53,21 +53,20 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
 	if (!isVisible) return null;
 
 
-	const handleSendDM = (e)=>{
+	const handleSendDM = (e) => {
 		e.preventDefault();
-		
-			
-		const checkDMs = userData.DMs ? Object.entries(userData.DMs).find(([partner, dmId])=> partner===profile.handle) : [];
+
+		const checkDMs = userData.DMs ? Object.entries(userData.DMs).find(([partner, dmId]) => partner === profile.handle) : [];
 		console.log(checkDMs);
-		if(checkDMs){
+		if (checkDMs) {
 			console.log(checkDMs)
 			navigate(`/dms/${checkDMs[1]}`);
 		}
-		
-		else{
+
+		else {
 
 			createDM(profile.handle, userData.handle)
-			.then((dmId)=> navigate(`/dms/${dmId}`))
+				.then((dmId) => navigate(`/dms/${dmId}`))
 
 		}
 
