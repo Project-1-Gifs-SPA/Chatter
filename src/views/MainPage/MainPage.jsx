@@ -3,6 +3,7 @@ import ChatBox from "../../components/ChatBox/ChatBox"
 import MyServers from "../../components/MyServers/MyServers"
 import SideBar from "../../components/SideBar/SideBar"
 import TeamSidebar from "../../components/TeamSidebar/TeamSidebar"
+import Dashboard from "../Dashboard/Dashboard"
 
 const MainPage = () => {
 
@@ -10,14 +11,11 @@ const MainPage = () => {
 
   return (
     <div className="font-sans antialiased h-screen flex overflow-x-hidden">
-      <SideBar /> {/* Adjust width as needed */}
-      <MyServers /> {/* Adjust width as needed */}
-      <ChatBox /> {/* Adjust width as needed */}
-      <TeamSidebar />
+      <SideBar />
+      <MyServers />
+      {teamId || dmId ? <ChatBox /> : <Dashboard />}
+      {teamId || dmId ? <TeamSidebar /> : null}
     </div>
   )
 }
 export default MainPage;
-
-// {teamId|| dmId ? <ChatBox /> : null} {/* Adjust width as needed */}
-// {teamId || dmId ? <TeamSidebar />:null  } {/* Adjust width as needed *
