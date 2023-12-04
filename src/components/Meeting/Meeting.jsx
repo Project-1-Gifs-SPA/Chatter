@@ -144,7 +144,7 @@ return (
 <br />
 <div>
     <h1 className="font-bold">Invited</h1>
-    <div>
+    <div className=" grid grid-cols-2">
         {members.map(member=> <TeamMember key={member.uid} member={member} />)}
     </div>
     
