@@ -93,24 +93,22 @@ export const getAllPrivateChannelsByTeam = (teamId) => getAllChannelsByTeam(team
 export const getChannelById = (channelId) => get(ref(db, `channels/${channelId}`))
     .then(snapshot => snapshot.exists() ? snapshot.val() : {});
 
-export const getChannelInTeamByName = (teamId, channelName) =>
-    getAllChannelsByTeam(teamId)
-        .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
-            .then(channels => {
-                const filtered = channels.filter(channel => channel.name === channelName)
-                return filtered.length ? filtered[0].id : 'No such channel';
-            }));
+export const getChannelInTeamByName = (teamId, channelName) => getAllChannelsByTeam(teamId)
+    .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
+        .then(channels => {
+            const filtered = channels.filter(channel => channel.name === channelName)
+            return filtered.length ? filtered[0].id : 'No such channel';
+        }));
 
-export const getChannelsInTeamByUser = (teamId, userHandle) =>
-    getAllChannelsByTeam(teamId)
-        .then(channelIds =>
-            Promise.all(channelIds.map(channelId => getChannelById(channelId)))
-                .then(channels => channels.filter(channel => channel.members.includes(userHandle) ? channel : false))
-        );
+export const getChannelsInTeamByUser = (teamId, userHandle) => getAllChannelsByTeam(teamId)
+    .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
+        .then(channels => channels.filter(channel => channel.members.includes(userHandle) ? channel : false))
+    );
 
 export const getChannelIdsInTeamByUser = (teamId, userHandle) => getAllChannelsByTeam(teamId)
     .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
         .then(channels => channels.filter(channel => channel?.members
-            ? channel.members[userHandle] || channel.isPublic
+            ? channel.members[userHandle] || channel.isPublic // remove `|| channel.isPublic` to not show if member left, when person is added in team add them in every public channel
                 ? channel : false
-            : false).map(channel => channel.id)));
+            : false)
+            .map(channel => channel.id)));

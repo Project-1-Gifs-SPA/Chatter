@@ -14,6 +14,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { MAX_CHANNELNAMELENGTH, MIN_CHANNELNAME_LENGTH } from '../../common/constants';
 // import CleanSearchBar from '../CleanSearchBar/CleanSearchBar';
 import { IoAdd, IoRemove } from 'react-icons/io5';
+import SearchBarChoose from '../SearchBarChoose/SearchBarChoose';
 
 const MyServers = () => {
 
@@ -108,11 +109,6 @@ const MyServers = () => {
 			.catch(e => console.log(e)) //better error handling
 	}
 
-	const handleSearchTerm = (e) => {
-		setSearchTerm(e.target.value.toLowerCase());
-		setSearchedUsers(getUsersBySearchTerm(allTeamMembers, searchParam, e.target.value));
-	};
-
 	const handleAddMember = (userHandle) => setChannelMembers({
 		...channelMembers,
 		[userHandle]: !channelMembers[userHandle],
@@ -160,42 +156,8 @@ const MyServers = () => {
 										onClick={() => setIsPublic(!isPublic)} />
 								</div>
 
-								{!isPublic ? <>
-									<div>
-										{/* <form className='pl-2 pr-2 pt-8 pb-3'> */}
-										<div className="flex items-center">
-											<input
-												type="search"
-												placeholder={`Search by ${searchParam === 'handle' ? 'username' : searchParam}...`}
-												className='flex-grow h-7 p-4 rounded-full bg-slate-700 text-gray-200'
-												onChange={handleSearchTerm}
-											/>
-											<div className="dropdown dropdown-hover dropdown-end">
-												<label className="h-7 w-7 bg-slate-700 rounded-full flex items-center justify-center hover:bg-slate-600 cursor-pointer" tabIndex={0} ><IoIosArrowDown /></label>
-												<ul className="dropdown-content z-[1] menu p-2 shadow bg-gray-600 rounded-box w-52" tabIndex={0}>
-													<li><a href="#" className="block px-4 py-2 text-sm text-white hover:bg-gray-100" role="menuitem" onClick={() => setSearchParam('handle')}>By username</a></li>
-													<li><a href="#" className="block px-4 py-2 text-sm text-white hover:bg-gray-100" role="menuitem" onClick={() => setSearchParam('email')}>By Email</a></li>
-													<li><a href="#" className="block px-4 py-2 text-sm text-white hover:bg-gray-100" role="menuitem" onClick={() => setSearchParam('firstName')}>By First Name</a></li>
-												</ul>
-											</div>
-										</div>
-										{/* </form> */}
-									</div>
+								{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
 
-									{searchedUsers && <div className='w-[auto] rounded bg-gray-700 bg-opacity-90 relative z-50'>
-										{searchedUsers.map(regUser =>
-											<div key={regUser.uid} className='flex items-center'>
-												<TeamMember key={regUser.handle} member={regUser} />
-												<div className='tooltip' data-tip='Add to channel'>
-													{channelMembers[regUser.handle]
-														? <IoRemove className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
-														: <IoAdd className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />}
-												</div>
-											</div>
-										)
-										}
-									</div>
-									}</> : null}
 								<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
 								<button className="btn">Close</button>
 							</form>
@@ -204,7 +166,15 @@ const MyServers = () => {
 					</div>
 				</dialog>
 				{currentTeam?.channels && generalId
-					? currentChannels.map(channelId => <ChannelTile key={channelId} channelTileId={channelId} generalId={generalId} isOwner={currentTeam.owner === userData.handle} />)
+					? currentChannels.map(channelId => <ChannelTile
+						key={channelId}
+						channelTileId={channelId}
+						generalId={generalId}
+						isOwner={currentTeam.owner === userData.handle}
+						addMembers={handleAddMember}
+						channelMembers={channelMembers}
+						teamMembers={allTeamMembers}
+					/>)
 					: null}
 				<div className="flex-grow"></div>
 

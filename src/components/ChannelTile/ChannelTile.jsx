@@ -2,22 +2,22 @@ import { useEffect, useRef, useState } from "react";
 import { getChannelById, getGeneralChannel, removeChannel } from "../../services/channel.service";
 import { useNavigate, useParams } from "react-router";
 import { AiOutlineClose } from "react-icons/ai";
+import { IoPencil } from "react-icons/io5";
 import SearchBar from "../SearchBar/SearchBar";
-import ChannelModal from "../ChannelModal/ChannelModal";
+import ChannelXModal from "../ChannelXModal/ChannelXModal";
+import ChannelEditModal from "../ChannelEditModal/ChannelEditModal";
 
-const ChannelTile = ({ channelTileId, generalId, isOwner }) => {
+const ChannelTile = ({ channelTileId, generalId, isOwner, addMembers, channelMembers, teamMembers }) => {
 
     const { teamId } = useParams();
 
     const [channelName, setChannelName] = useState('');
-    const [channelIdKept, setChannelIdKept] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     const navigate = useNavigate();
-    const modalRef = useRef(null);
 
     useEffect(() => {
-        setChannelIdKept(channelTileId);
         getChannelById(channelTileId)
             .then(channel => {
                 setChannelName(channel.name);
@@ -31,26 +31,29 @@ const ChannelTile = ({ channelTileId, generalId, isOwner }) => {
             >
                 {channelName}
             </button >
-            {channelTileId !== generalId && isOwner && <button
-                onClick={() => setShowModal(!showModal)}
+            {channelTileId !== generalId && <button
+                onClick={() => setShowDeleteModal(!showDeleteModal)}
             >
                 <AiOutlineClose />
-                {showModal && <ChannelModal isVisible={showModal} onClose={() => setShowModal(false)} channelId={channelTileId} teamId={teamId} />}
-                {/* <dialog ref={modalRef} id="delete-channel" className="modal">
-                    <div className="modal-box">
-                        <h3 className="font-bold text-lg">Are you sure you want to remove this channel?</h3>
+                {showDeleteModal && <ChannelXModal
+                    isVisible={showDeleteModal}
+                    onClose={() => setShowDeleteModal(false)}
+                    channelId={channelTileId} teamId={teamId} isOwner={isOwner}
+                />}
+            </button>}
 
-                        <div className="modal-action">
-
-                            <form method="dialog" >
-                                <button className="btn mr-5" >Close</button>
-                                <button className="btn bg-red-700"
-                                    onClick={() => { console.log(channelTileId); console.log(channelIdKept); removeChannel(teamId, channelTileId); }}>Remove channel</button>
-                            </form>
-
-                        </div>
-                    </div>
-                </dialog> */}
+            {channelTileId !== generalId && isOwner && <button
+                onClick={() => setShowEditModal(!showEditModal)}
+            >
+                <IoPencil />
+                {showEditModal && <ChannelEditModal
+                    isVisible={showEditModal}
+                    onClose={() => setShowEditModal(false)}
+                    channelId={channelTileId} teamId={teamId} isOwner={isOwner}
+                    addMembers={addMembers}
+                    channelMembers={channelMembers}
+                    teamMembers={teamMembers}
+                />}
             </button>}
         </div>
     )
