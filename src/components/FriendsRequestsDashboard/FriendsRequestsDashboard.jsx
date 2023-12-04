@@ -62,12 +62,14 @@ const FriendsRequestsDashboard = () => {
 					{requests.length ? requests.map(friendRequest => {
 						return <div className='flex items-center justify-center mt-5' key={friendRequest.uid}>
 							<TeamMember member={friendRequest} owner={null} />
+							<div className="mr-auto">
 							<p className='pl-5 mr-1 ml-2 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Accept' onClick={() => handleAcceptRequest(friendRequest.handle)}>✅</p>
 							<p className='pl-5 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Decline' onClick={() => handleDeclineRequest(friendRequest.handle)}>❌</p>
+							</div>
 						</div>
 					}) : <div className='flex justify-center'>
 						<p className='text-gray-500 text-center mt-20 text-3xl'>
-							You do not have friend requests.
+							You have no friend requests.
 						</p>
 					</div>}
 

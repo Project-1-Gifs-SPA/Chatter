@@ -57,6 +57,7 @@ const Friends = ({ friend }) => {
 				<h4 className="font-semibold hidden sm:flex"> {currentFriend.firstName} {currentFriend.lastName}</h4>
 				<span className="text-xs text-white hidden sm:flex">@{currentFriend.handle}</span>
 			</div>
+			<div className='ml-auto'>
 			<div className='cursor-pointer tooltip tooltip-top ml-5' data-tip='Send message' onClick={handleSendDM}><TbMessageChatbot className='text-2xl' />
 			</div>
 
@@ -65,7 +66,7 @@ const Friends = ({ friend }) => {
 					<MdPersonAddDisabled className='ml-5 cursor-pointer text-white text-xl hidden sm:flex' onClick={() => handleRemoveFriends(currentFriend.handle)} />
 				</div>
 			}
-
+			</div>
 		</div>
 	)
 }

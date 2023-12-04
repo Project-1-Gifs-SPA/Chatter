@@ -4,17 +4,19 @@ import OnlineFriends from '../../components/OnlineFriends/OnlineFriends'
 import AllFriends from '../../components/AllFriends/AllFriends'
 import FriendsRequests from '../../components/FriendsRequests/FriendsRequests'
 import FriendsRequestsDashboard from '../../components/FriendsRequestsDashboard/FriendsRequestsDashboard'
+import MeetingSideBar from '../../components/MeeetingSideBar/MeetingSideBar'
 
 const Dashboard = () => {
 
 	const [show, setShow] = useState('online')
 
 	return (
+		<>
 		<div className='bg-gray-700 w-full'>
-			<div className="bg-gray-800 w-[1000px] h-[100vh] pt-5 px-4 mx-auto">
-				<div className="flex flex-col lg:flex-row lg:items-center gap-4">
-					<p className="text-white mb-4 lg:mb-0 ml-4">Friends</p>
-					<div className="flex items-center lg:ml-4">
+			{/* <div className="bg-gray-800 w-[1000px] h-[100vh] pt-5 px-4 mx-auto"> */}
+				<div className="border-b border-gray-600 flex px-6 py-3 items-center justify-between shadow-xl">
+					<p className="text-white mb-4 lg:mb-0 ml-4 mr-6">Friends</p>
+					<div className="flex mr-auto">
 						<button className="btn btn-xs btn-neutral" onClick={() => setShow('online')}>Online</button>
 						<button className="btn btn-xs ml-4 btn-neutral" onClick={() => setShow('all')}>All</button>
 						<button className="btn btn-xs ml-4 btn-neutral" onClick={() => setShow('requests')}>Friend Requests</button>
@@ -25,6 +27,7 @@ const Dashboard = () => {
 				<div className="lg:mt-0 w-[full]">
 					<SearchBar />
 				</div>
+				
 
 				<div>
 					{show === 'online' ? <OnlineFriends /> : null}
@@ -32,9 +35,13 @@ const Dashboard = () => {
 					{show === 'requests' ? <FriendsRequestsDashboard /> : null}
 					{show === 'meetings' ? <p> meetings</p> : null}
 				</div>
+				
 
-			</div>
+
+			{/* </div> */}
 		</div>
+		<MeetingSideBar />
+		</>
 	)
 }
 
