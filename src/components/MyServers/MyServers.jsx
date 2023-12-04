@@ -36,7 +36,7 @@ const MyServers = () => {
 	const navigate = useNavigate();
 
 	const [currentTeam, setCurrentTeam] = useState({});
-	const [currentChannels, setCurrentChannels] = useState({});
+	const [currentChannels, setCurrentChannels] = useState([]);
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
@@ -62,8 +62,6 @@ const MyServers = () => {
 
 	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
 	const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs) : []);
-
-	const [dms, setDms] = useState(userData.DMs ? Object.values(userData.DMs) : [])
 
 	useEffect(() => {
 		if (!teamId) { return; }
@@ -102,6 +100,7 @@ const MyServers = () => {
 
 
 	useEffect(() => {
+
 		const unsubscribe = getLiveGroupDMs(data => {
 
 			setGroupDms(Object.keys(data));
@@ -203,7 +202,7 @@ const MyServers = () => {
 
 			<div className="flex flex-col h-screen">
 				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
-//<<<<<<< team-channel
+					{/* // team-channel
 //					<div className="flex-auto">
 //						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
 //					</div>
@@ -212,9 +211,9 @@ const MyServers = () => {
 //					<div className='text-xl mr-4'>
 //						Channels
 //					</div>
-//					{teamId && <div
-//						className="cursor-pointer"
-//=======
+//					{teamId && <div>
+//						className="cursor-pointer" */}
+					{/* //======= */}
 					<div className="flex justify-between items-center max-w-">
 						<h1
 							style={{ fontFamily: 'Rockwell, sans-serif' }}
@@ -236,7 +235,7 @@ const MyServers = () => {
 					<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
 						<div className='text-xl mr-4 text-white'
 							style={{ fontFamily: 'Rockwell, sans-serif' }}>
-//>>>>>>> main
+							{/* main*/}
 
 							Channels
 						</div>
@@ -249,12 +248,12 @@ const MyServers = () => {
 								<GoPlus className="h-10 w-10" />
 							</div>
 						</div>
-//<<<<<<< team-channel
-//					</div>}
+						{/* team-channel
+//					</div></> : null}
 //				</div>
-//=======
+					//=======*/}
 					</div>
-//>>>>>>> main
+					{/*</>// main*/}
 
 					<dialog ref={modalRef} id="create-channel" className="modal">
 						<div className="modal-box">
@@ -266,26 +265,26 @@ const MyServers = () => {
 
 								<form method="dialog" >
 
-								{/* if there is a button in form, it will close the modal */}
-								<div className='flex-auto'>
-									<p>Create public channel</p>
-									<input type="checkbox" className="checkbox"
-										checked={isPublic ? "checked" : ""}
-										onClick={() => setIsPublic(!isPublic)} />
-								</div>
+									{/* if there is a button in form, it will close the modal */}
+									<div className='flex-auto'>
+										<p>Create public channel</p>
+										<input type="checkbox" className="checkbox"
+											checked={isPublic ? "checked" : ""}
+											onClick={() => setIsPublic(!isPublic)} />
+									</div>
 
-								{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
+									{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
 
-								<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
-								<button className="btn">Close</button>
-							</form>
+									<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
+									<button className="btn">Close</button>
+								</form>
 
 							</div>
 						</div>
-//<<<<<<< team-channel
-//					</div>
-//				</dialog>
-//				{currentTeam?.channels && generalId
+						{/* // team-channel */}
+						{/* </div> */}
+						{/* </dialog > */}
+						{/* //				{currentTeam?.channels && generalId
 //					? currentChannels.map(channelId => <ChannelTile
 //						key={channelId}
 //						channelId={channelId}
@@ -297,24 +296,24 @@ const MyServers = () => {
 //            checkedChannels={checkedChannels}
 //            updateCheckedChannels={updateCheckedChannels}
 //					/>)
-//=======
-					</dialog>
+//======= */}
+					</dialog >
 				</>
-//>>>>>>> main
+					//>>>>>>> main
 					: null}
 				<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
-					{currentTeam.channels
-						? Object.keys(currentTeam.channels).map((channelId) => <ChannelTile
-						key={channelId}
-						channelId={channelId}
-						generalId={generalId}
-						isOwner={currentTeam.owner === userData.handle}
-						addMembers={handleAddMember}
-						channelMembers={channelMembers}
-						teamMembers={allTeamMembers}
-            checkedChannels={checkedChannels}
-            updateCheckedChannels={updateCheckedChannels}
-					/>)
+					{currentTeam.channels && teamId
+						? currentChannels.map((channelId) => <ChannelTile
+							key={channelId}
+							channelId={channelId}
+							generalId={generalId}
+							isOwner={currentTeam.owner === userData.handle}
+							addMembers={handleAddMember}
+							channelMembers={channelMembers}
+							teamMembers={allTeamMembers}
+							checkedChannels={checkedChannels}
+							updateCheckedChannels={updateCheckedChannels}
+						/>)
 						: (
 							<>
 								{dms && allDms.map((dm) => {
@@ -335,8 +334,8 @@ const MyServers = () => {
 
 					<ProfileBar />
 				</div>
-			</div>
-		</div>
+			</div >
+		</div >
 	)
 }
 

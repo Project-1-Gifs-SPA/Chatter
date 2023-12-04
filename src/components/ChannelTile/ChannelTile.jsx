@@ -60,11 +60,11 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
         <div className="items-center ml-auto mr-auto display-flex">
             <button
                 className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
-                onClick={() => { console.log(channelTileId); navigate(`/teams/${teamId}/channels/${channelTileId}`); }}
+                onClick={() => { console.log(channelId); navigate(`/teams/${teamId}/channels/${channelId}`); }}
             >
                 {channelName}
             </button >
-            {channelTileId !== generalId &&
+            {channelId !== generalId &&
             <button
                 onClick={() => setShowDeleteModal(!showDeleteModal)}
             >
@@ -72,31 +72,31 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                 {showDeleteModal && <ChannelXModal
                     isVisible={showDeleteModal}
                     onClose={() => setShowDeleteModal(false)}
-                    channelId={channelTileId} teamId={teamId} isOwner={isOwner}
+                    channelId={channelId} teamId={teamId} isOwner={isOwner}
                 />}
             </button>}
 
-            {channelTileId !== generalId && isOwner && <button
+            {channelId !== generalId && isOwner && <button
                 onClick={() => setShowEditModal(!showEditModal)}
             >
                 <IoPencil />
                 {showEditModal && <ChannelEditModal
                     isVisible={showEditModal}
                     onClose={() => setShowEditModal(false)}
-                    channelId={channelTileId} teamId={teamId} isOwner={isOwner}
+                    channelId={channelId} teamId={teamId} isOwner={isOwner}
                     addMembers={addMembers}
                     channelMembers={channelMembers}
                     teamMembers={teamMembers}
                 />}
             </button>}
-//=======
+{/* //=======
 //         <div>
 //             <button className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
 //                 onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
 //             >
 //                 {channelName}
 //             </button >
-//>>>>>>> main
+//>>>>>>> main */}
         </div>
     )
 }
