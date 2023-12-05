@@ -32,10 +32,10 @@ const AddTeam = () => {
         }
         addTeam(userData.handle, teamName)
           .then(teamId => {
-            createDefaultChannel(teamId, [userData.handle])
-            .then(channelId => {
-              navigate(`/teams/${teamId}/channels/${channelId}`)
-            });
+            createDefaultChannel(teamId, [userData.handle], userData.handle)
+              .then(channelId => {
+                navigate(`/teams/${teamId}/channels/${channelId}`)
+              });
           });
       })
       .catch(e => console.log(e)) //better error handling
