@@ -17,7 +17,6 @@
     "@heroicons/react": "^2.0.18",
     "@types/emoji-mart": "^3.0.13",
     "@types/firebase": "^3.2.1",
-    "@types/moment": "^2.13.0",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-toastify": "^4.1.0",

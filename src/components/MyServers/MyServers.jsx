@@ -9,7 +9,7 @@ import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
 import { addChannel, addChannelUser, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel, getLiveChannelSeenBy } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
-import { getUserByHandle, getUsersBySearchTerm } from '../../services/users.service';
+import { getAllUsers, getUserByHandle, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
 import { MAX_CHANNELNAMELENGTH, MIN_CHANNELNAME_LENGTH } from '../../common/constants';
 // import CleanSearchBar from '../CleanSearchBar/CleanSearchBar';
@@ -67,7 +67,7 @@ const MyServers = () => {
 	const [createMeetingModal, setCreateMeetingModal] = useState(false);
 
 	const [isPublic, setIsPublic] = useState(true);
-	const [channelMembers, setChannelMembers] = useState({});
+	
 	const [allTeamMembers, setAllTeamMembers] = useState([]);
 
 
@@ -139,7 +139,7 @@ const MyServers = () => {
 				}));
 
 
-		}, teamId)
+		// }, teamId)
 
 		const unsub = getLiveMeetingsByHandle(data => {
 
@@ -259,7 +259,7 @@ const MyServers = () => {
 	}, [dms])
 
 	return (
-
+		<>
 		<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
 			<div className="flex flex-col h-screen">
@@ -311,11 +311,11 @@ const MyServers = () => {
 					<div className='text-xl mr-4 text-white'
 						style={{ fontFamily: 'Rockwell, sans-serif' }}>
 
-				{teamId ? <>
+				{/* {teamId ? <>
 
 					<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
 						<div className='text-xl mr-4 text-white'
-							style={{ fontFamily: 'Rockwell, sans-serif' }}>
+							style={{ fontFamily: 'Rockwell, sans-serif' }}> */}
 							{/* main*/}
 
 
@@ -429,9 +429,10 @@ const MyServers = () => {
 				</div>
 			</div >
 		</div >
+		</>
 	)
 }
 
 export default MyServers;
 
-// animate-blink
+{/* // animate-blink */}

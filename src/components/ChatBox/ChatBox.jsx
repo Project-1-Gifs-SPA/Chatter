@@ -109,7 +109,7 @@ const ChatBox = () => {
 
 	}, [currentChannelId, dmId, meetingId]);
 
-		}
+		
 // <<<<<<< team-channel
 // 	}, [channelId, dmId]);
 
