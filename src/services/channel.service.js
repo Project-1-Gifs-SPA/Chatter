@@ -2,9 +2,11 @@ import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, start
 import { db } from '../config/firebase-config';
 import { getAllTeamMembers } from './teams.service';
 
-export const addChannel = (teamId, channelName, isPublic, members) => {
+export const addChannel = (teamId, channelName, isPublic, owner, creator, members) => {
 
     const formattedMembers = {};
+    formattedMembers[owner] = true;
+    formattedMembers[creator] = true;
     isPublic
         ? getAllTeamMembers(teamId).then(teamMembers => teamMembers.map(teamMember => (formattedMembers[teamMember] = true)))
         : members.map(memberHandle => (formattedMembers[memberHandle] = true));
@@ -49,7 +51,7 @@ export const removeChannel = (teamId, channelId) => {
 
 export const createDefaultChannel = (teamId, members) => {
     if (!teamId) return;
-    return addChannel(teamId, members, 'General');
+    return addChannel(teamId, 'General', true, members);
 }
 
 // return get(ref(db, `teams/${teamId}/channels`))
@@ -72,7 +74,8 @@ export const createDefaultChannel = (teamId, members) => {
 export const getGeneralChannel = (teamId) => getChannelInTeamByName(teamId, 'General')
     .then(answer => answer !== 'No such channel'
         ? answer
-        : createDefaultChannel(teamId)
+        : getAllTeamMembers(teamId)
+            .then(teamMembers => createDefaultChannel(teamId, teamMembers))
             .then(channel => channel)
     );
 
@@ -92,18 +95,12 @@ export const removeChannelUser = (channelId, user) => getChannelById(channelId)
         setChannelUsers(channelId, fixedusers);
     });
 
-export const getLiveChannelsByTeam = (teamId) => onValue(
-    ref(db, `teams/${teamId}/channels`),
-    snapshot => Object.keys(snapshot.exists() ? snapshot.val() : {})
-);
-
 export const getAllChannelsByTeam = (teamId) => get(ref(db, `teams/${teamId}/channels`))
     .then(snapshot => Object.keys(snapshot.exists() ? snapshot.val() : {})); // always true
 
 export const getAllPublicChannelsByTeam = (teamId) => getAllChannelsByTeam(teamId)
-    .then(snapshot => Promise.all(Object.keys(snapshot.exists() ? snapshot.val() : {})
-        .map(channelId => getChannelById(channelId)))
-        .then(answer => answer.val())
+    .then(snapshot => Promise.all(snapshot.map(channelId => getChannelById(channelId)))
+        // .then(answer => answer.val())
         .then(channels => channels.filter(channel => channel.isPublic)));
 
 export const getAllPrivateChannelsByTeam = (teamId) => getAllChannelsByTeam(teamId)
@@ -124,7 +121,7 @@ export const getChannelInTeamByName = (teamId, channelName) => getAllChannelsByT
 
 export const getChannelsInTeamByUser = (teamId, userHandle) => getAllChannelsByTeam(teamId)
     .then(channelIds => Promise.all(channelIds.map(channelId => getChannelById(channelId)))
-        .then(channels => channels.filter(channel => channel.members.includes(userHandle) ? channel : false))
+        .then(channels => channels.filter(channel => Object.keys(channel.members).includes(userHandle) ? channel : false))
     );
 
 export const getChannelIdsInTeamByUser = (teamId, userHandle) => getAllChannelsByTeam(teamId)
@@ -228,3 +225,42 @@ export const getLiveChannelSeenBy = (listenFn, channelId) => {
         }
     )
 }
+
+export const getLiveChannelMembers = (listenFn, channelId) => {
+    return onValue(
+        ref(db, `channels/${channelId}/members`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    )
+}
+
+
+export const getLiveChannelInfo = (listenFn, channelId) => {
+    return onValue(
+        ref(db, `channels/${channelId}`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            listenFn(data);
+        });
+};
+
+
+export const getLiveChannelsByTeam = (listenFn, teamId) =>{
+return onValue(
+    ref(db, `teams/${teamId}/channels`),
+    snapshot => {
+        const data = snapshot.exists() ? Object.keys(snapshot.val()) : [];
+        listenFn(data);
+    })
+}
+
+
+export const filterChannelsByUser = (channels, userHandle) => {
+    return Promise.all(channels.map(channelId => getChannelById(channelId)))
+        .then(channels => channels.filter(channel => Object.keys(channel.members).includes(userHandle) ? channel : false))
+}
+    

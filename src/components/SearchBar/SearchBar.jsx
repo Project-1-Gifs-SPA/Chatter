@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { addFriends, getAllUsers, getUsersBySearchTerm, getLiveUserInfo, removeFriends, sendFriendRequest } from '../../services/users.service';
+import { addFriends, getAllUsers, getUsersBySearchTerm, getLiveUserInfo, removeFriends, sendFriendRequest, getUserByHandle } from '../../services/users.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { IoIosArrowDown } from "react-icons/io";
 import { BsPersonFillAdd } from "react-icons/bs";
@@ -9,6 +9,7 @@ import { IoPeopleSharp } from "react-icons/io5";
 import { MdPersonAddDisabled } from "react-icons/md";
 import { addDmMember, createGroupDM } from '../../services/dms.service';
 import { useParams } from 'react-router';
+import { addChannelUser, getChannelById, getGeneralChannel } from '../../services/channel.service';
 
 const SearchBar = ({ team, dm, channel }) => {
 
@@ -18,7 +19,9 @@ const SearchBar = ({ team, dm, channel }) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchedUsers, setSearchedUsers] = useState([]);
 	const [currentUser, setCurrentUser] = useState({});
-  
+	const [currentChannelUsers, setCurrentChannelUsers] = useState({});
+	const [generalId, setGeneralId] = useState('');
+
 	const { dmId, teamId } = useParams();
 
 	useEffect(
@@ -40,6 +43,20 @@ const SearchBar = ({ team, dm, channel }) => {
 			})
 	}, []);
 
+	useEffect(() => {
+		console.log(team);
+		if (!team) { return; }
+		getGeneralChannel(team.id)
+			.then(generalId => setGeneralId(generalId));
+	}, [team]);
+
+	useEffect(() => {
+		getChannelById(channel)
+			.then(channel => Promise.all(Object.keys(channel.members).map(member => getUserByHandle(member)
+				.then(snapshot => snapshot.exists() ? snapshot.val() : {})))
+				.then(members => setCurrentChannelUsers(members)));
+	}, [channel]);
+
 	const handleAddMember = (user) => {
 		if (dmId) {
 			const dmMembers = Object.keys(dm.members);
@@ -48,10 +65,12 @@ const SearchBar = ({ team, dm, channel }) => {
 				createGroupDM(partner, userData.handle, user, dm.id)
 				return;
 			}
-			addDmMember(user, dm.id)
+			addDmMember(user, dm.id);
 		}
 		if (teamId) {
-			addTeamMember(user, team.id)
+			channel === generalId
+				? addTeamMember(user, team.id)
+				: addChannelUser(channel, user);
 		}
 	}
 
@@ -67,7 +86,9 @@ const SearchBar = ({ team, dm, channel }) => {
 		const searchTerm = e.target.value.toLowerCase();
 		setSearchTerm(searchTerm);
 
-		setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm));
+		channel === generalId
+			? setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm))
+			: setSearchedUsers(getUsersBySearchTerm(currentChannelUsers, searchParam, searchTerm));
 	};
 
 	return (
@@ -100,18 +121,32 @@ const SearchBar = ({ team, dm, channel }) => {
 					return (
 						<div key={regUser.uid} className='flex items-center'>
 							<TeamMember member={regUser} />
-							{dmId && <div className='tooltip' data-tip='Add to chat'>
+							{/* {dmId && <div className='tooltip' data-tip='Add to chat'>
 
-									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
-								</div>}
-								
-							{teamId && (team.owner === currentUser.handle && (
+								<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
+							</div>}
+
+							{teamId && team.owner === currentUser.handle && channel.id === generalId ? (
 
 								<div className='tooltip' data-tip='Add to team'>
 									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
-								</div>)
+								</div>
+							) : (
+								<div className='tooltip' data-tip='Add to channel'>
+									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
+								</div>
 							)
-							}
+							} */}
+							<div className='tooltip'
+								data-tip={dmId
+									? 'Add to chat'
+									: teamId && team.owner === currentUser.handle && channel === generalId
+										? 'Add to team'
+										: 'Add to channel'}
+							>
+								<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
+							</div>
+
 							{currentUser.handle !== regUser.handle && (
 								(currentUser.friends && Object.keys(currentUser.friends).includes(regUser.handle)) ? (<div className='tooltip' data-tip='Remove friend'>
 									<MdPersonAddDisabled className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleRemoveFriends(regUser.handle)} />

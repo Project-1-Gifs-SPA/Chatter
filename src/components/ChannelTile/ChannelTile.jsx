@@ -5,12 +5,16 @@ import { AiOutlineClose } from "react-icons/ai";
 import { IoPencil } from "react-icons/io5";
 import SearchBar from "../SearchBar/SearchBar";
 import ChannelXModal from "../ChannelXModal/ChannelXModal";
-import ChannelEditModal from "../ChannelEditModal/ChannelEditModal";
+// import ChannelEditModal from "../ChannelEditModal/ChannelEditModal";
 import AppContext from "../../context/AppContext";
 import { setTeamSeenBy, setTeamsNotSeenBy } from "../../services/chat.service";
 import { update } from "firebase/database";
+import ContextMenu from "../ContextMenu/ContextMenu";
 
 const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers, teamMembers, checkedChannels, updateCheckedChannels }) => {
+
+
+   
 
     const { teamId } = useParams();
     const { userData } = useContext(AppContext);
@@ -18,13 +22,20 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     const [channelName, setChannelName] = useState('');
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
+    // const [showEditModal, setShowEditModal] = useState(false);
 
-    const [currentChannel, setCurrentChannel] = useState({})
-    const [isChannelSeen, setIsChannelSeen] = useState([])
+    const [currentChannel, setCurrentChannel] = useState({});
+    const [isChannelSeen, setIsChannelSeen] = useState([]);
+    const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
 
     const navigate = useNavigate();
+
+    const handleContextMenu = (e) => {
+		e.preventDefault();
+		setContextMenuVisible(true);
+
+	}
 
     useEffect(() => {
         getChannelById(channelId)
@@ -46,7 +57,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     //console.log('channel ', channelId, ' is seen by ', isChannelSeen)
 
     useEffect(() => {
-        console.log('is working? ', isChannelSeen)
+        console.log('is working? isChannelSeen', isChannelSeen)
         if (isChannelSeen.includes(userData.handle)) {
             updateCheckedChannels(checkedChannels + 1)
         }
@@ -57,26 +68,29 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
 
     return (
 //<<<<<<< team-channel
-        <div className="items-center ml-auto mr-auto display-flex">
+            
+        <div className="items-center ml-auto mr-auto display-flex" onContextMenu={handleContextMenu}>
             <button
                 className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
                 onClick={() => { console.log(channelId); navigate(`/teams/${teamId}/channels/${channelId}`); }}
             >
                 {channelName}
             </button >
-            {channelId !== generalId &&
+            {/* {channelId !== generalId &&
             <button
                 onClick={() => setShowDeleteModal(!showDeleteModal)}
             >
                 <AiOutlineClose />
-                {showDeleteModal && <ChannelXModal
+               
+            </button>} */}
+            {showDeleteModal && <ChannelXModal
                     isVisible={showDeleteModal}
                     onClose={() => setShowDeleteModal(false)}
                     channelId={channelId} teamId={teamId} isOwner={isOwner}
                 />}
-            </button>}
+            {contextMenuVisible ? <ContextMenu channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal}/> : null  }
 
-            {channelId !== generalId && isOwner && <button
+            {/* {channelId !== generalId && isOwner && <button
                 onClick={() => setShowEditModal(!showEditModal)}
             >
                 <IoPencil />
@@ -88,7 +102,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                     channelMembers={channelMembers}
                     teamMembers={teamMembers}
                 />}
-            </button>}
+            </button>} */}
 {/* //=======
 //         <div>
 //             <button className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
