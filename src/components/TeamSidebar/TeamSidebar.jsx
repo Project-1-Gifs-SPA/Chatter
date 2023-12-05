@@ -56,9 +56,9 @@ const TeamSidebar = () => {
 	}, [channelId])
 
 
-	useEffect(()=>{
+	useEffect(() => {
 		const unsubscribe = getLiveChannelInfo(data => {
-			setCurrentChannel({...data})
+			setCurrentChannel({ ...data })
 		}, channelId)
 
 		return () => {
@@ -66,12 +66,7 @@ const TeamSidebar = () => {
 		}
 
 
-	},[channelId])
-
-
-
-
-
+	}, [channelId])
 
 	useEffect(() => {
 		const unsubscribe = getLiveDMs(data => {
@@ -100,6 +95,7 @@ const TeamSidebar = () => {
 			Promise.all(promises)
 				.then((membersData) => {
 					setMembers(membersData);
+					console.log(membersData)
 				})
 				.catch((error) => {
 					console.error(error);
@@ -155,7 +151,7 @@ const TeamSidebar = () => {
 					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 						<SearchBar team={currentTeam} dm={currentDM} channel={channelId} />
 						{/* Everything in the sidebar */}
-						{members.length ?
+						{members.length > 0 ?
 							(members.map(member => {
 								return (
 									<div key={member.uid} className='flex items-center'>
