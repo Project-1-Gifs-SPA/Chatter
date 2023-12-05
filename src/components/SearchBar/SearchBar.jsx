@@ -43,6 +43,8 @@ const SearchBar = ({ team, dm, channel }) => {
 			})
 	}, []);
 
+	//console.log(allUsers)
+
 	useEffect(() => {
 		console.log(team);
 		if (!team) { return; }
@@ -51,10 +53,12 @@ const SearchBar = ({ team, dm, channel }) => {
 	}, [team]);
 
 	useEffect(() => {
-		getChannelById(channel)
-			.then(channel => Promise.all(Object.keys(channel.members).map(member => getUserByHandle(member)
-				.then(snapshot => snapshot.exists() ? snapshot.val() : {})))
-				.then(members => setCurrentChannelUsers(members)));
+		if (channel) {
+			getChannelById(channel)
+				.then(channel => Promise.all(Object.keys(channel.members).map(member => getUserByHandle(member)
+					.then(snapshot => snapshot.exists() ? snapshot.val() : {})))
+					.then(members => setCurrentChannelUsers(members)));
+		}
 	}, [channel]);
 
 	const handleAddMember = (user) => {
@@ -85,10 +89,13 @@ const SearchBar = ({ team, dm, channel }) => {
 	const handleSearchTerm = (e) => {
 		const searchTerm = e.target.value.toLowerCase();
 		setSearchTerm(searchTerm);
-
-		channel === generalId
-			? setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm))
-			: setSearchedUsers(getUsersBySearchTerm(currentChannelUsers, searchParam, searchTerm));
+		if (channel && generalId) {
+			channel === generalId
+				? setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm))
+				: setSearchedUsers(getUsersBySearchTerm(currentChannelUsers, searchParam, searchTerm));
+		} else {
+			setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm))
+		}
 	};
 
 	return (

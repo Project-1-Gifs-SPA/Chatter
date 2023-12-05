@@ -61,7 +61,6 @@ const fromUsersDocument = snapshot => {
 
     return {
       ...user,
-      uid:key,
       createdOn: new Date(user.createdOn),
       likedPosts: user.likedPosts ? Object.keys(user.likedPosts) : []
     }
