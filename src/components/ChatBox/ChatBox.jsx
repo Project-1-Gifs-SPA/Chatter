@@ -8,8 +8,11 @@ import {
 	getChat,
 	getDMChat,
 	getLiveDirectMessages,
+	getLiveMeetingMessages,
 	getLiveMessages,
+	getMeetingChat,
 	sendDirectMessage,
+	sendMeetingMessage,
 	sendMessage,
 	sendPictureDirectMessage,
 	sendPictureMessage,
@@ -29,7 +32,9 @@ import { SlPicture } from "react-icons/sl";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId, dmId, teamId } = useParams();
+
+	const { channelId, dmId, meetingId, teamId } = useParams();
+
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -73,6 +78,13 @@ const ChatBox = () => {
 		//setNotSeenChannel(currentChannelId, teamId)
 	}, [messages]);
 
+// <<<<<<< team-channel
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			getChat(channelId)
+// 				.then((response) => setMessages(Object.values(response)))
+// 				.then(() => scrollToBottom());
+// =======
 
 	useEffect(() => {
 		if (currentChannelId) {
@@ -83,13 +95,44 @@ const ChatBox = () => {
 				})
 				.then(() => scrollToBottom());
 
+// >>>>>>> main
 		}
 		if (dmId) {
 			getDMChat(dmId)
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
+
 		}
-	}, [currentChannelId, dmId]);
+
+		if(meetingId) {
+
+			getMeetingChat(meetingId)
+			.then((response) => setMessages(Object.values(response)))
+			.then(() => scrollToBottom())
+
+
+		}
+
+
+	}, [currentChannelId, dmId, meetingId]);
+
+		
+// <<<<<<< team-channel
+// 	}, [channelId, dmId]);
+
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			const unsubscribe = getLiveMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// 			}, channelId);
+
+// 			return () => unsubscribe;
+// 		}
+// 		if (dmId) {
+// 			const unsubscribe = getLiveDirectMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// =======
+
 
 	useEffect(() => {
 		if (currentChannelId) {
@@ -106,11 +149,26 @@ const ChatBox = () => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
 
+// >>>>>>> main
 			}, dmId);
 
 			return () => unsubscribe();
 		}
-	}, [currentChannelId, dmId]);
+
+
+		if(meetingId){
+
+			const unsubscribe = getLiveMeetingMessages(snapshot=>{
+				const msgData = snapshot.exists() ? snapshot.val() : {};
+				setMessages(Object.values(msgData));
+			}, meetingId);
+
+			return () => unsubscribe;
+
+
+		}
+	}, [currentChannelId, dmId, meetingId]);
+
 
 	const handleMsg = (e) => {
 		console.log('msg handle')
@@ -149,6 +207,11 @@ const ChatBox = () => {
 				.then(() => setMsg(''))
 				.then(() => setNotSeenDm(dmId, teamId))
 		}
+
+		if(meetingId){
+			sendMeetingMessage(meetingId, userData.handle, msg, userData.photoURL)
+				.then(()=> setMsg(''));
+		}
 	};
 
 
@@ -185,11 +248,17 @@ const ChatBox = () => {
 					))
 					: null}
 			</div>
+
 			{showMenu &&<div className='p-3 m-3 flex justify-between rounded'>
   							<img src={picURL} alt='pic' className="w-[200px] h-auto ml-2" />
   							<p className="cursor-pointer" onClick={()=>{setShowMenu(false); setPicURL('')}}>X</p>
 							</div>}
-			{currentChannelId || dmId ?
+
+
+
+			{currentChannelId || dmId || meetingId ?
+
+
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
 						<form

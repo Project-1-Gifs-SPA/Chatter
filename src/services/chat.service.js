@@ -71,6 +71,43 @@ export const getLiveGroupDmMembers = (listenFn, dmId) => {
 };
 
 
+
+export const sendMeetingMessage = (meetingId, handle, msg, picURL) => {
+
+    return push(ref(db, `meetings/${meetingId}/msgs`),{})
+    .then(response => {
+
+        set(ref(db,`meetings/${meetingId}/msgs/${response.key}`), {
+            body:msg,
+            id: response.key,
+            owner:handle,
+            createdOn: serverTimestamp(),
+            avatar: picURL
+        });
+    })
+}
+
+export const getLiveMeetingMessages = (listenFn,meetingId) => {
+    const q = query(
+        ref(db, `/meetings/${meetingId}/msgs`),
+        orderByChild('createdOn'),
+        limitToFirst(50)
+    )
+
+    return onValue(q, listenFn);
+};
+
+
+
+export const getMeetingChat = (meetingId) => {
+    return get(ref(db, `meetings/${meetingId}/msgs`))
+    .then(snapshot =>{
+        const data = snapshot.exists() ? snapshot.val() : [];
+        return data;
+    })
+};
+
+
 export const setChannelSeenBy = (channelId, user) => {
     const updates = {};
       updates[`channels/${channelId}/seenBy/${user}`] = true;
@@ -97,6 +134,7 @@ export const setChannelSeenBy = (channelId, user) => {
       updates[`teams/${teamId}/seenBy/${user}`] = null;
       return update(ref(db), updates);
     }
+
 
     export const sendPictureMessage = (channelId, handle, msg, picURL) => {
 
@@ -128,3 +166,4 @@ export const setChannelSeenBy = (channelId, user) => {
             });
         })
     }
+

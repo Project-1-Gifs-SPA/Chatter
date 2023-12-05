@@ -1,10 +1,9 @@
-
 import { auth } from "./config/firebase-config";
 import MainPage from "./views/MainPage/MainPage"
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useState } from "react";
 import AppContext from "./context/AppContext";
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom';
 import LandingPage from "./views/LandingPage/LandingPage";
 import AuthenticatedRoute from "./hoc/AuthenticatedRoute";
 import SignIn from "./views/SignIn/SignIn";
@@ -64,6 +63,8 @@ function App() {
             <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/teams/:teamId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/teams/:teamId/channels/:channelId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+            <Route path="/meetings/:meetingId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+            <Route path="/meetings/:meetingId/room/:roomId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/dms/:dmId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/profile" element={<AuthenticatedRoute><Profile /></AuthenticatedRoute>} />
           </Routes>
@@ -74,4 +75,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

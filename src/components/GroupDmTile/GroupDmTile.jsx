@@ -85,6 +85,7 @@ const GroupDmTile = ({ groupDmId }) => {
 	const handleContextMenu = (e) => {
 		e.preventDefault();
 		setContextMenuVisible(true);
+
 	}
 
 	return (
@@ -109,6 +110,7 @@ const GroupDmTile = ({ groupDmId }) => {
 				</div>
 			</div>
 			{contextMenuVisible ? <ContextMenu groupDmId={groupDmId} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} /> : null}
+
 		</div>
 
 	)
