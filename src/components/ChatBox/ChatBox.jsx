@@ -14,6 +14,8 @@ import {
 	sendDirectMessage,
 	sendMeetingMessage,
 	sendMessage,
+	sendPictureDirectMessage,
+	sendPictureMessage,
 	setChannelSeenBy,
 	setNotSeenChannel,
 } from "../../services/chat.service";
@@ -24,6 +26,8 @@ import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
+import { uploadMessagePhoto } from "../../services/storage.service";
+import { SlPicture } from "react-icons/sl";
 
 
 const ChatBox = () => {
@@ -41,9 +45,13 @@ const ChatBox = () => {
 	const [isPickerVisible, setPickerVisible] = useState(false);
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
-	const [picURL, setPicURL] = useState([]);
+	const [picURL, setPicURL] = useState('');
 	const [showMenu, setShowMenu] = useState(false);
 	const [currentChannelId, setCurrentChannelId] = useState('')
+	const [pic, setPic] = useState({});
+
+
+	const container = useRef(null);
 
 	useEffect(() => {
 		setCurrentChannelId(channelId)
@@ -54,7 +62,7 @@ const ChatBox = () => {
 		chat.scrollTop = chat?.scrollHeight;
 	};
 
-	const container = useRef(null);
+	
 
 	const scroll = () => {
 		const { offsetHeight, scrollHeight, scrollTop } = container.current;
@@ -84,7 +92,6 @@ const ChatBox = () => {
 			getChat(currentChannelId)
 				.then((response) => {
 					setMessages(Object.values(response))
-					console.log('generating at ', currentChannelId)
 				})
 				.then(() => scrollToBottom());
 
@@ -164,14 +171,38 @@ const ChatBox = () => {
 
 
 	const handleMsg = (e) => {
+		console.log('msg handle')
 		e.preventDefault();
-		if (currentChannelId) {
+
+		if (picURL && channelId){
+			console.log('pic handling')
+			sendPictureMessage(channelId, userData.handle, msg, picURL)
+			.then(()=> {			
+				setShowMenu(false);
+				setPicURL('')
+				setMsg('')
+				return;
+				})
+		}
+
+		
+		if (picURL && dmId){
+			console.log('pic handling')
+			sendPictureDirectMessage(dmId, userData.handle, msg, picURL)
+			.then(()=> {			
+				setShowMenu(false);
+				setPicURL('')
+				setMsg('')
+				})
+		}
+
+		if (currentChannelId && msg && !picURL) {
 			sendMessage(currentChannelId, userData.handle, msg, userData.photoURL)
 				.then(() => setMsg(""))
 				.then(() => setNotSeenChannel(currentChannelId, teamId))
 		}
 
-		if (dmId) {
+		if (dmId && msg && !picURL) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
 				.then(() => setMsg(''))
 				.then(() => setNotSeenDm(dmId, teamId))
@@ -182,6 +213,22 @@ const ChatBox = () => {
 				.then(()=> setMsg(''));
 		}
 	};
+
+
+	const handlePic = (e) => {
+		e.preventDefault();
+		if (e.target.files[0] !== null) {
+			const file = e.target.files[0];
+			uploadMessagePhoto( photoURL=>{
+				
+				setPicURL(photoURL);
+				setShowMenu(true);	
+				
+			},file)
+			// setMsg(e.target.files[0].name)
+			console.log(pic);
+		}
+	}
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -202,8 +249,15 @@ const ChatBox = () => {
 					: null}
 			</div>
 
+			{showMenu &&<div className='p-3 m-3 flex justify-between rounded'>
+  							<img src={picURL} alt='pic' className="w-[200px] h-auto ml-2" />
+  							<p className="cursor-pointer" onClick={()=>{setShowMenu(false); setPicURL('')}}>X</p>
+							</div>}
+
+
 
 			{currentChannelId || dmId || meetingId ?
+
 
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
@@ -226,7 +280,14 @@ const ChatBox = () => {
 							/>
 
 							{/* <button type='submit' className='ml-50'>Send</button> */}
+						
+							<input className='upl hidden' id='pic' type='file'  accept="image/jpeg, image/png, image/jpg" onChange={handlePic}/>
 						</form>
+						
+						
+			
+						
+						
 					</div>
 					<div className="relative inline-block pr-5">
 						<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
@@ -261,8 +322,8 @@ const ChatBox = () => {
 								color: 'white',
 							}}
 								htmlFor='pic'>
-								<IoDocumentAttachOutline className='w-6 h-6 text-white cursor-pointer' />
-								{/* <input className='upl hidden' id='pic' type='file' onChange={addImage} /> */}
+								<SlPicture className='w-6 h-6 text-white cursor-pointer' />
+								
 							</label>
 						</div>
 					</div>

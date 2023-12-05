@@ -2,7 +2,10 @@ import { updateProfile } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { updateUserPhoto } from './users.service';
 import { updateTeamPhoto } from './teams.service';
+import { sendPictureMessage } from './chat.service';
+
 import { addRecordingToMeeting } from './meetings.service';
+
 
 export const storage = getStorage();
 
@@ -65,6 +68,18 @@ export const uploadTeamPhoto = (file, teamId, setLoading) => {
     });
 }
 
+
+
+export const uploadMessagePhoto = (listenFn, file) => {
+  const fileRef = ref(storage, file.name);
+
+  return uploadBytes(fileRef, file)
+    .then(()=> getDownloadURL(fileRef))
+    .then((photoURL)=> listenFn(photoURL))
+    .catch((error) => {
+      console.error('Error uploading file:', error);
+    });
+
 export const uploadCallRecording = (file, meetingId) => {
   const fileRef = ref(storage, meetingId + '.mp4');
 
@@ -73,4 +88,5 @@ export const uploadCallRecording = (file, meetingId) => {
     .then((recordingURL)=> addRecordingToMeeting(meetingId, recordingURL))
     .catch(error=> console.error('Error upload file:', error))
     
+
 }

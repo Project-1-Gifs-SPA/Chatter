@@ -107,6 +107,7 @@ export const getMeetingChat = (meetingId) => {
     })
 };
 
+
 export const setChannelSeenBy = (channelId, user) => {
     const updates = {};
       updates[`channels/${channelId}/seenBy/${user}`] = true;
@@ -132,5 +133,37 @@ export const setChannelSeenBy = (channelId, user) => {
     
       updates[`teams/${teamId}/seenBy/${user}`] = null;
       return update(ref(db), updates);
+    }
+
+
+    export const sendPictureMessage = (channelId, handle, msg, picURL) => {
+
+        return push(ref(db, `channels/${channelId}/msgs`),{})
+        .then(response => {
+    
+            set(ref(db,`channels/${channelId}/msgs/${response.key}`), {
+                body: msg,
+                pic: picURL,
+                id: response.key,
+                owner:handle,
+                createdOn: serverTimestamp(),
+            });
+        })
+    }
+
+
+    export const sendPictureDirectMessage = (dmId, handle, msg, picURL) => {
+
+        return push(ref(db, `dms/${dmId}/msgs`),{})
+        .then(response => {
+    
+            set(ref(db,`dms/${dmId}/msgs/${response.key}`), {
+                body: msg,
+                pic: picURL,
+                id: response.key,
+                owner:handle,
+                createdOn: serverTimestamp(),
+            });
+        })
     }
 
