@@ -171,13 +171,15 @@ const Message = ({ message }) => {
 					</div>
 				) : (
 					<>
-						{message.pic?
+						<div className='grid'>
+						<div className=' text-left tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
+							{message.body}
+						</div>
+						{message.pic &&
 							<div className='w-[400px] tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
 							<img src={message.pic} onClick={()=>setShowPic(true)} />
+							</div>}
 							</div>
-						:<div className='tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
-							{message.body}
-						</div>}
 						{message.edited && <div className="chat-footer text-[7pt] text-gray-400 flex items-center">
 							(edited)
 						</div>}

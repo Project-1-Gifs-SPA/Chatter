@@ -70,38 +70,6 @@ export const getLiveGroupDmMembers = (listenFn, dmId) => {
     return onValue(ref(`dms/${dmId}/members`), listenFn);
 };
 
-// export const sendMessageTest = (teamId, handle, msg, picURL) => { ////delete when testing is done!
-
-//     return push(ref(db, `teams/${teamId}/msgs`),{})
-//     .then(response => {
-
-//         set(ref(db,`teams/${teamId}/msgs/${response.key}`), {
-//             body:msg,
-//             id: response.key,
-//             owner:handle,
-//             createdOn: serverTimestamp(),
-//             avatar: picURL,
-//         });
-//     })
-// }
-
-
-// export const getLiveMessagesTest = (listenFn,teamId) => {  //delete when testing is done!
-//     const q= query(
-//         ref(db, `/teams/${teamId}/msgs`),
-//         orderByChild('createdOn'),
-//         limitToFirst(50)
-//     )
-//     return onValue(q, listenFn)
-// }
-
-// export const getChatTest = (teamId) => {
-//     return get(ref(db, `teams/${teamId}/msgs`))
-//     .then(snapshot =>{
-//         const data = snapshot.exists() ? snapshot.val() : [];
-//         return Object.values(data);
-//     })
-// }
 
 export const setChannelSeenBy = (channelId, user) => {
     const updates = {};
@@ -130,12 +98,29 @@ export const setChannelSeenBy = (channelId, user) => {
       return update(ref(db), updates);
     }
 
-    export const sendPictureMessage = (channelId, handle, picURL) => {
+    export const sendPictureMessage = (channelId, handle, msg, picURL) => {
 
         return push(ref(db, `channels/${channelId}/msgs`),{})
         .then(response => {
     
             set(ref(db,`channels/${channelId}/msgs/${response.key}`), {
+                body: msg,
+                pic: picURL,
+                id: response.key,
+                owner:handle,
+                createdOn: serverTimestamp(),
+            });
+        })
+    }
+
+
+    export const sendPictureDirectMessage = (dmId, handle, msg, picURL) => {
+
+        return push(ref(db, `dms/${dmId}/msgs`),{})
+        .then(response => {
+    
+            set(ref(db,`dms/${dmId}/msgs/${response.key}`), {
+                body: msg,
                 pic: picURL,
                 id: response.key,
                 owner:handle,

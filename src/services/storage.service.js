@@ -66,12 +66,12 @@ export const uploadTeamPhoto = (file, teamId, setLoading) => {
 }
 
 
-export const uploadMessagePhoto = (channelId, handle, file) => {
+export const uploadMessagePhoto = (listenFn, file) => {
   const fileRef = ref(storage, file.name);
 
   return uploadBytes(fileRef, file)
     .then(()=> getDownloadURL(fileRef))
-    .then((photoURL)=> sendPictureMessage(channelId, handle, photoURL))
+    .then((photoURL)=> listenFn(photoURL))
     .catch((error) => {
       console.error('Error uploading file:', error);
     });
