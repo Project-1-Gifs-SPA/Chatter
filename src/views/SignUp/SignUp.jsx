@@ -111,8 +111,9 @@ const SignUp = () => {
 					setFail('Email has already been used!');
 				} else if (e.code === 'auth/weak-password') {
 					setFail('Password is required and must be at least 6 characters long!')
-				}
-				else {
+				} else if (e.code === 'auth/invalid-email') {
+					setFail('Email is not valid!')
+				} else {
 					setFail(`${e.message}`);
 				}
 				setShowAlert(true);
