@@ -7,9 +7,10 @@ import AppContext from "../../context/AppContext";
 import { sendEmailVerification } from "firebase/auth";
 import { removeTeamMember } from "../../services/teams.service";
 import { deleteGroupMember } from "../../services/dms.service";
+import { removeChannelUser } from "../../services/channel.service";
 
 
-const ContextMenu = ({teamId, owner, contextMenuVisible, setContextMenuVisible, showModal, setShowModal, channelId, member, groupDmId}) => {
+const ContextMenu = ({teamId, owner, isOwner, contextMenuVisible, setContextMenuVisible, showModal, setShowModal, channelId, member, groupDmId, setShowDeleteModal}) => {
 
 	const {userData} = useContext(AppContext)
 
@@ -36,10 +37,16 @@ const ContextMenu = ({teamId, owner, contextMenuVisible, setContextMenuVisible, 
 	}
 
 	const handleLeaveGroup = (e, groupMember) => {
-		e.preventDefault()
+		e.preventDefault();
 		deleteGroupMember(groupDmId, groupMember)
 		.then(()=>setContextMenuVisible(false));
 
+	}
+
+	const handleLeaveChannel = (e, channelMember)=>{
+		e.preventDefault();
+		removeChannelUser(channelId, channelMember)
+		.then(()=>setContextMenuVisible(false));
 	}
     return (
         < >
@@ -59,6 +66,8 @@ const ContextMenu = ({teamId, owner, contextMenuVisible, setContextMenuVisible, 
 		? <li onClick={(e)=>handleLeave(e,member)}><a>Remove from Team</a></li> 
 		: null}
 		{groupDmId ? <li onClick={(e)=>handleLeaveGroup(e, userData.handle)}><a>Leave Group</a></li> : null}
+		{channelId && !isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Leave Channel</a></li> : null}
+		{channelId && isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Remove Channel</a></li> : null}
         </ul>
 		</div>
         </>

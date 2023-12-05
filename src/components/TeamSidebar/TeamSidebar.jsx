@@ -10,7 +10,7 @@ import AppContext from '../../context/AppContext';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { MdPersonAddDisabled } from "react-icons/md";
 import { getLiveDMs } from '../../services/dms.service';
-import { getChannelById, getGeneralChannel } from '../../services/channel.service';
+import { getChannelById, getGeneralChannel, getLiveChannelInfo } from '../../services/channel.service';
 
 const TeamSidebar = () => {
 	const { userData } = useContext(AppContext)
@@ -54,6 +54,24 @@ const TeamSidebar = () => {
 		getChannelById(channelId)
 			.then(channel => setCurrentChannel(channel));
 	}, [channelId])
+
+
+	useEffect(()=>{
+		const unsubscribe = getLiveChannelInfo(data => {
+			setCurrentChannel({...data})
+		}, channelId)
+
+		return () => {
+			unsubscribe();
+		}
+
+
+	},[channelId])
+
+
+
+
+
 
 	useEffect(() => {
 		const unsubscribe = getLiveDMs(data => {

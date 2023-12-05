@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router"
 import ProfileBar from '../ProfileBar/ProfileBar';
 import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
-import { addChannel, addChannelUser, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel, getLiveChannelSeenBy } from '../../services/channel.service';
+import { addChannel, addChannelUser, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel, getLiveChannelSeenBy, getLiveChannelsByTeam } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { getAllUsers, getUserByHandle, getUsersBySearchTerm } from '../../services/users.service';
 import { IoIosArrowDown } from 'react-icons/io';
@@ -37,7 +37,7 @@ const MyServers = () => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const { userData } = useContext(AppContext);
-	const { teamId, dmId, meetingId } = useParams();
+	const { teamId, dmId, meetingId, channelId } = useParams();
 
 	const [team, setTeam] = useState('');
 
@@ -113,7 +113,7 @@ const MyServers = () => {
 
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
-		}, teamId);
+		}, teamId);	
 
 		getTeamById(teamId)
 			.then(team => setTeam(team));
@@ -178,6 +178,26 @@ const MyServers = () => {
 	}, [dmId, userData])
 
 
+	useEffect(()=> {
+		const unsubscribe = getLiveChannelsByTeam (data => {
+			console.log(data)
+			Promise.all(data.map(channelId => getChannelById(channelId)))
+			.then(channels => {
+				const filteredCHanneld= channels.filter(channel => Object.keys(channel.members).includes(userData.handle))
+				setCurrentChannels(filteredCHanneld.map(channel=>channel.id));
+
+			})
+			// .then(filteredChannels=> setCurrentChannels(filteredChannels))
+
+			// setCurrentChannels(data);
+		}, teamId)
+
+		return () => {
+			unsubscribe();
+		}
+	},[channelId])
+
+
 	const createChannel = (e) => {
 		e.preventDefault();
 
@@ -197,7 +217,7 @@ const MyServers = () => {
 					throw new Error(`Channel ${channelName} already exists`);
 				}
 
-				addChannel(teamId, channelName, isPublic, Object.keys(channelMembers).filter(member => channelMembers[member]))
+				addChannel(teamId, channelName, isPublic, currentTeam.owner, userData.handle, Object.keys(channelMembers).filter(member => channelMembers[member]))
 					.then(channelId => {
 						navigate(`/teams/${teamId}/channels/${channelId}`);
 					});
@@ -257,6 +277,8 @@ const MyServers = () => {
 				});
 		}
 	}, [dms])
+
+	
 
 	return (
 		<>
