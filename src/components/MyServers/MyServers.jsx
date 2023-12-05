@@ -67,14 +67,14 @@ const MyServers = () => {
 	const [createMeetingModal, setCreateMeetingModal] = useState(false);
 
 	const [isPublic, setIsPublic] = useState(true);
-	
+
 	const [allTeamMembers, setAllTeamMembers] = useState([]);
 
 
 	const [channelError, setChannelError] = useState('');
 	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
 
-	const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs): []);
+	const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs) : []);
 	const [meetings, setMeetings] = useState([]);
 	const [currentUserMeetings, setCurrentUserMeetings] = useState([]);
 
@@ -88,16 +88,16 @@ const MyServers = () => {
 	}, []);
 
 
-	useEffect(()=>{
-		if(currentTeam.meetings && currentUserMeetings) {
-	
-		const teamMeetings = Object.keys(currentTeam.meetings)
-		
-		const filteredMeetings = teamMeetings.filter(meetingId=> currentUserMeetings.includes(meetingId)? meetingId : null);
+	useEffect(() => {
+		if (currentTeam.meetings && currentUserMeetings) {
 
-		setMeetings(filteredMeetings)
+			const teamMeetings = Object.keys(currentTeam.meetings)
 
-		} else{
+			const filteredMeetings = teamMeetings.filter(meetingId => currentUserMeetings.includes(meetingId) ? meetingId : null);
+
+			setMeetings(filteredMeetings)
+
+		} else {
 			setMeetings([]);
 		}
 
@@ -113,7 +113,7 @@ const MyServers = () => {
 
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
-		}, teamId);	
+		}, teamId);
 
 		getTeamById(teamId)
 			.then(team => setTeam(team));
@@ -150,7 +150,7 @@ const MyServers = () => {
 			// }
 
 			setCurrentUserMeetings(data)
-		
+
 		}, userData?.handle)
 
 		return () => {
@@ -178,15 +178,15 @@ const MyServers = () => {
 	}, [dmId, userData])
 
 
-	useEffect(()=> {
-		const unsubscribe = getLiveChannelsByTeam (data => {
+	useEffect(() => {
+		const unsubscribe = getLiveChannelsByTeam(data => {
 			console.log(data)
 			Promise.all(data.map(channelId => getChannelById(channelId)))
-			.then(channels => {
-				const filteredCHanneld= channels.filter(channel => Object.keys(channel.members).includes(userData.handle))
-				setCurrentChannels(filteredCHanneld.map(channel=>channel.id));
+				.then(channels => {
+					const filteredCHanneld = channels.filter(channel => Object.keys(channel.members).includes(userData.handle))
+					setCurrentChannels(filteredCHanneld.map(channel => channel.id));
 
-			})
+				})
 			// .then(filteredChannels=> setCurrentChannels(filteredChannels))
 
 			// setCurrentChannels(data);
@@ -195,7 +195,7 @@ const MyServers = () => {
 		return () => {
 			unsubscribe();
 		}
-	},[channelId])
+	}, [channelId])
 
 
 	const createChannel = (e) => {
@@ -278,15 +278,15 @@ const MyServers = () => {
 		}
 	}, [dms])
 
-	
+
 
 	return (
 		<>
-		<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
+			<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
-			<div className="flex flex-col h-screen">
-				<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
-					{/* // team-channel
+				<div className="flex flex-col h-screen">
+					<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
+						{/* // team-channel
 //					<div className="flex-auto">
 //						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
 //					</div>
@@ -297,98 +297,98 @@ const MyServers = () => {
 //					</div>
 //					{teamId && <div>
 //						className="cursor-pointer" */}
-					{/* //======= */}
-					<div className="flex justify-between items-center max-w-">
-						<h1
-							style={{ fontFamily: 'Rockwell, sans-serif' }}
-							className={`font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
-							{teamId ?
-								`${currentTeam.name}` : 'Direct Messages'}
-						</h1>
-						{expanded ? (
-							<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Hide channels"><IoIosArrowBack onClick={() => setExpanded(false)} className="text-purple-500 text-2xl" /></div>
-						) : (
-							<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Show channels"><IoIosArrowForward onClick={() => setExpanded(true)} className="text-purple-500 text-2xl" /></div>
-						)
-						}
+						{/* //======= */}
+						<div className="flex justify-between items-center max-w-">
+							<h1
+								style={{ fontFamily: 'Rockwell, sans-serif' }}
+								className={`font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
+								{teamId ?
+									`${currentTeam.name}` : 'Direct Messages'}
+							</h1>
+							{expanded ? (
+								<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Hide channels"><IoIosArrowBack onClick={() => setExpanded(false)} className="text-purple-500 text-2xl" /></div>
+							) : (
+								<div className='tooltip tooltip-bottom cursor-pointer' data-tip="Show channels"><IoIosArrowForward onClick={() => setExpanded(true)} className="text-purple-500 text-2xl" /></div>
+							)
+							}
+						</div>
 					</div>
-				</div>
 
 
-				{teamId || meetingId? <>
-				{expanded?
-					<>
-        <button className="btn bg-gray-800 border-none" onClick={()=>setCreateMeetingModal(true)}>{
-        <>
-        <BsCalendarEvent /> 
-        Create Meeting
-        </>}</button>
-        <div className="divider mt-auto"></div>
-        </>
-				
-		: null}
-		{createMeetingModal ? <CreateMeetingModal setShowModal={setCreateMeetingModal} /> : null}
-				<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
-				
-					<div className='text-xl mr-4 text-white'
-						style={{ fontFamily: 'Rockwell, sans-serif' }}>
+					{teamId || meetingId ? <>
+						{expanded ?
+							<>
+								<button className="btn bg-gray-700 border-none ml-3 mr-3" onClick={() => setCreateMeetingModal(true)}>{
+									<p className='flex text-white'>
+										<BsCalendarEvent className='mr-3' />
+										Create Meeting
+									</p>}</button>
+								<div className="divider mt-auto"></div>
+							</>
 
-				{/* {teamId ? <>
+							: null}
+						{createMeetingModal ? <CreateMeetingModal setShowModal={setCreateMeetingModal} /> : null}
+						<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
+
+							<div className='text-xl mr-4 text-white'
+								style={{ fontFamily: 'Rockwell, sans-serif' }}>
+
+								{/* {teamId ? <>
 
 					<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
 						<div className='text-xl mr-4 text-white'
 							style={{ fontFamily: 'Rockwell, sans-serif' }}> */}
-							{/* main*/}
+								{/* main*/}
 
 
-							Channels
-						</div>
-						<div
-							className="cursor-pointer"
-
-							onClick={() => document.getElementById("create-channel").showModal()}
-						>
-							<div className="bg-white opacity-25 h-5 w-5 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl overflow-hidden">
-								<GoPlus className="h-10 w-10" />
+								Channels
 							</div>
-						</div>
-						{/* team-channel
+							<div
+								className="cursor-pointer"
+
+								onClick={() => document.getElementById("create-channel").showModal()}
+							>
+								<div className="bg-white opacity-25 h-5 w-5 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl overflow-hidden">
+									<GoPlus className="h-10 w-10" />
+								</div>
+							</div>
+							{/* team-channel
 //					</div></> : null}
 //				</div>
 					//=======*/}
-					</div>
-					{/*</>// main*/}
-
-					<dialog ref={modalRef} id="create-channel" className="modal">
-						<div className="modal-box">
-							<h3 className="font-bold text-lg py-2">Enter Channel name</h3>
-							<input type='text' value={channelName} onChange={(e) => setChannelName(e.target.value)} /><br />
-							<span className="bg-red">{channelError}</span>
-
-							<div className="modal-action">
-
-								<form method="dialog" >
-
-									{/* if there is a button in form, it will close the modal */}
-									<div className='flex-auto'>
-										<p>Create public channel</p>
-										<input type="checkbox" className="checkbox"
-											checked={isPublic ? "checked" : ""}
-											onClick={() => setIsPublic(!isPublic)} />
-									</div>
-
-									{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
-
-									<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
-									<button className="btn">Close</button>
-								</form>
-
-							</div>
 						</div>
-						{/* // team-channel */}
-						{/* </div> */}
-						{/* </dialog > */}
-						{/* //				{currentTeam?.channels && generalId
+						{/*</>// main*/}
+
+						<dialog ref={modalRef} id="create-channel" className="modal">
+							<div className="modal-box">
+								<h3 className="font-bold text-lg py-2">Enter Channel name</h3>
+								<input type='text' value={channelName} onChange={(e) => setChannelName(e.target.value)} /><br />
+								<span className="bg-red">{channelError}</span>
+
+								<div className="modal-action">
+
+									<form method="dialog" >
+
+										{/* if there is a button in form, it will close the modal */}
+										<div className='flex-auto'>
+											<p>Create public channel</p>
+											<input type="checkbox" className="checkbox"
+												checked={isPublic ? "checked" : ""}
+												onClick={() => setIsPublic(!isPublic)} />
+										</div>
+
+										{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
+
+										<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
+										<button className="btn">Close</button>
+									</form>
+
+								</div>
+							</div>
+							{/* // team-channel */}
+							{/* </div> */}
+							{/* </dialog > */}
+							{/* //				{currentTeam?.channels && generalId
 //					? currentChannels.map(channelId => <ChannelTile
 //						key={channelId}
 //						channelId={channelId}
@@ -401,60 +401,60 @@ const MyServers = () => {
 //            updateCheckedChannels={updateCheckedChannels}
 //					/>)
 //======= */}
-					</dialog >
-				</>
+						</dialog >
+					</>
 
-					//>>>>>>> main
-					: null}
-				<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
-					{currentTeam.channels && teamId
-						? currentChannels.map((channelId) => <ChannelTile
-							key={channelId}
-							channelId={channelId}
-							generalId={generalId}
-							isOwner={currentTeam.owner === userData.handle}
-							addMembers={handleAddMember}
-							channelMembers={channelMembers}
-							teamMembers={allTeamMembers}
-							checkedChannels={checkedChannels}
-							updateCheckedChannels={updateCheckedChannels}
-						/>)
-						: (
-							<>
-								{dms && allDms.map((dm) => {
-									const partner = Object.keys(dm.members).find(member => member !== userData.handle)
-									return <div key={dm.id}
-										className={`hover:bg-gray-300 cursor-pointer`}>
-										<TeamMember dmPartner={partner} dmId={dm.id} /></div>
-								})
-								}
+						//>>>>>>> main
+						: null}
+					<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
+						{currentTeam.channels && teamId
+							? currentChannels.map((channelId) => <ChannelTile
+								key={channelId}
+								channelId={channelId}
+								generalId={generalId}
+								isOwner={currentTeam.owner === userData.handle}
+								addMembers={handleAddMember}
+								channelMembers={channelMembers}
+								teamMembers={allTeamMembers}
+								checkedChannels={checkedChannels}
+								updateCheckedChannels={updateCheckedChannels}
+							/>)
+							: (
+								<>
+									{dms && allDms.map((dm) => {
+										const partner = Object.keys(dm.members).find(member => member !== userData.handle)
+										return <div key={dm.id}
+											className={`hover:bg-gray-300 cursor-pointer`}>
+											<TeamMember dmPartner={partner} dmId={dm.id} /></div>
+									})
+									}
 
-								{groupDMs && groupDMs.map(groupDmId => <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
-							</>
-						)}
-				</div>
-         <br />
-		  <div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
-				{(meetings.length && teamId)
-				?meetings.map((meetingId)=><MeetingTile key={meetingId} meetingId={meetingId} />)
-				: null
-				
-				}		
+									{groupDMs && groupDMs.map(groupDmId => <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
+								</>
+							)}
+					</div>
+					<br />
+					<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
+						{(meetings.length && teamId)
+							? meetings.map((meetingId) => <MeetingTile key={meetingId} meetingId={meetingId} />)
+							: null
 
-		  </div>
+						}
+
+					</div>
 
 
-				<div className="flex-grow"></div>
-				<div className={`${expanded ? '' : 'hidden'}`}>
+					<div className="flex-grow"></div>
+					<div className={`${expanded ? '' : 'hidden'}`}>
 
-					<ProfileBar />
-				</div>
+						<ProfileBar />
+					</div>
+				</div >
 			</div >
-		</div >
 		</>
 	)
 }
 
 export default MyServers;
 
-{/* // animate-blink */}
+{/* // animate-blink */ }
