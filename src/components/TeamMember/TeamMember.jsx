@@ -34,10 +34,12 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 			setIsDmSeen(data)
 		}, dmId)
 
+
 		return () => {
 			unsubscribe();
 		}
 	}, [dmId]);
+
 
 	return (
 		<>

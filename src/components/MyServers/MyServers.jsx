@@ -22,14 +22,22 @@ import { getDMById, getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveIsDMSe
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
+
+import CreateMeetingModal from '../CreateMeetingModal/CreateMeetingModal';
+import { BsCalendarEvent } from "react-icons/bs";
+import MeetingTile from '../MeetingTile/MeetingTile';
+import { getLiveMeetingsByHandle } from '../../services/meetings.service';
+
+
 import { setChannelSeenBy, setTeamSeenBy, setTeamsNotSeenBy } from '../../services/chat.service';
+
 
 const MyServers = () => {
 
 	const [isOpen, setIsOpen] = useState(false);
 
 	const { userData } = useContext(AppContext);
-	const { teamId, dmId } = useParams();
+	const { teamId, dmId, meetingId } = useParams();
 
 	const [team, setTeam] = useState('');
 
@@ -54,14 +62,51 @@ const MyServers = () => {
 	const modalRef = useRef(null);
 
 	const [channelName, setChannelName] = useState('');
+
+	const [channelMembers, setChannelMembers] = useState('');
+	const [createMeetingModal, setCreateMeetingModal] = useState(false);
+
 	const [isPublic, setIsPublic] = useState(true);
 	const [channelMembers, setChannelMembers] = useState({});
 	const [allTeamMembers, setAllTeamMembers] = useState([]);
 
-	const [channelError, setChannelError] = useState('');
 
+	const [channelError, setChannelError] = useState('');
 	const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
-	const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs) : []);
+
+	const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs): []);
+	const [meetings, setMeetings] = useState([]);
+	const [currentUserMeetings, setCurrentUserMeetings] = useState([]);
+
+
+
+	useEffect(() => {
+		getAllUsers()
+			.then((r) => {
+				setChannelMembers([...r].sort((a, b) => b.createdOn - a.createdOn));
+			})
+	}, []);
+
+
+	useEffect(()=>{
+		if(currentTeam.meetings && currentUserMeetings) {
+	
+		const teamMeetings = Object.keys(currentTeam.meetings)
+		
+		const filteredMeetings = teamMeetings.filter(meetingId=> currentUserMeetings.includes(meetingId)? meetingId : null);
+
+		setMeetings(filteredMeetings)
+
+		} else{
+			setMeetings([]);
+		}
+
+	}, [currentTeam?.meetings, currentUserMeetings])
+
+
+
+
+
 
 	useEffect(() => {
 		if (!teamId) { return; }
@@ -93,8 +138,24 @@ const MyServers = () => {
 					setChannelMembers({ ...formattedMembers });
 				}));
 
+
+		}, teamId)
+
+		const unsub = getLiveMeetingsByHandle(data => {
+
+			// if(currentTeam.meetings){
+			// const filterMeetings = Object.keys(currentTeam.meetings).filter((meetingId=> data.includes(meetingId)? meetingId:null))
+			// console.log(filterMeetings)
+			// setMeetings([...filterMeetings]);
+			// }
+
+			setCurrentUserMeetings(data)
+		
+		}, userData?.handle)
+
 		return () => {
 			unsubscribe();
+			unsub();
 		}
 	}, [teamId]);
 
@@ -115,6 +176,7 @@ const MyServers = () => {
 			unsub();
 		}
 	}, [dmId, userData])
+
 
 	const createChannel = (e) => {
 		e.preventDefault();
@@ -230,12 +292,32 @@ const MyServers = () => {
 					</div>
 				</div>
 
+
+				{teamId || meetingId? <>
+				{expanded?
+					<>
+        <button className="btn bg-gray-800 border-none" onClick={()=>setCreateMeetingModal(true)}>{
+        <>
+        <BsCalendarEvent /> 
+        Create Meeting
+        </>}</button>
+        <div className="divider mt-auto"></div>
+        </>
+				
+		: null}
+		{createMeetingModal ? <CreateMeetingModal setShowModal={setCreateMeetingModal} /> : null}
+				<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
+				
+					<div className='text-xl mr-4 text-white'
+						style={{ fontFamily: 'Rockwell, sans-serif' }}>
+
 				{teamId ? <>
 
 					<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
 						<div className='text-xl mr-4 text-white'
 							style={{ fontFamily: 'Rockwell, sans-serif' }}>
 							{/* main*/}
+
 
 							Channels
 						</div>
@@ -299,6 +381,7 @@ const MyServers = () => {
 //======= */}
 					</dialog >
 				</>
+
 					//>>>>>>> main
 					: null}
 				<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
@@ -328,6 +411,16 @@ const MyServers = () => {
 							</>
 						)}
 				</div>
+         <br />
+		  <div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
+				{(meetings.length && teamId)
+				?meetings.map((meetingId)=><MeetingTile key={meetingId} meetingId={meetingId} />)
+				: null
+				
+				}		
+
+		  </div>
+
 
 				<div className="flex-grow"></div>
 				<div className={`${expanded ? '' : 'hidden'}`}>

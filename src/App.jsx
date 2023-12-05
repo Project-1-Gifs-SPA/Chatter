@@ -63,6 +63,8 @@ function App() {
             <Route path="/" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/teams/:teamId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/teams/:teamId/channels/:channelId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+            <Route path="/meetings/:meetingId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
+            <Route path="/meetings/:meetingId/room/:roomId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/dms/:dmId" element={<AuthenticatedRoute><MainPage /></AuthenticatedRoute>} />
             <Route path="/profile" element={<AuthenticatedRoute><Profile /></AuthenticatedRoute>} />
           </Routes>

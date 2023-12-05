@@ -8,8 +8,11 @@ import {
 	getChat,
 	getDMChat,
 	getLiveDirectMessages,
+	getLiveMeetingMessages,
 	getLiveMessages,
+	getMeetingChat,
 	sendDirectMessage,
+	sendMeetingMessage,
 	sendMessage,
 	setChannelSeenBy,
 	setNotSeenChannel,
@@ -25,7 +28,9 @@ import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId, dmId, teamId } = useParams();
+
+	const { channelId, dmId, meetingId, teamId } = useParams();
+
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -89,6 +94,21 @@ const ChatBox = () => {
 			getDMChat(dmId)
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
+
+		}
+
+		if(meetingId) {
+
+			getMeetingChat(meetingId)
+			.then((response) => setMessages(Object.values(response)))
+			.then(() => scrollToBottom())
+
+
+		}
+
+
+	}, [currentChannelId, dmId, meetingId]);
+
 		}
 // <<<<<<< team-channel
 // 	}, [channelId, dmId]);
@@ -105,7 +125,7 @@ const ChatBox = () => {
 // 			const unsubscribe = getLiveDirectMessages((snapshot) => {
 // 				setMessages(Object.values(snapshot.val()));
 // =======
-	}, [currentChannelId, dmId]);
+
 
 	useEffect(() => {
 		if (currentChannelId) {
@@ -128,7 +148,20 @@ const ChatBox = () => {
 			return () => unsubscribe();
 		}
 
-	}, [currentChannelId, dmId]);
+
+		if(meetingId){
+
+			const unsubscribe = getLiveMeetingMessages(snapshot=>{
+				const msgData = snapshot.exists() ? snapshot.val() : {};
+				setMessages(Object.values(msgData));
+			}, meetingId);
+
+			return () => unsubscribe;
+
+
+		}
+	}, [currentChannelId, dmId, meetingId]);
+
 
 	const handleMsg = (e) => {
 		e.preventDefault();
@@ -142,6 +175,11 @@ const ChatBox = () => {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
 				.then(() => setMsg(''))
 				.then(() => setNotSeenDm(dmId, teamId))
+		}
+
+		if(meetingId){
+			sendMeetingMessage(meetingId, userData.handle, msg, userData.photoURL)
+				.then(()=> setMsg(''));
 		}
 	};
 
@@ -164,7 +202,9 @@ const ChatBox = () => {
 					: null}
 			</div>
 
-			{currentChannelId || dmId ?
+
+			{currentChannelId || dmId || meetingId ?
+
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
 						<form

@@ -2,6 +2,7 @@ import { updateProfile } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { updateUserPhoto } from './users.service';
 import { updateTeamPhoto } from './teams.service';
+import { addRecordingToMeeting } from './meetings.service';
 
 export const storage = getStorage();
 
@@ -62,4 +63,14 @@ export const uploadTeamPhoto = (file, teamId, setLoading) => {
     .catch((error) => {
       console.error('Error uploading file:', error);
     });
+}
+
+export const uploadCallRecording = (file, meetingId) => {
+  const fileRef = ref(storage, meetingId + '.mp4');
+
+  return uploadBytes(fileRef, file)
+    .then(()=> getDownloadURL(fileRef))
+    .then((recordingURL)=> addRecordingToMeeting(meetingId, recordingURL))
+    .catch(error=> console.error('Error upload file:', error))
+    
 }
