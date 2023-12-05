@@ -96,6 +96,7 @@ export const addFriends = (handle, friendHandle) => {
   updateFriends[`/users/${handle}/friends/${friendHandle}`] = true;
   updateFriends[`users/${friendHandle}/friends/${handle}`] = true;
   updateFriends[`users/${handle}/friendRequests/${friendHandle}`] = null;
+  updateFriends[`users/${friendHandle}/friendRequests/${handle}`] = null;
 
   return update(ref(db), updateFriends)
   .then(() => toast.success("Friend request was accepted", {
