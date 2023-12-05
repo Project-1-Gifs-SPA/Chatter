@@ -144,15 +144,18 @@ const SearchBar = ({ team, dm, channel }) => {
 								</div>
 							)
 							} */}
-							<div className='tooltip'
-								data-tip={dmId
-									? 'Add to chat'
-									: teamId && team.owner === currentUser.handle && channel === generalId
-										? 'Add to team'
-										: 'Add to channel'}
-							>
-								<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
-							</div>
+							{team || channel &&
+								<div className='tooltip'
+									data-tip={dmId
+										? 'Add to chat'
+										: teamId && team.owner === currentUser.handle && channel === generalId
+											? 'Add to team'
+											: 'Add to channel'}
+								>
+									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
+								</div>
+
+							}
 
 							{currentUser.handle !== regUser.handle && (
 								(currentUser.friends && Object.keys(currentUser.friends).includes(regUser.handle)) ? (<div className='tooltip' data-tip='Remove friend'>
