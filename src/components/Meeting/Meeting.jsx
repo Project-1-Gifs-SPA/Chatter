@@ -88,10 +88,6 @@ const handleDescription = (e)=>{
 }
 
 
-const handleDelete  = (e)=> {
-    e.preventDefault();
-    deleteMeeting(meetingId, currentMeeting.team);
-}
 
 
 
@@ -138,7 +134,6 @@ return (
 <p className="font-bold">Meeting End:</p> <span>{moment(currentMeeting.end).calendar()}</span>
 <br />
 <button className="btn w-40" onClick={()=> setLoading(true)}>Join Call</button>
-<button className="btn w-40" onClick={handleDelete}>Remove meeting</button>
 </div>
 
 <br />
