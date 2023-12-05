@@ -82,6 +82,8 @@ export const getAllUsers = () => {
 
 export const getUsersBySearchTerm = (users, searchParam, searchTerm) => {
 
+  console.log(users);
+
   return searchTerm === ''
     ? []
     : users.filter((user) => typeof user[searchParam] === 'string'

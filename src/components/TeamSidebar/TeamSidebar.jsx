@@ -10,15 +10,18 @@ import AppContext from '../../context/AppContext';
 import { BsPersonFillAdd } from "react-icons/bs";
 import { MdPersonAddDisabled } from "react-icons/md";
 import { getLiveDMs } from '../../services/dms.service';
+import { getChannelById, getGeneralChannel } from '../../services/channel.service';
 
 const TeamSidebar = () => {
 	const { userData } = useContext(AppContext)
 	const [expanded, setExpanded] = useState(false)
 	const [currentTeam, setCurrentTeam] = useState({});
+	const [currentChannel, setCurrentChannel] = useState({});
 	const [members, setMembers] = useState([]);
-	const { teamId, dmId } = useParams();
+	const { teamId, dmId, channelId } = useParams();
 	const [currentUser, setCurrentUser] = useState({});
-	const [currentDM, setCurrentDm] = useState({})
+	const [currentDM, setCurrentDm] = useState({});
+	const [generalId, setGeneralId] = useState('');
 
 	useEffect(
 		() => {
@@ -33,15 +36,24 @@ const TeamSidebar = () => {
 		}, [userData]);
 
 	useEffect(() => {
-		console.log('get team or dm')
+		console.log('get team or dm');
+
+		getGeneralChannel(teamId)
+			.then(generalId => setGeneralId(generalId));
+
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
 		}, teamId)
 		return () => {
 			unsubscribe();
 		}
+	}, [teamId]);
 
-	}, [teamId])
+	useEffect(() => {
+		console.log(channelId);
+		getChannelById(channelId)
+			.then(channel => setCurrentChannel(channel));
+	}, [channelId])
 
 	useEffect(() => {
 		const unsubscribe = getLiveDMs(data => {
@@ -51,16 +63,21 @@ const TeamSidebar = () => {
 		return () => {
 			unsubscribe();
 		}
-	}, [dmId])
+	}, [dmId]);
 
 	useEffect(() => {
-		if (currentTeam.members) {
-			const promises = Object.keys(currentTeam.members).map(member => {
-				return getUserByHandle(member)
-					.then((snapshot) => {
-						return snapshot.val();
-					});
-			});
+		console.log(currentChannel);
+		if (currentChannel.members) {
+			// const promises = channelId === generalId
+			// 	? Object.keys(currentTeam.members).map(member => getUserByHandle(member)
+			// 		.then(snapshot => snapshot.val())
+			// 	)
+			// 	: Object.keys(currentChannel.members).map(member => getUserByHandle(member)
+			// 		.then(snapshot => snapshot.val())
+			// 	);
+			const promises = Object.keys(currentChannel.members).map(member => getUserByHandle(member)
+				.then(snapshot => snapshot.val())
+			);
 
 			Promise.all(promises)
 				.then((membersData) => {
@@ -87,14 +104,14 @@ const TeamSidebar = () => {
 					console.error(error);
 				});
 		}
-	}, [currentTeam.members, currentDM.members])
+	}, [currentChannel.members, currentDM.members]);
 
 	const handleSendFriendRequest = (user) => {
-		sendFriendRequest(userData.handle, user)
+		sendFriendRequest(userData.handle, user);
 	}
 
 	const handleRemoveFriends = (user) => {
-		removeFriends(userData.handle, user)
+		removeFriends(userData.handle, user);
 	}
 
 	return (
@@ -113,13 +130,12 @@ const TeamSidebar = () => {
 						}`}>Members</p>
 				</div>
 				<div
-					className={`
-              flex justify-between items-center
-              overflow-hidden transition-all ${expanded ? "w-64" : "w-0"}
-          `}
+					className={`flex justify-between items-center
+            overflow-hidden transition-all ${expanded ? "w-64" : "w-0"}
+        `}
 				>
 					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-						<SearchBar team={currentTeam} dm={currentDM} />
+						<SearchBar team={currentTeam} dm={currentDM} channel={channelId} />
 						{/* Everything in the sidebar */}
 						{members.length ?
 							(members.map(member => {

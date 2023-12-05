@@ -5,7 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { IoPencil } from "react-icons/io5";
 import SearchBar from "../SearchBar/SearchBar";
 import ChannelXModal from "../ChannelXModal/ChannelXModal";
-import ChannelEditModal from "../ChannelEditModal/ChannelEditModal";
+// import ChannelEditModal from "../ChannelEditModal/ChannelEditModal";
 import AppContext from "../../context/AppContext";
 import { setTeamSeenBy, setTeamsNotSeenBy } from "../../services/chat.service";
 import { update } from "firebase/database";
@@ -18,7 +18,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     const [channelName, setChannelName] = useState('');
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
+    // const [showEditModal, setShowEditModal] = useState(false);
 
     const [currentChannel, setCurrentChannel] = useState({})
     const [isChannelSeen, setIsChannelSeen] = useState([])
@@ -46,7 +46,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     //console.log('channel ', channelId, ' is seen by ', isChannelSeen)
 
     useEffect(() => {
-        console.log('is working? ', isChannelSeen)
+        console.log('is working? isChannelSeen', isChannelSeen)
         if (isChannelSeen.includes(userData.handle)) {
             updateCheckedChannels(checkedChannels + 1)
         }
@@ -76,7 +76,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                 />}
             </button>}
 
-            {channelId !== generalId && isOwner && <button
+            {/* {channelId !== generalId && isOwner && <button
                 onClick={() => setShowEditModal(!showEditModal)}
             >
                 <IoPencil />
@@ -88,7 +88,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                     channelMembers={channelMembers}
                     teamMembers={teamMembers}
                 />}
-            </button>}
+            </button>} */}
 {/* //=======
 //         <div>
 //             <button className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}

@@ -49,7 +49,7 @@ export const removeChannel = (teamId, channelId) => {
 
 export const createDefaultChannel = (teamId, members) => {
     if (!teamId) return;
-    return addChannel(teamId, members, 'General');
+    return addChannel(teamId, 'General', true, members);
 }
 
 // return get(ref(db, `teams/${teamId}/channels`))
@@ -72,7 +72,8 @@ export const createDefaultChannel = (teamId, members) => {
 export const getGeneralChannel = (teamId) => getChannelInTeamByName(teamId, 'General')
     .then(answer => answer !== 'No such channel'
         ? answer
-        : createDefaultChannel(teamId)
+        : getAllTeamMembers(teamId)
+            .then(teamMembers => createDefaultChannel(teamId, teamMembers))
             .then(channel => channel)
     );
 
@@ -101,9 +102,8 @@ export const getAllChannelsByTeam = (teamId) => get(ref(db, `teams/${teamId}/cha
     .then(snapshot => Object.keys(snapshot.exists() ? snapshot.val() : {})); // always true
 
 export const getAllPublicChannelsByTeam = (teamId) => getAllChannelsByTeam(teamId)
-    .then(snapshot => Promise.all(Object.keys(snapshot.exists() ? snapshot.val() : {})
-        .map(channelId => getChannelById(channelId)))
-        .then(answer => answer.val())
+    .then(snapshot => Promise.all(snapshot.map(channelId => getChannelById(channelId)))
+        // .then(answer => answer.val())
         .then(channels => channels.filter(channel => channel.isPublic)));
 
 export const getAllPrivateChannelsByTeam = (teamId) => getAllChannelsByTeam(teamId)
