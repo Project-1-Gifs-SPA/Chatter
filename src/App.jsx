@@ -1,10 +1,9 @@
-
 import { auth } from "./config/firebase-config";
 import MainPage from "./views/MainPage/MainPage"
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useState } from "react";
 import AppContext from "./context/AppContext";
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom';
 import LandingPage from "./views/LandingPage/LandingPage";
 import AuthenticatedRoute from "./hoc/AuthenticatedRoute";
 import SignIn from "./views/SignIn/SignIn";

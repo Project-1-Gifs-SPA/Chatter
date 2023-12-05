@@ -124,4 +124,5 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
 		</div>
 	);
 };
-export default ProfileModal
+
+export default ProfileModal;

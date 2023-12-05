@@ -14,6 +14,8 @@ import {
 	sendDirectMessage,
 	sendMeetingMessage,
 	sendMessage,
+	setChannelSeenBy,
+	setNotSeenChannel,
 } from "../../services/chat.service";
 import { useParams } from "react-router";
 import AppContext from "../../context/AppContext";
@@ -21,11 +23,14 @@ import { FaRegSmile } from "react-icons/fa";
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { IoDocumentAttachOutline } from "react-icons/io5";
+import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
 
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
-	const { channelId, dmId, meetingId } = useParams();
+
+	const { channelId, dmId, meetingId, teamId } = useParams();
+
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -37,7 +42,12 @@ const ChatBox = () => {
 	const [msg, setMsg] = useState("");
 	const [messages, setMessages] = useState([]);
 	const [picURL, setPicURL] = useState([]);
-	const [showMenu, setShowMenu] = useState(false)
+	const [showMenu, setShowMenu] = useState(false);
+	const [currentChannelId, setCurrentChannelId] = useState('')
+
+	useEffect(() => {
+		setCurrentChannelId(channelId)
+	}, [channelId])
 
 	const scrollToBottom = () => {
 		const chat = document.getElementById("chat");
@@ -55,23 +65,36 @@ const ChatBox = () => {
 
 	useEffect(() => {
 		scroll();
+		setChannelSeenBy(channelId, userData.handle);
+		setDmSeenBy(dmId, userData.handle);
+		//setNotSeenChannel(currentChannelId, teamId)
 	}, [messages]);
 
+// <<<<<<< team-channel
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			getChat(channelId)
+// 				.then((response) => setMessages(Object.values(response)))
+// 				.then(() => scrollToBottom());
+// =======
 
 	useEffect(() => {
-		console.log("live msg");
+		if (currentChannelId) {
 
-		if (channelId) {
-			getChat(channelId)
-				.then((response) => setMessages(Object.values(response)))
+			getChat(currentChannelId)
+				.then((response) => {
+					setMessages(Object.values(response))
+					console.log('generating at ', currentChannelId)
+				})
 				.then(() => scrollToBottom());
 
+// >>>>>>> main
 		}
 		if (dmId) {
 			getDMChat(dmId)
-
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
+
 		}
 
 		if(meetingId) {
@@ -84,29 +107,47 @@ const ChatBox = () => {
 		}
 
 
-	}, [channelId, dmId, meetingId]);
+	}, [currentChannelId, dmId, meetingId]);
+
+		}
+// <<<<<<< team-channel
+// 	}, [channelId, dmId]);
+
+// 	useEffect(() => {
+// 		if (channelId) {
+// 			const unsubscribe = getLiveMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// 			}, channelId);
+
+// 			return () => unsubscribe;
+// 		}
+// 		if (dmId) {
+// 			const unsubscribe = getLiveDirectMessages((snapshot) => {
+// 				setMessages(Object.values(snapshot.val()));
+// =======
+
 
 	useEffect(() => {
-		console.log("live msg");
-
-		if (channelId) {
+		if (currentChannelId) {
 			const unsubscribe = getLiveMessages((snapshot) => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
-			}, channelId);
+			}, currentChannelId);
 
-			return () => unsubscribe;
+			return () => unsubscribe();
 		}
 
-		if(dmId){
-			const unsubscribe = getLiveDirectMessages((snapshot)=>{
+		if (dmId) {
+			const unsubscribe = getLiveDirectMessages((snapshot) => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
 
+// >>>>>>> main
 			}, dmId);
 
-			return () => unsubscribe;
+			return () => unsubscribe();
 		}
+
 
 		if(meetingId){
 
@@ -119,19 +160,21 @@ const ChatBox = () => {
 
 
 		}
-	}, [channelId, dmId, meetingId]);
+	}, [currentChannelId, dmId, meetingId]);
+
 
 	const handleMsg = (e) => {
 		e.preventDefault();
-
-		if (channelId) {
-			sendMessage(channelId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(""));
+		if (currentChannelId) {
+			sendMessage(currentChannelId, userData.handle, msg, userData.photoURL)
+				.then(() => setMsg(""))
+				.then(() => setNotSeenChannel(currentChannelId, teamId))
 		}
 
 		if (dmId) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(''));
+				.then(() => setMsg(''))
+				.then(() => setNotSeenDm(dmId, teamId))
 		}
 
 		if(meetingId){
@@ -139,7 +182,6 @@ const ChatBox = () => {
 				.then(()=> setMsg(''));
 		}
 	};
-
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -155,12 +197,14 @@ const ChatBox = () => {
 				<Message /> */}
 				{messages.length
 					? messages.map((message) => (
-						<Message key={message.id} message={message} channelId={channelId} dmId={dmId} />
+						<Message key={message.id} message={message} channelId={currentChannelId} dmId={dmId} />
 					))
 					: null}
 			</div>
 
-			{channelId || dmId || meetingId ?
+
+			{currentChannelId || dmId || meetingId ?
+
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
 						<form
@@ -223,8 +267,6 @@ const ChatBox = () => {
 						</div>
 					</div>
 				</div> : null}
-
-
 		</div>
 	);
 };
