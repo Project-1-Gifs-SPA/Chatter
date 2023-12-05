@@ -79,6 +79,7 @@ export const uploadMessagePhoto = (listenFn, file) => {
     .catch((error) => {
       console.error('Error uploading file:', error);
     });
+}
 
 export const uploadCallRecording = (file, meetingId) => {
   const fileRef = ref(storage, meetingId + '.mp4');
