@@ -85,7 +85,8 @@ const SearchBar = ({ team, dm, channel }) => {
 	const handleRemoveFriends = (user) => {
 		removeFriends(userData.handle, user)
 	}
-
+	console.log(currentChannelUsers)
+	console.log(allUsers)
 	const handleSearchTerm = (e) => {
 		const searchTerm = e.target.value.toLowerCase();
 		setSearchTerm(searchTerm);
@@ -97,7 +98,8 @@ const SearchBar = ({ team, dm, channel }) => {
 			setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm))
 		}
 	};
-
+	console.log(searchedUsers)
+	console.log(currentUser)
 	return (
 		<>
 			<div>
@@ -125,6 +127,7 @@ const SearchBar = ({ team, dm, channel }) => {
 			{searchedUsers && <div className='w-[auto] rounded bg-gray-700 bg-opacity-90 relative  z-50'> {/* top-24 right-9 w-[300px]*/}
 
 				{searchedUsers.map(regUser => {
+					console.log(regUser)
 					return (
 						<div key={regUser.uid} className='flex items-center'>
 							<TeamMember member={regUser} />
@@ -144,7 +147,7 @@ const SearchBar = ({ team, dm, channel }) => {
 								</div>
 							)
 							} */}
-							{team || channel &&
+							{(team || channel) &&
 								<div className='tooltip'
 									data-tip={dmId
 										? 'Add to chat'
