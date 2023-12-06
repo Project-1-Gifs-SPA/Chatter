@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { BsCalendarEvent } from "react-icons/bs";
 import AppContext from "../../context/AppContext";
 import MeetingTile from "../MeetingTile/MeetingTile";
+import { getLiveMeetingsByHandle } from "../../services/meetings.service";
 
 const MeetingSideBar = () => {
 
@@ -12,6 +13,16 @@ const MeetingSideBar = () => {
 	const [userMeetings, setUserMeetings] = useState(userData.meetings? Object.keys(userData.meetings):[])
 
 	
+	useEffect(()=>{
+		const unsubscribe = getLiveMeetingsByHandle(data=>{
+			setUserMeetings(data)
+		},userData.handle)
+
+		return () => unsubscribe();
+	}, [userData])
+
+
+
 
 
 
@@ -37,11 +48,11 @@ const MeetingSideBar = () => {
               overflow-hidden transition-all ${expanded ? "w-64" : "w-0"}
           `}
 				>
-					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+					<div className="mt-6 pt-6" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 						{/* Everything in the sidebar */}
 						{userMeetings? userMeetings.map(meetingId=>
 
-							<div className='text-gray-300 p-4 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4', textAlign: 'center' }} key={meetingId} >
+							<div className='text-gray-300 pt-3 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4', textAlign: 'center' }} key={meetingId} >
 							<MeetingTile meetingId={meetingId} />
 							</div>
 						)
