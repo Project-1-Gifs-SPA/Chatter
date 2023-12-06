@@ -29,7 +29,7 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
 import { uploadMessagePhoto } from "../../services/storage.service";
 import { SlPicture } from "react-icons/sl";
-
+import './ChatBox.css'
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
@@ -222,7 +222,7 @@ const ChatBox = () => {
 			{/* <!-- Chat messages --> */}
 			<div
 				ref={container}
-				className="px-6 py-4 flex-1 overflow-y-scroll"
+				className="px-6 py-4 flex-1 overflow-y-scroll custom-scrollbar"
 				id="chat"
 			>
 				{/* <Message />
