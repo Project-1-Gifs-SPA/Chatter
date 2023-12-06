@@ -80,12 +80,15 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     // console.log(checkedChannels, ' at ChannelTile')
 
     return (
-        <div className="items-center ml-auto mr-auto display-flex" onContextMenu={handleContextMenu}>
+        <div className="items-center ml-auto mr-auto display-flex"  onContextMenu={handleContextMenu}>
             <button
                 className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
+                style={{maxWidth: "200px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", }}
                 onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
             >
+               <spam className="truncate text-center" >
                 {channelName}
+                </spam> 
             </button >
             {/* {channelId !== generalId &&
             <button
