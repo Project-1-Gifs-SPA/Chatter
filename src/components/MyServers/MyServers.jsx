@@ -363,23 +363,26 @@ const MyServers = () => {
 						: null}
 					<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
 						{currentTeam.channels && teamId
-							? currentChannels.map((channelId) => <ChannelTile
-								key={channelId}
-								channelId={channelId}
-								generalId={generalId}
-								isOwner={currentTeam.owner === userData.handle}
-								addMembers={handleAddMember}
-								channelMembers={channelMembers}
-								teamMembers={allTeamMembers}
-								checkedChannels={checkedChannels}
-								updateCheckedChannels={updateCheckedChannels}
-							/>)
+							? <div className='flex flex-col mt-3'>
+								{currentChannels.map((channelId) => <ChannelTile
+									key={channelId}
+									channelId={channelId}
+									generalId={generalId}
+									isOwner={currentTeam.owner === userData.handle}
+									addMembers={handleAddMember}
+									channelMembers={channelMembers}
+									teamMembers={allTeamMembers}
+									checkedChannels={checkedChannels}
+									updateCheckedChannels={updateCheckedChannels}
+
+								/>)}
+							</div>
 							: (
 								<>
 									{dms && allDms.map((dm) => {
 										const partner = Object.keys(dm.members).find(member => member !== userData.handle)
 										return <div key={dm.id}
-											className={`hover:bg-gray-300 cursor-pointer`}>
+											className={`hover:bg-gray-700 cursor-pointer`}>
 											<TeamMember dmPartner={partner} dmId={dm.id} /></div>
 									})
 									}

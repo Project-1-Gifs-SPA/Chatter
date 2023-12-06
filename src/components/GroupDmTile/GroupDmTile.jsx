@@ -90,7 +90,7 @@ const GroupDmTile = ({ groupDmId }) => {
 
 	return (
 		<div className="tooltip tooltip-top" data-tip={partners.map(partner => partner.firstName)} onContextMenu={handleContextMenu}>
-			<div className={`flex p-3 mb-0 relative hover:bg-gray-300 cursor-pointer ${(groupDmId && !isDmSeen.includes(userData.handle)) && 'animate-blink'}`} onClick={() => navigate(`/dms/${groupDmId}`)}>
+			<div className={`flex p-3 mb-0 relative hover:bg-gray-700 cursor-pointer ${(groupDmId && !isDmSeen.includes(userData.handle)) && 'bg-gradient-to-r from-purple-700 to-gray-800'}`} onClick={() => navigate(`/dms/${groupDmId}`)}>
 
 				<div className="w-10 rounded-full bg-green-700 mr-3">
 					<IoIosPeople className="w-10 h-10" />

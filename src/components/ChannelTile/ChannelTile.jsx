@@ -71,25 +71,26 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     }, [isChannelSeen])
 
     return (
-        <div className="items-center ml-auto mr-auto display-flex"  onContextMenu={handleContextMenu}>
+        <div className={`flex justify-start items-center rounded my-1 mx-3 h-10 ${isChannelSeen.includes(userData.handle) ? 'bg-gradient-to-r from-gray-600 to-gray-800' : 'bg-gradient-to-r from-purple-700 to-gray-800'}`} onContextMenu={handleContextMenu}>
             <button
-                className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
-                style={{maxWidth: "200px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", }}
+                className='text-white ml-4'
+                style={{ maxWidth: "200px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", }}
                 onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
             >
-               <spam className="truncate text-center" >
-                {channelName}
-                </spam> 
+                <spam className="truncate text-center flex items-center" >
+                    {channelName}
+                </spam>
+
             </button >
             {showDeleteModal && <ChannelXModal
-                    setShowDeleteModal={setShowDeleteModal}
-                    isVisible={showDeleteModal}
-                    onClose={() => setShowDeleteModal(false)}
-                    channelId={channelId} teamId={teamId} isOwner={isOwner}
-                />}
-            {contextMenuVisible ? <ContextMenu channelList={true} channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal}/> : null  }
+                setShowDeleteModal={setShowDeleteModal}
+                isVisible={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                channelId={channelId} teamId={teamId} isOwner={isOwner}
+            />}
+            {contextMenuVisible ? <ContextMenu channelList={true} channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal} /> : null}
 
-                {/* {/* {/* isVisible={showDeleteModal}
+            {/* {/* {/* isVisible={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
                 channelId={channelId} teamId={teamId} isOwner={isOwner}
             />}
@@ -100,7 +101,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                 contextMenuVisible={contextMenuVisible}
                 setContextMenuVisible={setContextMenuVisible}
                 setShowDeleteModal={setShowDeleteModal} /> : null} } */}
-        </div> 
+        </div>
     )
 }
 
