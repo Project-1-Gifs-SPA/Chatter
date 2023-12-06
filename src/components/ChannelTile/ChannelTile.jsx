@@ -100,6 +100,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
             {showDeleteModal && <ChannelXModal
 
                     isVisible={showDeleteModal}
+                    setShowDeleteModal={setShowDeleteModal}
                     onClose={() => setShowDeleteModal(false)}
                     channelId={channelId} teamId={teamId} isOwner={isOwner}
                 />}

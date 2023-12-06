@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { removeChannel, removeChannelUser } from "../../services/channel.service";
 import AppContext from "../../context/AppContext";
 
-const ChannelXModal = ({ channelId, teamId, isOwner, user }) => {
+const ChannelXModal = ({ channelId, teamId, isOwner, user, setShowDeleteModal }) => {
 
     const { userData } = useContext(AppContext);
 
@@ -19,8 +19,8 @@ const ChannelXModal = ({ channelId, teamId, isOwner, user }) => {
                         <button className="btn mr-5" >Close</button>
                         <button className="btn bg-red-700"
                             onClick={isOwner
-                                ? () => { console.log(channelId); removeChannel(teamId, channelId); }
-                                : () => { removeChannelUser(channelId, userData.handle) }}>
+                                ? () => { console.log(channelId); removeChannel(teamId, channelId).then(()=>setShowDeleteModal(false)); }
+                                : () => { removeChannelUser(channelId, userData.handle).then(()=>setShowDeleteModal(false)); }}>
                             {isOwner
                                 ? 'Remove channel'
                                 : 'Leave channel'}
