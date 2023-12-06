@@ -123,8 +123,8 @@ const Profile = ({ isVisible, onClose }) => {
 								<input className="bg-white py-1 px-2 rounded-lg cursor-pointer text-sm" onClick={() => inputRef.current.click()} placeholder={fileName === '' ? "Choose between .jpg, .png" : fileName} />
 								<input className="hidden" ref={inputRef} type='file' accept="image/jpeg, image/png, image/jpg" onChange={handleChange} />
 								<div>
-									<button className="btn btn-primary w-15 mt-2 text-sm" onClick={() => inputRef.current.click()}>Choose File</button>
-									<button className="btn btn-success text-white w-25 mt-2 ml-3 text-sm" disabled={loading || !photo} onClick={handleClick}>Change picture</button>
+									<button className="btn btn-primary btn-sm w-15 mt-2 text-sm" onClick={() => inputRef.current.click()}>Choose File</button>
+									<button className="btn btn-success btn-sm  text-white w-25 mt-2 ml-3 text-sm" disabled={loading || !photo} onClick={handleClick}>Change picture</button>
 								</div>
 							</div>
 						</div>
@@ -132,7 +132,7 @@ const Profile = ({ isVisible, onClose }) => {
 
 					{/* Change names section */}
 					<div className="flex justify-center">
-						<div className='bg-gray-700 h-[360px] w-[360px] pt-5 rounded-xl mt-5 ml-5 mr-5'>
+						<div className='h-[360px] w-[360px] pt-5 rounded-xl mt-5 ml-5 mr-5'>
 							<div className="flex flex-col items-center text-white">
 								<p style={{ fontFamily: 'Rockwell, sans-serif' }} className='text-xl text-purple-400'>Edit your profile info</p>
 							</div>
@@ -185,13 +185,13 @@ const Profile = ({ isVisible, onClose }) => {
 							<div className='flex justify-center pt-3 pr-7 items-center '>
 								<button
 									onClick={handleSaveChanges}
-									className="bg-green-500 text-white px-4 py-2 ml-3 rounded-md transition-colors duration-300 hover:bg-green-600"
+									className="btn btn-sm border-none bg-green-500 text-white px-4 py-2 ml-3 rounded-md transition-colors duration-300 hover:bg-green-600"
 								>
 									Save changes
 								</button>
 								<button
 									onClick={handleDiscardChanges}
-									className="bg-red-500 text-white px-4 py-2 ml-3 rounded-md transition-colors duration-300 hover:bg-red-600 "
+									className="btn btn-sm border-none bg-red-500 text-white px-4 py-2 ml-3 rounded-md transition-colors duration-300 hover:bg-red-600 "
 								>
 									Discard changes
 								</button>
