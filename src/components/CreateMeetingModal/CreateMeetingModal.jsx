@@ -47,8 +47,9 @@ const CreateMeetingModal = ({setShowModal, teamMembers}) => {
     useEffect(()=> {
         if(check){
         const allMembers = {}
-        teamMembers.map(memberId=> allMembers[memberId] = true)
+        teamMembers.map(member=> allMembers[member.handle] = true)
         setMembers(allMembers);
+        console.log(members)
 
         }
     } ,[check])

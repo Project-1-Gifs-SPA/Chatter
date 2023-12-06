@@ -8,11 +8,18 @@ import { sendEmailVerification } from "firebase/auth";
 import { removeTeamMember } from "../../services/teams.service";
 import { deleteGroupMember } from "../../services/dms.service";
 import { removeChannelUser } from "../../services/channel.service";
+import ChannelXModal from "../ChannelXModal/ChannelXModal";
+import AlertModal from "../AlertModal/AlertModal";
+import { getLiveUserInfo } from "../../services/users.service";
 
 
-const ContextMenu = ({teamId, owner, isOwner, contextMenuVisible, setContextMenuVisible, showModal, setShowModal, channelId, member, groupDmId, setShowDeleteModal}) => {
+const ContextMenu = ({teamId,channelList, owner, isOwner, contextMenuVisible, setContextMenuVisible, showModal, setShowModal, channelId, member, groupDmId, setShowDeleteModal}) => {
 
 	const {userData} = useContext(AppContext)
+
+	const [showAlert, setShowAlert] = useState(false);
+	const [command, setCommand] = useState('');
+	const [currentUser, setCurrentUser] = useState(userData)
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -29,12 +36,33 @@ const ContextMenu = ({teamId, owner, isOwner, contextMenuVisible, setContextMenu
 	}, [setContextMenuVisible]);
 
 
-	const handleLeave = (e, teamMember) =>{
-		e.preventDefault()
-		console.log('remove from team')
-		removeTeamMember(teamId, teamMember)
-		.then(()=>setContextMenuVisible(false));
-	}
+	useEffect(()=> {
+
+	const unsubscribe = getLiveUserInfo(data=>{
+
+			setCurrentUser({...data})
+		},userData.handle)
+	
+		return () => unsubscribe();
+
+	},[userData])
+
+
+	// const handleLeave = (e, teamMember) =>{
+	// 	e.preventDefault()
+	// 	console.log('remove from team')
+	// 	removeTeamMember(teamId, teamMember)
+	// 	.then(()=>setContextMenuVisible(false));
+	// }
+
+
+	// const handleLeave = () =>{
+		
+	// 	console.log('remove from team')
+	// 	setCommand('leave this team');
+	// 	setShowAlert(true)
+	// 	setContextMenuVisible(false);
+	// }
 
 	const handleLeaveGroup = (e, groupMember) => {
 		e.preventDefault();
@@ -52,25 +80,26 @@ const ContextMenu = ({teamId, owner, isOwner, contextMenuVisible, setContextMenu
         < >
 		<div id="context-menu" > 
         <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box" >
-        {( userData.handle===owner && !channelId)  
+        {( currentUser.handle===owner && !channelId)  
 		? <li onClick={()=>{
 					setShowModal(true);
 					setContextMenuVisible(false);
 					console.log(showModal)				
 		}} ><a>Edit Team</a></li> 
 		: null}
-		{( userData.teams? Object.keys(userData.teams).includes(teamId):null) 
-		? <li onClick={(e)=>handleLeave(e,userData.handle)}><a>Leave Team</a></li> 
+		{((Object.keys(currentUser.teams)).includes(teamId) && !channelList)&&  <li onClick={()=>{setShowAlert(true); setCommand('leave this team');}}><a>Leave Team</a></li>} 
+		
+		{(( currentUser.myTeams? Object.keys(currentUser.myTeams).includes(teamId):null) && channelId && currentUser.handle!==member) 
+		? <li onClick={()=>{setShowAlert(true); setCommand('remove member from team');}}><a>Remove from Team</a></li> 
 		: null}
-		{(( userData.myTeams? Object.keys(userData.myTeams).includes(teamId):null) && channelId && userData.handle!==member) 
-		? <li onClick={(e)=>handleLeave(e,member)}><a>Remove from Team</a></li> 
-		: null}
-		{groupDmId ? <li onClick={(e)=>handleLeaveGroup(e, userData.handle)}><a>Leave Group</a></li> : null}
-		{channelId && !isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Leave Channel</a></li> : null}
-		{channelId && isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Remove Channel</a></li> : null}
+		{groupDmId ? <li onClick={(e)=>handleLeaveGroup(e, currentUser.handle)}><a>Leave Group</a></li> : null}
+		{channelId && channelList && !isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Leave Channel</a></li> : null}
+		{channelId && channelList && isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Remove Channel</a></li> : null}
         </ul>
+		{showAlert? <AlertModal teamId={teamId} showAlert={setShowAlert} command={command} setContextMenuVisible={setContextMenuVisible} contextMenuVisible={contextMenuVisible}/>:null}
 		</div>
         </>
+		
     )
 
 }

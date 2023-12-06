@@ -51,9 +51,8 @@ const AddTeam = () => {
     >
       <div className="bg-white opacity-25 h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden hover:rounded-md ">
         <GoPlus className="h-10 w-10" />
-        <dialog ref={modalRef} id="my_modal_1" className="modal">
+        <dialog ref={modalRef} id="my_modal_1" className="modal fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Hello!</h3>
             <p className="py-4">
               Enter Team name
             </p>
