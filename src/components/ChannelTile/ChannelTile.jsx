@@ -89,7 +89,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                 />}
             {contextMenuVisible ? <ContextMenu channelList={true} channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal}/> : null  }
 
-                {/* isVisible={showDeleteModal}
+                {/* {/* {/* isVisible={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
                 channelId={channelId} teamId={teamId} isOwner={isOwner}
             />}
@@ -99,8 +99,8 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                 isOwner={isOwner}
                 contextMenuVisible={contextMenuVisible}
                 setContextMenuVisible={setContextMenuVisible}
-                setShowDeleteModal={setShowDeleteModal} /> : null}
-        </div>
+                setShowDeleteModal={setShowDeleteModal} /> : null} } */}
+        </div> 
     )
 }
 
