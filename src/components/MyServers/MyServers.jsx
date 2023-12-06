@@ -7,13 +7,9 @@ import { useNavigate, useParams } from "react-router"
 import ProfileBar from '../ProfileBar/ProfileBar';
 import AppContext from '../../context/AppContext';
 import ChannelTile from '../ChannelTile/ChannelTile';
-import { addChannel, addChannelUser, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel, getLiveChannelSeenBy, getLiveChannelsByTeam } from '../../services/channel.service';
+import { addChannel, getChannelById, getChannelIdsInTeamByUser, getChannelInTeamByName, getGeneralChannel, getLiveChannelsByTeam } from '../../services/channel.service';
 import TeamMember from '../TeamMember/TeamMember';
-import { getAllUsers, getUserByHandle, getUsersBySearchTerm } from '../../services/users.service';
-import { IoIosArrowDown } from 'react-icons/io';
-import { MAX_CHANNELNAMELENGTH, MIN_CHANNELNAME_LENGTH } from '../../common/constants';
-// import CleanSearchBar from '../CleanSearchBar/CleanSearchBar';
-import { IoAdd, IoRemove } from 'react-icons/io5';
+import { getAllUsers, getUserByHandle } from '../../services/users.service';
 import SearchBarChoose from '../SearchBarChoose/SearchBarChoose';
 
 import GroupDmTile from '../GroupDmTile/GroupDmTile';
@@ -25,25 +21,19 @@ import CreateMeetingModal from '../CreateMeetingModal/CreateMeetingModal';
 import { BsCalendarEvent } from "react-icons/bs";
 import MeetingTile from '../MeetingTile/MeetingTile';
 import { getLiveMeetingsByHandle } from '../../services/meetings.service';
-import { setTeamSeenBy, setTeamsNotSeenBy } from '../../services/chat.service';
 
 
 const MyServers = () => {
 
-	const [isOpen, setIsOpen] = useState(false);
+	// const [isOpen, setIsOpen] = useState(false);
 
 	const { userData } = useContext(AppContext);
 	const { teamId, dmId, meetingId, channelId } = useParams();
-
-	const [team, setTeam] = useState('');
 
 	const navigate = useNavigate();
 
 	const [currentTeam, setCurrentTeam] = useState({});
 	const [currentChannels, setCurrentChannels] = useState([]);
-	const [searchParam, setSearchParam] = useState("handle");
-	const [searchTerm, setSearchTerm] = useState('');
-	const [searchedUsers, setSearchedUsers] = useState([]);
 	const [generalId, setGeneralId] = useState('');
 	const [expanded, setExpanded] = useState(true)
 	const [checkedChannels, setCheckedChannels] = useState(0);
@@ -99,9 +89,6 @@ const MyServers = () => {
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
 		}, teamId);
-
-		getTeamById(teamId)
-			.then(team => setTeam(team));
 
 		getChannelIdsInTeamByUser(teamId, userData.handle)
 			.then(channels => setCurrentChannels(channels));
@@ -210,15 +197,6 @@ const MyServers = () => {
 		[userHandle]: !channelMembers[userHandle],
 	});
 
-	// const handleSearchTerm = async (e) => {
-	// 	setSearchTerm(e.target.value.toLowerCase());
-
-	// 	setSearchedUsers(getUsersBySearchTerm(await getAllTeamMembers(), searchParam, searchTerm));
-	// };
-
-	// const handleAddMember = (user) => {
-	// 	addChannelUser(channelId, user);
-	// }
 	const updateCheckedChannels = (newValue) => {
 		if (newValue >= 0 && newValue <= currentChannels.length) {
 			setCheckedChannels(newValue);
