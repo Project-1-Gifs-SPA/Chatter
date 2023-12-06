@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { addFriends, getAllUsers, getUsersBySearchTerm, getLiveUserInfo, removeFriends, sendFriendRequest, getUserByHandle } from '../../services/users.service';
+import { addFriends, getAllUsers, getUsersBySearchTerm, getLiveUserInfo, removeFriends, sendFriendRequest, getUserByHandle, getLiveAllUsers } from '../../services/users.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { IoIosArrowDown } from "react-icons/io";
 import { BsPersonFillAdd } from "react-icons/bs";
@@ -42,6 +42,17 @@ const SearchBar = ({ team, dm, channel }) => {
 				setAllUsers([...r].sort((a, b) => b.createdOn - a.createdOn));
 			})
 	}, []);
+
+
+
+	useEffect(()=>{
+
+	const unsubscribe =	getLiveAllUsers(data=>setAllUsers([...data].sort((a, b) => a.handle-b.handle)));
+
+	return() => unsubscribe();
+		
+	
+	},[userData])
 
 	useEffect(() => {
 		if (!team) { return; }

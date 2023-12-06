@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../context/AppContext";
 import { removeTeamMember } from "../../services/teams.service";
+import { deleteGroupMember } from "../../services/dms.service";
 
 
-const AlertModal = ({showAlert, command, setContextMenuVisible, teamId}) => {
+const AlertModal = ({showAlert, command, setContextMenuVisible, teamId, member, groupDmId}) => {
 
     const [action, setAction] = useState(command);
     const {userData} = useContext(AppContext)
@@ -19,8 +20,21 @@ const AlertModal = ({showAlert, command, setContextMenuVisible, teamId}) => {
         })
         }
 
-      
+        if(command === 'remove member from team'){
+            removeTeamMember(teamId, member)
+            .then(()=>{
+                showAlert(false)
+                setContextMenuVisible(false);
+            })
+        }
 
+        if(command === 'leave group chat'){
+            deleteGroupMember(groupDmId, userData.handle)
+            .then(()=>{
+                showAlert(false)
+                setContextMenuVisible(false);
+            })
+        }
     }
 // const handleLeave = (e, teamMember) =>{
 	// 	e.preventDefault()

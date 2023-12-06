@@ -199,3 +199,16 @@ export const getLiveUserFriends = (listener, handle) => {
       listener(data);
     });
 };
+
+
+export const getLiveAllUsers = (listenFn) => {
+  return onValue(
+      ref(db, 'users'),
+      snapshot => {
+          const data = snapshot.exists() ? snapshot.val() : {};
+          const result = Object.values(data);
+
+          listenFn(result);
+      }
+  )
+}

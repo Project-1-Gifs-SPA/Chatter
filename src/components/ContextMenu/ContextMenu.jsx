@@ -64,12 +64,12 @@ const ContextMenu = ({teamId,channelList, owner, isOwner, contextMenuVisible, se
 	// 	setContextMenuVisible(false);
 	// }
 
-	const handleLeaveGroup = (e, groupMember) => {
-		e.preventDefault();
-		deleteGroupMember(groupDmId, groupMember)
-		.then(()=>setContextMenuVisible(false));
+	// const handleLeaveGroup = (e, groupMember) => {
+	// 	e.preventDefault();
+	// 	deleteGroupMember(groupDmId, groupMember)
+	// 	.then(()=>setContextMenuVisible(false));
 
-	}
+	// }
 
 	const handleLeaveChannel = (e, channelMember)=>{
 		e.preventDefault();
@@ -92,11 +92,11 @@ const ContextMenu = ({teamId,channelList, owner, isOwner, contextMenuVisible, se
 		{(( currentUser.myTeams? Object.keys(currentUser.myTeams).includes(teamId):null) && channelId && currentUser.handle!==member) 
 		? <li onClick={()=>{setShowAlert(true); setCommand('remove member from team');}}><a>Remove from Team</a></li> 
 		: null}
-		{groupDmId ? <li onClick={(e)=>handleLeaveGroup(e, currentUser.handle)}><a>Leave Group</a></li> : null}
+		{groupDmId ? <li onClick={()=>{setShowAlert(true); setCommand('leave group chat');}}><a>Leave Group</a></li> : null}
 		{channelId && channelList && !isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Leave Channel</a></li> : null}
 		{channelId && channelList && isOwner ? <li onClick={()=>setShowDeleteModal(true)}><a>Remove Channel</a></li> : null}
         </ul>
-		{showAlert? <AlertModal teamId={teamId} showAlert={setShowAlert} command={command} setContextMenuVisible={setContextMenuVisible} contextMenuVisible={contextMenuVisible}/>:null}
+		{showAlert? <AlertModal groupDmId = {groupDmId} member={member} teamId={teamId} showAlert={setShowAlert} command={command} setContextMenuVisible={setContextMenuVisible} contextMenuVisible={contextMenuVisible}/>:null}
 		</div>
         </>
 		
