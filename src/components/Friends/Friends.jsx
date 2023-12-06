@@ -32,12 +32,14 @@ const Friends = ({ friend }) => {
 	const handleSendDM = (e) => {
 		e.preventDefault();
 
-		const checkDMs = userData.DMs ? Object.entries(userData.DMs).find(([partner, dmId]) => partner === currentFriend.handle) : [];
-		if (checkDMs) {
-			navigate(`/dms/${checkDMs[1]}`);
-		} else {
+		if (userData.DMs[currentFriend.handle]) {
+			navigate(`/dms/${userData.DMs[currentFriend.handle]}`);
+		}
+		else {
+			console.log('you dont have dms with this person')
 			createDM(currentFriend.handle, userData.handle)
 				.then((dmId) => navigate(`/dms/${dmId}`))
+
 		}
 	}
 
