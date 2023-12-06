@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
-import { reactions } from '../../common/constants'
-import AppContext from '../../context/AppContext'
+import { useContext } from 'react';
+import { reactions } from '../../common/constants';
+import AppContext from '../../context/AppContext';
 import { useParams } from 'react-router';
 import { addChannelReaction, removeChannelReaction } from '../../services/channel.service';
 import { addDmReaction, removeDMReaction } from '../../services/dms.service';
@@ -35,4 +35,4 @@ const Reactions = ({ msg, reaction, count }) => {
 	)
 }
 
-export default Reactions
+export default Reactions;

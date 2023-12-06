@@ -1,14 +1,10 @@
-import { useContext, useRef, useEffect, useState } from "react";
-import { getChannelById, getGeneralChannel, removeChannel, getLiveChannelSeenBy } from "../../services/channel.service";
+import { useContext, useEffect, useState } from "react";
+import { getChannelById, getLiveChannelSeenBy } from "../../services/channel.service";
 import { useNavigate, useParams } from "react-router";
-import { AiOutlineClose } from "react-icons/ai";
-import { IoPencil } from "react-icons/io5";
-import SearchBar from "../SearchBar/SearchBar";
 import ChannelXModal from "../ChannelXModal/ChannelXModal";
 // import ChannelEditModal from "../ChannelEditModal/ChannelEditModal";
 import AppContext from "../../context/AppContext";
 import { setTeamSeenBy, setTeamsNotSeenBy } from "../../services/chat.service";
-import { update } from "firebase/database";
 import ContextMenu from "../ContextMenu/ContextMenu";
 
 const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers, teamMembers, checkedChannels, updateCheckedChannels }) => {
@@ -21,7 +17,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     // const [showEditModal, setShowEditModal] = useState(false);
 
-    const [currentChannel, setCurrentChannel] = useState({});
+    // const [currentChannel, setCurrentChannel] = useState({});
     const [isChannelSeen, setIsChannelSeen] = useState([]);
     const [contextMenuVisible, setContextMenuVisible] = useState(false);
 
@@ -37,7 +33,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
         getChannelById(channelId)
             .then(channel => {
                 setChannelName(channel.name);
-                setCurrentChannel(channel)
+                // setCurrentChannel(channel);
             })
     }, [channelId])
 
@@ -73,11 +69,6 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
             setTeamsNotSeenBy(teamId, userData.handle);
         }
     }, [isChannelSeen])
-    //console.log(isChannelSeen)
-    // console.log(checkedChannels)
-    //console.log(isChannelSeen)
-
-    // console.log(checkedChannels, ' at ChannelTile')
 
     return (
         <div className="items-center ml-auto mr-auto display-flex"  onContextMenu={handleContextMenu}>
@@ -90,17 +81,9 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                 {channelName}
                 </spam> 
             </button >
-            {/* {channelId !== generalId &&
-            <button
-                onClick={() => setShowDeleteModal(!showDeleteModal)}
-            >
-                <AiOutlineClose />
-               
-            </button>} */}
             {showDeleteModal && <ChannelXModal
-
-                    isVisible={showDeleteModal}
                     setShowDeleteModal={setShowDeleteModal}
+                    isVisible={showDeleteModal}
                     onClose={() => setShowDeleteModal(false)}
                     channelId={channelId} teamId={teamId} isOwner={isOwner}
                 />}
@@ -110,30 +93,13 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                 onClose={() => setShowDeleteModal(false)}
                 channelId={channelId} teamId={teamId} isOwner={isOwner}
             />}
-            {contextMenuVisible ? <ContextMenu channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal} /> : null}
->>>>>>> 309260567cf558c4a9e23d94386971fbf75debf9 */}
-
-            {/* {channelId !== generalId && isOwner && <button
-                onClick={() => setShowEditModal(!showEditModal)}
-            >
-                <IoPencil />
-                {showEditModal && <ChannelEditModal
-                    isVisible={showEditModal}
-                    onClose={() => setShowEditModal(false)}
-                    channelId={channelId} teamId={teamId} isOwner={isOwner}
-                    addMembers={addMembers}
-                    channelMembers={channelMembers}
-                    teamMembers={teamMembers}
-                />}
-            </button>} */}
-            {/* //=======
-//         <div>
-//             <button className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
-//                 onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
-//             >
-//                 {channelName}
-//             </button >
-//>>>>>>> main */}
+            {contextMenuVisible ? <ContextMenu
+                channelList={true}
+                channelId={channelId}
+                isOwner={isOwner}
+                contextMenuVisible={contextMenuVisible}
+                setContextMenuVisible={setContextMenuVisible}
+                setShowDeleteModal={setShowDeleteModal} /> : null}
         </div>
     )
 }

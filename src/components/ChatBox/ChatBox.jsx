@@ -158,6 +158,8 @@ const ChatBox = () => {
 		console.log('msg handle')
 		e.preventDefault();
 
+		if(!msg.trim()) { return; }
+
 		if (picURL && channelId) {
 			console.log('pic handling')
 			sendPictureMessage(channelId, userData.handle, msg, picURL)

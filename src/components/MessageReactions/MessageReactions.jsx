@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext} from 'react'
 import { reactions } from '../../common/constants'
 import { BsEmojiSmile } from "react-icons/bs";
 import { useParams } from 'react-router';
@@ -9,7 +9,7 @@ import { addDmReaction } from '../../services/dms.service';
 const MessageReactions = ({ msg }) => {
 	const { channelId, dmId } = useParams();
 	const { userData } = useContext(AppContext);
-	const reactionWords = Object.keys(reactions)
+	const reactionWords = Object.keys(reactions);
 
 	return (<>
 		<div className='dropdown dropdown-hover dropdown-top'>
@@ -46,4 +46,4 @@ const MessageReactions = ({ msg }) => {
 	)
 }
 
-export default MessageReactions
+export default MessageReactions;
