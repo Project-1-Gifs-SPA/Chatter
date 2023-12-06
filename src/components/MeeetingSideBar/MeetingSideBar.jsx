@@ -52,7 +52,7 @@ const MeetingSideBar = () => {
 						{/* Everything in the sidebar */}
 						{userMeetings? userMeetings.map(meetingId=>
 
-							<div className='text-gray-300 pt-3 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4', textAlign: 'center' }} key={meetingId} >
+							<div className='text-gray-300 pt-3 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }} key={meetingId} >
 							<MeetingTile meetingId={meetingId} />
 							</div>
 						)
