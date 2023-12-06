@@ -8,8 +8,7 @@ export const createDM = (partner, handle) => {
     });
 };
 
-
- const addMembersToDM = (partner, handle, id) => {
+const addMembersToDM = (partner, handle, id) => {
     const updates = {};
 
     updates[`dms/${id}/members/${partner}`] = true;
@@ -112,7 +111,6 @@ export const getLiveDmMembers = (listenFn, dmId) => {
     )
 }
 
-
 export const addDMstatusEdited = (dmId, msgId) => {
     const DmStatus = {};
     DmStatus[`dms/${dmId}/msgs/${msgId}/edited`] = true;
@@ -134,13 +132,17 @@ export const removeDMReaction = (reaction,userHandle, dmId, msgId) => {
 
 export const setDmSeenBy = (dmId, user) => {
     const updates = {};
+    if(!dmId) return;
+
       updates[`dms/${dmId}/seenBy/${user}`] = true;
       return update(ref(db), updates);
   };
 
   export const setNotSeenDm = (dmId) => {
       const updates = {};
-      updates[`dms/${dmId}/seenBy/`] = null;
+      if(!dmId) return;
+
+      updates[`dms/${dmId}/seenBy`] = null;
       return update(ref(db), updates);
     }
 

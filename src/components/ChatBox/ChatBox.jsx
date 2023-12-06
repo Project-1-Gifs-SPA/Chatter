@@ -35,7 +35,6 @@ const ChatBox = () => {
 	// const messagesEndRef = useRef();
 
 	const { channelId, dmId, meetingId, teamId } = useParams();
-
 	const { user, userData } = useContext(AppContext);
 
 	// const scrollToBottom = () => {
@@ -51,7 +50,6 @@ const ChatBox = () => {
 	const [currentChannelId, setCurrentChannelId] = useState('')
 	const [pic, setPic] = useState({});
 
-
 	const container = useRef(null);
 
 	useEffect(() => {
@@ -63,8 +61,6 @@ const ChatBox = () => {
 		chat.scrollTop = chat?.scrollHeight;
 	};
 
-	
-
 	const scroll = () => {
 		const { offsetHeight, scrollHeight, scrollTop } = container.current;
 		if (scrollHeight <= scrollTop + offsetHeight + 100) {
@@ -74,65 +70,59 @@ const ChatBox = () => {
 
 	useEffect(() => {
 		scroll();
-		setChannelSeenBy(channelId, userData.handle);
-		setDmSeenBy(dmId, userData.handle);
-		//setNotSeenChannel(currentChannelId, teamId)
+		if (channelId) {
+			setChannelSeenBy(channelId, userData.handle);
+		}
+
+		if (dmId) {
+			setDmSeenBy(dmId, userData.handle);
+		}
 	}, [messages]);
 
-// <<<<<<< team-channel
-// 	useEffect(() => {
-// 		if (channelId) {
-// 			getChat(channelId)
-// 				.then((response) => setMessages(Object.values(response)))
-// 				.then(() => scrollToBottom());
-// =======
+	// <<<<<<< team-channel
+	// 	useEffect(() => {
+	// 		if (channelId) {
+	// 			getChat(channelId)
+	// 				.then((response) => setMessages(Object.values(response)))
+	// 				.then(() => scrollToBottom());
+	// =======
 
 	useEffect(() => {
 		if (currentChannelId) {
-
 			getChat(currentChannelId)
 				.then((response) => {
 					setMessages(Object.values(response))
 				})
 				.then(() => scrollToBottom());
-
-// >>>>>>> main
 		}
 		if (dmId) {
 			getDMChat(dmId)
 				.then((response) => setMessages(Object.values(response)))
 				.then(() => scrollToBottom())
-
 		}
-
-		if(meetingId) {
-
+		if (meetingId) {
 			getMeetingChat(meetingId)
-			.then((response) => setMessages(Object.values(response)))
-			.then(() => scrollToBottom())
-
-
+				.then((response) => setMessages(Object.values(response)))
+				.then(() => scrollToBottom())
 		}
-
-
 	}, [currentChannelId, dmId, meetingId]);
 
-		
-// <<<<<<< team-channel
-// 	}, [channelId, dmId]);
 
-// 	useEffect(() => {
-// 		if (channelId) {
-// 			const unsubscribe = getLiveMessages((snapshot) => {
-// 				setMessages(Object.values(snapshot.val()));
-// 			}, channelId);
+	// <<<<<<< team-channel
+	// 	}, [channelId, dmId]);
 
-// 			return () => unsubscribe;
-// 		}
-// 		if (dmId) {
-// 			const unsubscribe = getLiveDirectMessages((snapshot) => {
-// 				setMessages(Object.values(snapshot.val()));
-// =======
+	// 	useEffect(() => {
+	// 		if (channelId) {
+	// 			const unsubscribe = getLiveMessages((snapshot) => {
+	// 				setMessages(Object.values(snapshot.val()));
+	// 			}, channelId);
+
+	// 			return () => unsubscribe;
+	// 		}
+	// 		if (dmId) {
+	// 			const unsubscribe = getLiveDirectMessages((snapshot) => {
+	// 				setMessages(Object.values(snapshot.val()));
+	// =======
 
 
 	useEffect(() => {
@@ -144,29 +134,22 @@ const ChatBox = () => {
 
 			return () => unsubscribe();
 		}
-
 		if (dmId) {
 			const unsubscribe = getLiveDirectMessages((snapshot) => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
-
-// >>>>>>> main
 			}, dmId);
 
 			return () => unsubscribe();
 		}
+		if (meetingId) {
 
-
-		if(meetingId){
-
-			const unsubscribe = getLiveMeetingMessages(snapshot=>{
+			const unsubscribe = getLiveMeetingMessages(snapshot => {
 				const msgData = snapshot.exists() ? snapshot.val() : {};
 				setMessages(Object.values(msgData));
 			}, meetingId);
 
 			return () => unsubscribe;
-
-
 		}
 	}, [currentChannelId, dmId, meetingId]);
 
@@ -175,67 +158,58 @@ const ChatBox = () => {
 		console.log('msg handle')
 		e.preventDefault();
 
-		if (picURL && channelId){
+		if (picURL && channelId) {
 			console.log('pic handling')
 			sendPictureMessage(channelId, userData.handle, msg, picURL)
-			.then(()=> {			
-				setShowMenu(false);
-				setPicURL('')
-				setMsg('')
-				return;
+				.then(() => {
+					setShowMenu(false);
+					setPicURL('');
+					setMsg('');
+					return;
 				})
 		}
-
-		
-		if (picURL && dmId){
+		if (picURL && dmId) {
 			console.log('pic handling')
 			sendPictureDirectMessage(dmId, userData.handle, msg, picURL)
-			.then(()=> {			
-				setShowMenu(false);
-				setPicURL('')
-				setMsg('')
+				.then(() => {
+					setShowMenu(false);
+					setPicURL('');
+					setMsg('');
 				})
 		}
-
 		if (currentChannelId && msg && !picURL) {
 			sendMessage(currentChannelId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(""))
 				.then(() => setNotSeenChannel(currentChannelId, teamId))
+				.then(() => setMsg(""));
 		}
-
 		if (dmId && msg && !picURL) {
 			sendDirectMessage(dmId, userData.handle, msg, userData.photoURL)
-				.then(() => setMsg(''))
-				.then(() => setNotSeenDm(dmId, teamId))
+				.then(() => setNotSeenDm(dmId))
+				.then(() => setMsg(''));
 		}
-
-		if(meetingId && msg && !picURL){
+		if (meetingId && msg && !picURL) {
 			sendMeetingMessage(meetingId, userData.handle, msg, userData.photoURL)
-				.then(()=> setMsg(''));
+				.then(() => setMsg(''));
 		}
 
-		if(meetingId && picURL){
+		if (meetingId && picURL) {
 			sendMeetingPictureMessage(meetingId, userData.handle, msg, picURL)
-			.then(()=> {			
-				setShowMenu(false);
-				setPicURL('')
-				setMsg('')
+				.then(() => {
+					setShowMenu(false);
+					setPicURL('');
+					setMsg('');
 				})
 		}
-
 	};
-
 
 	const handlePic = (e) => {
 		e.preventDefault();
 		if (e.target.files[0] !== null) {
 			const file = e.target.files[0];
-			uploadMessagePhoto( photoURL=>{
-				
+			uploadMessagePhoto(photoURL => {
 				setPicURL(photoURL);
-				setShowMenu(true);	
-				
-			},file)
+				setShowMenu(true);
+			}, file)
 			// setMsg(e.target.files[0].name)
 			console.log(pic);
 		}
@@ -260,15 +234,12 @@ const ChatBox = () => {
 					: null}
 			</div>
 
-			{showMenu &&<div className='p-3 m-3 flex justify-between rounded'>
-  							<img src={picURL} alt='pic' className="w-[200px] h-auto ml-2" />
-  							<p className="cursor-pointer" onClick={()=>{setShowMenu(false); setPicURL('')}}>X</p>
-							</div>}
-
-
+			{showMenu && <div className='p-3 m-3 flex justify-between rounded'>
+				<img src={picURL} alt='pic' className="w-[200px] h-auto ml-2" />
+				<p className="cursor-pointer" onClick={() => { setShowMenu(false); setPicURL('') }}>X</p>
+			</div>}
 
 			{currentChannelId || dmId || meetingId ?
-
 
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
 					<div className='flex-grow'>
@@ -291,14 +262,10 @@ const ChatBox = () => {
 							/>
 
 							{/* <button type='submit' className='ml-50'>Send</button> */}
-						
-							<input className='upl hidden' id='pic' type='file'  accept="image/jpeg, image/png, image/jpg" onChange={handlePic}/>
+
+							<input className='upl hidden' id='pic' type='file' accept="image/jpeg, image/png, image/jpg" onChange={handlePic} />
 						</form>
-						
-						
-			
-						
-						
+
 					</div>
 					<div className="relative inline-block pr-5">
 						<div className={`absolute z-10 ${isPickerVisible ? '' : 'hidden'} mt-2`}
@@ -334,7 +301,7 @@ const ChatBox = () => {
 							}}
 								htmlFor='pic'>
 								<SlPicture className='w-6 h-6 text-white cursor-pointer' />
-								
+
 							</label>
 						</div>
 					</div>
