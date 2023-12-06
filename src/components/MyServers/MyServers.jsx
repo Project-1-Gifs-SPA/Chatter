@@ -17,19 +17,15 @@ import { IoAdd, IoRemove } from 'react-icons/io5';
 import SearchBarChoose from '../SearchBarChoose/SearchBarChoose';
 
 import GroupDmTile from '../GroupDmTile/GroupDmTile';
-import { getDMById, getLiveDMs, getLiveDmMembers, getLiveGroupDMs, getLiveIsDMSeen, getLiveUserDMs } from '../../services/dms.service';
-
+import { getDMById, getLiveGroupDMs, getLiveUserDMs } from '../../services/dms.service';
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from '../../common/constants';
-
 import CreateMeetingModal from '../CreateMeetingModal/CreateMeetingModal';
 import { BsCalendarEvent } from "react-icons/bs";
 import MeetingTile from '../MeetingTile/MeetingTile';
 import { getLiveMeetingsByHandle } from '../../services/meetings.service';
-
-
-import { setChannelSeenBy, setTeamSeenBy, setTeamsNotSeenBy } from '../../services/chat.service';
+import { setTeamSeenBy, setTeamsNotSeenBy } from '../../services/chat.service';
 
 
 const MyServers = () => {
@@ -48,12 +44,7 @@ const MyServers = () => {
 	const [searchParam, setSearchParam] = useState("handle");
 	const [searchTerm, setSearchTerm] = useState('');
 	const [searchedUsers, setSearchedUsers] = useState([]);
-
 	const [generalId, setGeneralId] = useState('');
-
-
-	// const { userData } = useContext(AppContext)
-
 	const [expanded, setExpanded] = useState(true)
 	const [checkedChannels, setCheckedChannels] = useState(0);
 	const [allDms, setAllDms] = useState([])
@@ -100,13 +91,7 @@ const MyServers = () => {
 		} else {
 			setMeetings([]);
 		}
-
-	}, [currentTeam?.meetings, currentUserMeetings])
-
-
-
-
-
+	}, [currentTeam?.meetings, currentUserMeetings]);
 
 	useEffect(() => {
 		if (!teamId) { return; }
@@ -137,9 +122,6 @@ const MyServers = () => {
 					members.map(member => (formattedMembers[member.handle] = false));
 					setChannelMembers({ ...formattedMembers });
 				}));
-
-
-		// }, teamId)
 
 		const unsub = getLiveMeetingsByHandle(data => {
 
@@ -177,10 +159,8 @@ const MyServers = () => {
 		}
 	}, [dmId, userData])
 
-
 	useEffect(() => {
 		const unsubscribe = getLiveChannelsByTeam(data => {
-			console.log(data)
 			Promise.all(data.map(channelId => getChannelById(channelId)))
 				.then(channels => {
 					const filteredCHanneld = channels.filter(channel => Object.keys(channel.members).includes(userData.handle))
@@ -240,24 +220,24 @@ const MyServers = () => {
 	// 	addChannelUser(channelId, user);
 	// }
 	const updateCheckedChannels = (newValue) => {
-		if (newValue >= 0 && newValue <= Object.keys(currentTeam.channels).length) {
+		if (newValue >= 0 && newValue <= currentChannels.length) {
 			setCheckedChannels(newValue);
 		}
 	};
+	console.log('channels ', currentChannels.length)
 
-	useEffect(() => {
-		setCheckedChannels(0);
-	}, [teamId]);
+	// useEffect(() => {
+	// 	setCheckedChannels(0);
+	// }, [teamId]);
 
-	useEffect(() => {
-		if (currentTeam.channels) {
-			if (checkedChannels === Object.keys(currentTeam.channels).length) {
-				setTeamSeenBy(teamId, userData.handle)
-			} else {
-				setTeamsNotSeenBy(teamId, userData.handle)
-			}
-		}
-	}, [checkedChannels, currentTeam?.channels, teamId])
+	// useEffect(() => {
+	// 	console.log(checkedChannels === currentChannels.length)
+	// 	if (checkedChannels === currentChannels.length) {
+	// 		setTeamSeenBy(teamId, userData.handle)
+	// 	} else {
+	// 		setTeamsNotSeenBy(teamId, userData.handle)
+	// 	}
+	// }, [checkedChannels])
 
 	useEffect(() => {
 		if (dms) {
@@ -277,8 +257,8 @@ const MyServers = () => {
 				});
 		}
 	}, [dms])
-
-
+	//console.log('Chennels count: ', currentChannels.length)
+	console.log(checkedChannels, ' at MyServers')
 
 	return (
 		<>

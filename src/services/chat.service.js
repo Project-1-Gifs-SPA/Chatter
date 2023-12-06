@@ -114,10 +114,8 @@ export const setChannelSeenBy = (channelId, user) => {
 
   export const setNotSeenChannel = (channelId, teamId) => {
       const updates = {};
-      if(!channelId) return;
-
-      updates[`channels/${channelId}/seenBy`] = null;
-      updates[`teams/${teamId}/seenBy`] = null;
+        updates[`channels/${channelId}/seenBy`] = null;
+        updates[`teams/${teamId}/seenBy`] = null;
       return update(ref(db), updates);
     }
     

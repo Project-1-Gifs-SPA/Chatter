@@ -70,8 +70,8 @@ const ChatBox = () => {
 
 	useEffect(() => {
 		scroll();
-		if (channelId) {
-			setChannelSeenBy(channelId, userData.handle);
+		if (currentChannelId) {
+			setChannelSeenBy(currentChannelId, userData.handle);
 		}
 
 		if (dmId) {
@@ -177,9 +177,9 @@ const ChatBox = () => {
 					setMsg('');
 				})
 		}
-		if (currentChannelId && msg && !picURL) {
+		if (channelId && msg && !picURL) {
 			sendMessage(currentChannelId, userData.handle, msg, userData.photoURL)
-				.then(() => setNotSeenChannel(currentChannelId, teamId))
+				.then(() => setNotSeenChannel(channelId, teamId))
 				.then(() => setMsg(""));
 		}
 		if (dmId && msg && !picURL) {
