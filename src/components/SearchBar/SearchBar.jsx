@@ -43,10 +43,7 @@ const SearchBar = ({ team, dm, channel }) => {
 			})
 	}, []);
 
-	//console.log(allUsers)
-
 	useEffect(() => {
-		console.log(team);
 		if (!team) { return; }
 		getGeneralChannel(team.id)
 			.then(generalId => setGeneralId(generalId));
@@ -85,8 +82,7 @@ const SearchBar = ({ team, dm, channel }) => {
 	const handleRemoveFriends = (user) => {
 		removeFriends(userData.handle, user)
 	}
-	console.log(currentChannelUsers)
-	console.log(allUsers)
+
 	const handleSearchTerm = (e) => {
 		const searchTerm = e.target.value.toLowerCase();
 		setSearchTerm(searchTerm);
@@ -98,8 +94,7 @@ const SearchBar = ({ team, dm, channel }) => {
 			setSearchedUsers(getUsersBySearchTerm(allUsers, searchParam, searchTerm))
 		}
 	};
-	console.log(searchedUsers)
-	console.log(currentUser)
+
 	return (
 		<>
 			<div>

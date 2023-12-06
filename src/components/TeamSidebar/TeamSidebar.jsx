@@ -36,8 +36,6 @@ const TeamSidebar = () => {
 		}, [userData]);
 
 	useEffect(() => {
-		console.log('get team or dm');
-
 		getGeneralChannel(teamId)
 			.then(generalId => setGeneralId(generalId));
 
@@ -50,7 +48,6 @@ const TeamSidebar = () => {
 	}, [teamId]);
 
 	useEffect(() => {
-		console.log(channelId);
 		getChannelById(channelId)
 			.then(channel => setCurrentChannel(channel));
 	}, [channelId])
@@ -64,14 +61,11 @@ const TeamSidebar = () => {
 		return () => {
 			unsubscribe();
 		}
-
-
 	}, [channelId])
 
 	useEffect(() => {
 		const unsubscribe = getLiveDMs(data => {
 			setCurrentDm({ ...data })
-			console.log(data);
 		}, dmId)
 		return () => {
 			unsubscribe();
@@ -79,7 +73,6 @@ const TeamSidebar = () => {
 	}, [dmId]);
 
 	useEffect(() => {
-		console.log(currentChannel);
 		if (currentChannel.members) {
 			// const promises = channelId === generalId
 			// 	? Object.keys(currentTeam.members).map(member => getUserByHandle(member)
@@ -95,7 +88,6 @@ const TeamSidebar = () => {
 			Promise.all(promises)
 				.then((membersData) => {
 					setMembers(membersData);
-					console.log(membersData)
 				})
 				.catch((error) => {
 					console.error(error);
