@@ -340,8 +340,8 @@ const MyServers = () => {
 						{/*</>// main*/}
 
 						<dialog ref={modalRef} id="create-channel" className="modal">
-							<div className="modal-box">
-								<h3 className="font-bold text-lg py-2">Enter Channel name</h3>
+							<div className="modal-box bg-gray-800">
+								<h3 className="text-lg py-2 text-white">Enter Channel name</h3>
 								<input type='text' value={channelName} onChange={(e) => setChannelName(e.target.value)} /><br />
 								<span className="bg-red">{channelError}</span>
 
@@ -350,17 +350,17 @@ const MyServers = () => {
 									<form method="dialog" >
 
 										{/* if there is a button in form, it will close the modal */}
-										<div className='flex-auto'>
-											<p>Create public channel</p>
-											<input type="checkbox" className="checkbox"
+										<div className='flex'>
+											<p className='text-white mr-3 mb-3'>Create public channel</p>
+											<input type="checkbox" className="checkbox" style={{ border: '1px solid white' }}
 												checked={isPublic ? "checked" : ""}
 												onClick={() => setIsPublic(!isPublic)} />
 										</div>
 
 										{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
 
-										<button className="btn mr-5" onClick={createChannel}>Add Channel</button>
-										<button className="btn">Close</button>
+										<button className="btn btn-sm border-none bg-green-500 text-white mr-5 hover:bg-green-600 mr-5" onClick={createChannel}>Add Channel</button>
+										<button className="btn btn-sm bg-red-500 text-white hover:bg-red-600 border-none mt-5">Close</button>
 									</form>
 
 								</div>
