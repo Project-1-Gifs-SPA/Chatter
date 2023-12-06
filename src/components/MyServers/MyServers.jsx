@@ -398,10 +398,7 @@ const MyServers = () => {
 							: null
 
 						}
-
 					</div>
-
-
 					<div className="flex-grow"></div>
 					<div className={`${expanded ? '' : 'hidden'}`}>
 
