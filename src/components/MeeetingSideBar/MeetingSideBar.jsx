@@ -1,9 +1,19 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { BsCalendarEvent } from "react-icons/bs";
+import AppContext from "../../context/AppContext";
+import MeetingTile from "../MeetingTile/MeetingTile";
 
 const MeetingSideBar = () => {
 
+	const{userData} = useContext(AppContext)
+
     const [expanded, setExpanded] = useState(false);
+
+	const [userMeetings, setUserMeetings] = useState(userData.meetings? Object.keys(userData.meetings):[])
+
+	
+
+
 
     return (
 
@@ -29,10 +39,15 @@ const MeetingSideBar = () => {
 				>
 					<div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 						{/* Everything in the sidebar */}
-						
-							<p className='text-gray-300 p-4 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4', textAlign: 'center' }}>
+						{userMeetings? userMeetings.map(meetingId=>
+
+							<div className='text-gray-300 p-4 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4', textAlign: 'center' }} key={meetingId} >
+							<MeetingTile meetingId={meetingId} />
+							</div>
+						)
+							:<p className='text-gray-300 p-4 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4', textAlign: 'center' }}>
 								<br className="md:hidden lg:inline" />
-								You have no upcoming meetings</p>
+								You have no upcoming meetings</p>}
 						
 					</div>
 					{/* inside the sidebar ends here */}
