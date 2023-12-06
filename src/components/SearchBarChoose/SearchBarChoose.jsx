@@ -4,7 +4,7 @@ import { IoAdd, IoRemove } from "react-icons/io5";
 import TeamMember from "../TeamMember/TeamMember";
 import { IoIosArrowDown } from "react-icons/io";
 
-const SearchBarChoose = ({ addMembers, channelMembers, teamMembers }) => {
+const SearchBarChoose = ({ addMembers, channelMembers, teamMembers,members, isMeeting }) => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchedUsers, setSearchedUsers] = useState([]);
@@ -14,6 +14,8 @@ const SearchBarChoose = ({ addMembers, channelMembers, teamMembers }) => {
         setSearchTerm(e.target.value.toLowerCase());
         setSearchedUsers(getUsersBySearchTerm(teamMembers, searchParam, e.target.value));
     };
+
+    console.log(teamMembers)
 
     return (
         <>
@@ -41,7 +43,13 @@ const SearchBarChoose = ({ addMembers, channelMembers, teamMembers }) => {
                     <div key={regUser.uid} className='flex items-center'>
                         <TeamMember key={regUser.handle} member={regUser} />
                         <div className='tooltip' data-tip='Add to channel'>
-                            {channelMembers[regUser.handle]
+                            {isMeeting ?
+
+                            members[regUser.handle]
+                             ? <IoRemove className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
+                             : <IoAdd className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
+                            
+                            : channelMembers[regUser.handle]
                                 ? <IoRemove className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
                                 : <IoAdd className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />}
                         </div>

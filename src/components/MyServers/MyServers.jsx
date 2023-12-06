@@ -327,7 +327,7 @@ const MyServers = () => {
 							</>
 
 							: null}
-						{createMeetingModal ? <CreateMeetingModal setShowModal={setCreateMeetingModal} /> : null}
+						{createMeetingModal ? <CreateMeetingModal setShowModal={setCreateMeetingModal} teamMembers={allTeamMembers} /> : null}
 						<div className={`flex mx-auto content-center items-center ${expanded ? '' : 'hidden'}`}>
 
 							<div className='text-xl mr-4 text-white'

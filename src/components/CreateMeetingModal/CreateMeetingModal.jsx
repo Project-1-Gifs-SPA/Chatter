@@ -8,9 +8,10 @@ import { createMeeting } from "../../services/meetings.service";
 import { createDyteCallRoom } from "../../services/calls.service";
 import { MAX_CHANNEL_LENGTH, MIN_CHANNEL_LENGTH } from "../../common/constants";
 import { getAllTeamMembers } from "../../services/teams.service";
+import SearchBarChoose from "../SearchBarChoose/SearchBarChoose";
 
 
-const CreateMeetingModal = ({setShowModal}) => {
+const CreateMeetingModal = ({setShowModal, teamMembers}) => {
 
     const {teamId} = useParams();
     const {userData} = useContext(AppContext)
@@ -18,11 +19,12 @@ const CreateMeetingModal = ({setShowModal}) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState ('');
     const [meetingTopic, setMeetingTopic] = useState('')
-    const [members, setMembers] = useState([userData.handle])
+    const [members, setMembers] = useState({[userData.handle]:true})
     const [meetingTopicError, setMeetingTopicError] = useState('Meeting Topic')
     const [check, setCheck] = useState(false);
+   
     
-
+   
     const handleClick = (e) => {
         e.preventDefault();
 
@@ -31,17 +33,22 @@ const CreateMeetingModal = ({setShowModal}) => {
 			throw new Error('Meeting topic must be between 3 and 40 characters');
 		}
 
-        createMeeting(userData.handle,members, meetingTopic,startDate, endDate, teamId)
+        createMeeting(userData.handle,Object.keys(members), meetingTopic,startDate, endDate, teamId)
         .then(meetingId=>createDyteCallRoom(meetingId, meetingTopic))
         .then(()=> setShowModal(false))
     }
 
+    const addMembers = (userHandle) => setMembers({
+		...members,
+		[userHandle]: !members[userHandle],
+	});
+    console.log(members);
 
     useEffect(()=> {
         if(check){
-
-            getAllTeamMembers(teamId)
-            .then(teamArr=>setMembers([...teamArr]))
+        const allMembers = {}
+        teamMembers.map(memberId=> allMembers[memberId] = true)
+        setMembers(allMembers);
 
         }
     } ,[check])
@@ -50,8 +57,8 @@ const CreateMeetingModal = ({setShowModal}) => {
 
     return (
         <div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
-        <div id='myModal' className='w-[550px] flex flex-col'>
-            <div className='bg-gray-900 p-2 rounded-xl h-[400px]'>
+        <div id='myModal' className='w-[550px] flex flex-col justify-center'>
+            <div className='bg-gray-900 p-2 rounded-xl h-[auto]'>
            
 
                 {/* Avatar section */}
@@ -107,6 +114,7 @@ const CreateMeetingModal = ({setShowModal}) => {
 				</div>
             
                 </div>
+                
 
                 {/* end date*/}
 
@@ -123,7 +131,16 @@ const CreateMeetingModal = ({setShowModal}) => {
 										// placeholder={currentUser.firstName}
 										type="datetime-local"
 									/>
-                                    <div>
+                <div className=" mt-5 w-[300px]">
+                <SearchBarChoose teamMembers={teamMembers} addMembers={addMembers} members={members} isMeeting={true}/>
+                <div className="form-control" >
+                <label className="label cursor-pointer flex justify-end">
+                <span className="label-text mr-3">Add all team members</span> 
+                <input type="checkbox" checked={check} className="checkbox" onChange={()=>setCheck(!check)}  />
+                </label>
+                </div>
+                </div>
+                                    <div className="mb-2 pl-5 ml-2">
                                         <button  className="btn btn-primary w-15 mt-2 text-sm"
                                         onClick={handleClick}
                                         >
@@ -138,17 +155,12 @@ const CreateMeetingModal = ({setShowModal}) => {
                 
            
                 {/* <SearchBar team={teamId} /> */}
-               
+            
                 </div>
                 </div>
                 
 				</div>
-                <div className="form-control" >
-                <label className="label cursor-pointer flex justify-end">
-                <span className="label-text mr-3">Add all team members</span> 
-                <input type="checkbox" checked={check} className="checkbox" onChange={()=>setCheck(!check)}  />
-                </label>
-                </div>
+               
 
                 </div> 
                
