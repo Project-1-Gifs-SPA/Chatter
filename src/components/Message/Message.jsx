@@ -24,10 +24,6 @@ const Message = ({ message }) => {
 	const [ownerPic, setOwnerPic] = useState('');
 	const [showPic, setShowPic] = useState(false)
 
-
-
-
-
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			const modal = document.getElementById('myModal');
@@ -41,8 +37,6 @@ const Message = ({ message }) => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, [setShowPic]);
-
-
 
 	useEffect(() => {
 		console.log('user msg')
@@ -172,14 +166,14 @@ const Message = ({ message }) => {
 				) : (
 					<>
 						<div className='grid'>
-						<div className=' text-left tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
-							{message.body}
-						</div>
-						{message.pic &&
-							<div className='w-[400px] tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
-							<img src={message.pic} onClick={()=>setShowPic(true)} />
-							</div>}
+							<div className=' text-left tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
+								{message.body}
 							</div>
+							{message.pic &&
+								<div className='w-[400px] tooltip tooltip-top' data-tip={(new Date(message.createdOn)).toLocaleDateString('en-US', dOptions).split(',')[0]}>
+									<img src={message.pic} onClick={() => setShowPic(true)} />
+								</div>}
+						</div>
 						{message.edited && <div className="chat-footer text-[7pt] text-gray-400 flex items-center">
 							(edited)
 						</div>}
@@ -192,20 +186,18 @@ const Message = ({ message }) => {
 					</>
 				)}
 			</div >
-			{showPic &&<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
-        <div id='myModal' className='w-[1000px] flex flex-col'>
-			<img src={message.pic} />
-			</div>
+			{showPic && <div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+				<div id='myModal' className='w-[1000px] flex flex-col'>
+					<img src={message.pic} />
+				</div>
 			</div>}
 		</div>
 	</>
 	)
 }
 
-export default Message
-
+export default Message;
 
 {/* <div className="tooltip tooltip-top" data-tip='Add reaction'>
 						<BsEmojiSmile className='ml-2 text-[17px] text-gray-400 cursor-pointer' />
 					</div> */}
-

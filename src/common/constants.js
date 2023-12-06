@@ -35,13 +35,12 @@ export const MIN_CHANNELNAME_LENGTH = 3;
 export const MAX_CHANNELNAMELENGTH = 40; // remove
 
 export const reactions = {
-	like: '👍',
-    love: '❤️',
-    haha: '😄',
-    wow: '😮',
-    sad:'🙁',
-    angry: '😠'
+	Like: '👍',
+    Love: '❤️',
+    Haha: '😄',
+    Wow: '😮',
+    Sad:'🙁',
+    Angry: '😠'
 }
 
 //+1 when clicked
-
