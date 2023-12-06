@@ -13,6 +13,7 @@ import {
 	getMeetingChat,
 	sendDirectMessage,
 	sendMeetingMessage,
+	sendMeetingPictureMessage,
 	sendMessage,
 	sendPictureDirectMessage,
 	sendPictureMessage,
@@ -208,10 +209,20 @@ const ChatBox = () => {
 				.then(() => setNotSeenDm(dmId, teamId))
 		}
 
-		if(meetingId){
+		if(meetingId && msg && !picURL){
 			sendMeetingMessage(meetingId, userData.handle, msg, userData.photoURL)
 				.then(()=> setMsg(''));
 		}
+
+		if(meetingId && picURL){
+			sendMeetingPictureMessage(meetingId, userData.handle, msg, picURL)
+			.then(()=> {			
+				setShowMenu(false);
+				setPicURL('')
+				setMsg('')
+				})
+		}
+
 	};
 
 

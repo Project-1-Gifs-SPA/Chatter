@@ -167,3 +167,19 @@ export const setChannelSeenBy = (channelId, user) => {
         })
     }
 
+
+    export const sendMeetingPictureMessage = (meetingId, handle, msg, picURL) => {
+
+        return push(ref(db, `meetings/${meetingId}/msgs`),{})
+        .then(response => {
+    
+            set(ref(db,`meetings/${meetingId}/msgs/${response.key}`), {
+                body: msg,
+                pic: picURL,
+                id: response.key,
+                owner:handle,
+                createdOn: serverTimestamp(),
+            });
+        })
+    }
+
