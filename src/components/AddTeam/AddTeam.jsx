@@ -18,7 +18,7 @@ const AddTeam = () => {
 
   const createTeam = (e) => {
     e.preventDefault();
-    if (teamName.length < MIN_TEAMNAME_LENGTH || teamName > MAX_TEAMNAME_LENGTH) {
+    if (teamName.length < MIN_TEAMNAME_LENGTH || teamName.length > MAX_TEAMNAME_LENGTH) {
       setTeamError('Team name must be between 3 and 40 characters');
       throw new Error('Team name must be between 3 and 40 characters');
 

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { addFriends, getAllUsers, getUsersBySearchTerm, getLiveUserInfo, removeFriends, sendFriendRequest, getUserByHandle, getLiveAllUsers } from '../../services/users.service';
+import { useContext, useEffect, useState } from 'react'
+import { getAllUsers, getUsersBySearchTerm, getLiveUserInfo, removeFriends, sendFriendRequest, getUserByHandle, getLiveAllUsers } from '../../services/users.service';
 import TeamMember from '../TeamMember/TeamMember';
 import { IoIosArrowDown } from "react-icons/io";
 import { BsPersonFillAdd } from "react-icons/bs";
