@@ -29,8 +29,8 @@ const MeetingSideBar = () => {
     return (
 
         <div className="h-screen flex flex-col md:flex md:block justify-end bg-gray-800">
-			<div className="h-full flex flex-col border-r shadow-sm bg-gray-800">
-				<div className="border-b border-gray-600 flex px-6 py-2 items-center shadow-xl">
+			<div className="h-full flex flex-col pb-1 shadow-sm bg-gray-800">
+				<div className="border-b border-gray-600 flex mt-2 mb-1 px-4 py-2 items-center shadow-xl">
 					<button
 						onClick={() => setExpanded((curr) => !curr)}
 						className="p-0 p-0 rounded-lg focus:outline-none"
