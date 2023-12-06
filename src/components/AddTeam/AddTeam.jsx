@@ -52,24 +52,24 @@ const AddTeam = () => {
       <div className="bg-white opacity-25 h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden hover:rounded-md ">
         <GoPlus className="h-10 w-10" />
         <dialog ref={modalRef} id="my_modal_1" className="modal fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
-          <div className="modal-box">
-            <p className="py-4">
+
+          <div className="modal-box bg-gray-700">
+            <p className="py-4 text-white">
               Enter Team name
             </p>
-            <input type='text' value={teamName} onChange={(e) => setTeamName(e.target.value)} /><br />
+            <input className='rounded' type='text' value={teamName} onChange={(e) => setTeamName(e.target.value)} /><br />
             <span className="bg-red">{teamError}</span>
 
             <div className="modal-action">
 
               <form method="dialog" >
-
                 {/* if there is a button in form, it will close the modal */}
-                <button className="btn mr-5" onClick={createTeam}>Add Team</button>
-                <button className="btn">Close</button>
+                <button className="btn btn-sm border-none bg-green-500 text-white mr-5 hover:bg-green-600" onClick={createTeam}>Add Team</button>
+                <button className="btn btn-sm border-none bg-red-500 text-white hover:bg-red-600 ">Close</button>
               </form>
-
             </div>
           </div>
+
         </dialog>
       </div>
     </div>
