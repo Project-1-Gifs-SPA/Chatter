@@ -258,7 +258,6 @@ return onValue(
     })
 }
 
-
 export const filterChannelsByUser = (channels, userHandle) => {
     return Promise.all(channels.map(channelId => getChannelById(channelId)))
         .then(channels => channels.filter(channel => Object.keys(channel.members).includes(userHandle) ? channel : false))

@@ -4,7 +4,7 @@ import { IoAdd, IoRemove } from "react-icons/io5";
 import TeamMember from "../TeamMember/TeamMember";
 import { IoIosArrowDown } from "react-icons/io";
 
-const SearchBarChoose = ({ addMembers, channelMembers, teamMembers,members, isMeeting }) => {
+const SearchBarChoose = ({ addMembers, channelMembers, teamMembers, members, isMeeting }) => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchedUsers, setSearchedUsers] = useState([]);
@@ -14,8 +14,6 @@ const SearchBarChoose = ({ addMembers, channelMembers, teamMembers,members, isMe
         setSearchTerm(e.target.value.toLowerCase());
         setSearchedUsers(getUsersBySearchTerm(teamMembers, searchParam, e.target.value));
     };
-
-    console.log(teamMembers)
 
     return (
         <>
@@ -45,13 +43,13 @@ const SearchBarChoose = ({ addMembers, channelMembers, teamMembers,members, isMe
                         <div className='tooltip' data-tip='Add to channel'>
                             {isMeeting ?
 
-                            members[regUser.handle]
-                             ? <IoRemove className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
-                             : <IoAdd className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
-                            
-                            : channelMembers[regUser.handle]
-                                ? <IoRemove className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
-                                : <IoAdd className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />}
+                                members[regUser.handle]
+                                    ? <IoRemove className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
+                                    : <IoAdd className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
+
+                                : channelMembers[regUser.handle]
+                                    ? <IoRemove className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />
+                                    : <IoAdd className='cursor-pointer text-white text-xl ' onClick={() => addMembers(regUser.handle)} />}
                         </div>
                     </div>
                 )

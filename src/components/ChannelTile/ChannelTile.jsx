@@ -13,9 +13,6 @@ import ContextMenu from "../ContextMenu/ContextMenu";
 
 const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers, teamMembers, checkedChannels, updateCheckedChannels }) => {
 
-
-   
-
     const { teamId } = useParams();
     const { userData } = useContext(AppContext);
 
@@ -32,10 +29,9 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
     const navigate = useNavigate();
 
     const handleContextMenu = (e) => {
-		e.preventDefault();
-		setContextMenuVisible(true);
-
-	}
+        e.preventDefault();
+        setContextMenuVisible(true);
+    }
 
     useEffect(() => {
         getChannelById(channelId)
@@ -47,32 +43,47 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
 
     useEffect(() => {
         const unsubscribe = getLiveChannelSeenBy(data => {
-            setIsChannelSeen(data)
+            setIsChannelSeen([...data]);
         }, channelId)
+
         return () => {
             unsubscribe();
         }
-    }, [channelId])
+    }, [channelId]);
+    // updateCheckedChannels(0)
 
-    //console.log('channel ', channelId, ' is seen by ', isChannelSeen)
+    // useEffect(() => {
+    //     if (isChannelSeen.includes(userData.handle)) {
+    //         console.log('entered')
+    //         updateCheckedChannels(checkedChannels + 1)
+    //         console.log('updating checked channels: ', checkedChannels)
+    //     }
+    //     // if (!isChannelSeen.includes(userData.handle)) {
+    //     //     console.log('second if')
+    //     //     updateCheckedChannels(checkedChannels - 1)
+    //     //     console.log('decreasing checked channels: ', checkedChannels)
+    //     // }
+    // }, [isChannelSeen])
 
     useEffect(() => {
-        console.log('is working? isChannelSeen', isChannelSeen)
         if (isChannelSeen.includes(userData.handle)) {
-            updateCheckedChannels(checkedChannels + 1)
+            setTeamSeenBy(teamId, userData.handle);
+        } else {
+            console.log('inside of the else')
+            setTeamsNotSeenBy(teamId, userData.handle);
         }
-        // else {
-        //     updateCheckedChannels(checkedChannels - 1)
-        // }
     }, [isChannelSeen])
+    //console.log(isChannelSeen)
+    // console.log(checkedChannels)
+    //console.log(isChannelSeen)
+
+    // console.log(checkedChannels, ' at ChannelTile')
 
     return (
-//<<<<<<< team-channel
-            
         <div className="items-center ml-auto mr-auto display-flex" onContextMenu={handleContextMenu}>
             <button
                 className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
-                onClick={() => { console.log(channelId); navigate(`/teams/${teamId}/channels/${channelId}`); }}
+                onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
             >
                 {channelName}
             </button >
@@ -84,11 +95,19 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                
             </button>} */}
             {showDeleteModal && <ChannelXModal
+
                     isVisible={showDeleteModal}
                     onClose={() => setShowDeleteModal(false)}
                     channelId={channelId} teamId={teamId} isOwner={isOwner}
                 />}
             {contextMenuVisible ? <ContextMenu channelList={true} channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal}/> : null  }
+
+                {/* isVisible={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                channelId={channelId} teamId={teamId} isOwner={isOwner}
+            />}
+            {contextMenuVisible ? <ContextMenu channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal} /> : null}
+>>>>>>> 309260567cf558c4a9e23d94386971fbf75debf9 */}
 
             {/* {channelId !== generalId && isOwner && <button
                 onClick={() => setShowEditModal(!showEditModal)}
@@ -103,7 +122,7 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
                     teamMembers={teamMembers}
                 />}
             </button>} */}
-{/* //=======
+            {/* //=======
 //         <div>
 //             <button className={`${isChannelSeen.includes(userData.handle) ? 'text-white' : 'text-red-400'} ml-4`}
 //                 onClick={() => { navigate(`/teams/${teamId}/channels/${channelId}`) }}
