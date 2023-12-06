@@ -258,7 +258,7 @@ const MyServers = () => {
 						{/* //======= */}
 						<div className="flex justify-between items-center max-w-">
 							<h1
-								style={{ fontFamily: 'Rockwell, sans-serif' }}
+								style={{maxWidth: "180px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",fontFamily: 'Rockwell, sans-serif' }}
 								className={`font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
 								{teamId ?
 									`${currentTeam.name}` : 'Direct Messages'}
