@@ -118,15 +118,15 @@ const ChatBot = () => {
 
     return (
 
-        <div className=" flex flex-col bg-gray-700 h-[90vh]">
-            <div className="px-6 py-4 overflow-y-scroll custom-scrollbar mb-[30px]">
+        <div className=" flex flex-col items-center bg-gray-700 h-[90vh]">
+            <div className="px-6 pb-[80px] mb-[100px]">
                 {messages.map((message, i) => {
                     return (<ChatBotMessage key={i} message={message} />)
                 })}
             </div>
             <div className="ml-2 mb-1">{typing && <Typing />}</div>
 
-            <div className='flex absolute bottom-[7px] items-center bg-gray-00 rounded-md ml-4 mb-3' style={{ width: "75%", outline: 'none' }}>
+            <div className='absolute bottom-0 items-center bg-gray-700 bg-opacity-80 rounded ml-4 mr-4' style={{ width: "77%", height: '70px', outline: 'none' }}>
                 <div className='flex-grow'>
                     <form
                         style={{
@@ -139,7 +139,7 @@ const ChatBot = () => {
                     >
                         <input
                             className="bg-gray-800 border-none rounded"
-                            style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
+                            style={{ padding: "15px 30px", width: "100%", outline: 'none' }}
                             type="text"
                             value={msg}
                             placeholder={`Type something...`}
@@ -150,7 +150,6 @@ const ChatBot = () => {
                     </form>
 
                 </div>
-
             </div>
         </div>
 
