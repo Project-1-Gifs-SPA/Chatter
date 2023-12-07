@@ -38,15 +38,9 @@ const Dashboard = () => {
 						{show === 'online' ? <OnlineFriends /> : null}
 						{show === 'all' ? <AllFriends /> : null}
 						{show === 'requests' ? <FriendsRequestsDashboard /> : null}
-
+						{show === 'meetings' ? <ChatBot /> : null}
 					</div>
 				</div>
-
-
-				<div>
-					{show === 'meetings' ? <ChatBot /> : null}
-				</div>
-				{/* </div> */}
 			</div>
 			<MeetingSideBar />
 		</>
