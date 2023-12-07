@@ -256,7 +256,7 @@ const ChatBox = () => {
 				</p>
 			</div>}
 
-			{giphy && <div className="relative inline-block pr-5"><Giphy setPicURL={setPicURL} /></div>}
+			{giphy && <div className="absolute bottom-[55px] right-[100px] mt-[-38px] pr-5"><Giphy setPicURL={setPicURL} /></div>}
 
 			{currentChannelId || dmId || meetingId ?
 
