@@ -15,7 +15,7 @@ const Dashboard = () => {
 
 	return (
 		<>
-			<div className='bg-gray-700 w-full overflow-y-scroll custom-scrollbar'>
+			<div className='bg-gray-700 w-full overflow-y-scroll custom-scrollbar overflow-x-hidden '>
 				{/* <div className="bg-gray-800 w-[1000px] h-[100vh] pt-5 px-4 mx-auto"> */}
 				<div className="border-b border-gray-600 flex px-6 py-2 items-center justify-between shadow-xl">
 					<p className="text-white mb-4 lg:mb-0 ml-4 mr-6">Friends</p>
