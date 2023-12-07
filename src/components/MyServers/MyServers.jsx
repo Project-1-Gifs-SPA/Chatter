@@ -320,7 +320,7 @@ const MyServers = () => {
 							<div className="modal-box bg-gray-800 flex flex-col items-center overflow-y-scroll no-scrollbar" style={{ width: '550px', height: '350px' }}>
 								<h3 className="text-lg py-2 text-white">Enter Channel name</h3>
 								<input type='text' className='rounded-md' value={channelName} onChange={(e) => setChannelName(e.target.value)} style={{ width: '400px', height: '35px' }} /><br />
-								<span className="bg-red">{channelError}</span>
+								<span className="bg-red text-red-300">{channelError}</span>
 
 								<div className="modal-action">
 
@@ -336,7 +336,10 @@ const MyServers = () => {
 										{!isPublic && <SearchBarChoose addMembers={handleAddMember} channelMembers={channelMembers} teamMembers={allTeamMembers} />}
 
 										<button className="btn btn-sm border-none bg-green-500 text-white mr-5 hover:bg-green-600 mr-5" onClick={createChannel}>Add Channel</button>
-										<button className="btn btn-sm bg-red-500 text-white hover:bg-red-600 border-none mt-5">Close</button>
+										<button className="btn btn-sm bg-red-500 text-white hover:bg-red-600 border-none mt-5" onClick={() => {
+											setChannelError('');
+											setChannelName('');
+										}}>Close</button>
 									</form>
 
 								</div>
