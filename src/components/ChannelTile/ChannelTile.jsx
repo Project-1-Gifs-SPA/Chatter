@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { getChannelById, getLiveChannelSeenBy } from "../../services/channel.service";
+import { getChannelById, getChannelIdsInTeamByUser, getLiveChannelSeenBy } from "../../services/channel.service";
 import { useNavigate, useParams } from "react-router";
 import ChannelXModal from "../ChannelXModal/ChannelXModal";
 // import ChannelEditModal from "../ChannelEditModal/ChannelEditModal";
@@ -7,7 +7,7 @@ import AppContext from "../../context/AppContext";
 import { setTeamSeenBy, setTeamsNotSeenBy } from "../../services/chat.service";
 import ContextMenu from "../ContextMenu/ContextMenu";
 
-const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers, teamMembers, checkedChannels, updateCheckedChannels }) => {
+const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers, teamMembers, checkedChannels, updateCheckedChannels, setCurrentChannels }) => {
 
     const { teamId } = useParams();
     const { userData } = useContext(AppContext);
@@ -69,6 +69,21 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
             setTeamsNotSeenBy(teamId, userData.handle);
         }
     }, [isChannelSeen])
+
+    useEffect(()=>{
+
+        if(!showDeleteModal){
+
+
+            getChannelIdsInTeamByUser(teamId, userData.handle)
+			.then(channels => setCurrentChannels(channels));
+
+
+        }
+
+ 
+
+    },[showDeleteModal])
 
     return (
         <>
