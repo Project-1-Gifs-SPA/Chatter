@@ -30,6 +30,9 @@ import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
 import { uploadMessagePhoto } from "../../services/storage.service";
 import { SlPicture } from "react-icons/sl";
 import './ChatBox.css'
+import Giphy from "../Giphy/Giphy";
+
+import { HiOutlineGif } from "react-icons/hi2";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
@@ -49,6 +52,7 @@ const ChatBox = () => {
 	const [showMenu, setShowMenu] = useState(false);
 	const [currentChannelId, setCurrentChannelId] = useState('')
 	const [pic, setPic] = useState({});
+	const [giphy, setGiphy] = useState(false);
 
 	const container = useRef(null);
 
@@ -217,6 +221,20 @@ const ChatBox = () => {
 		}
 	}
 
+	useEffect(()=>{
+		if(picURL && giphy){
+			setGiphy(false);
+			setShowMenu(true);
+		}
+	},[picURL])
+
+
+
+
+
+
+
+
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
 			{/* Top bar */}
@@ -240,6 +258,8 @@ const ChatBox = () => {
 				<img src={picURL} alt='pic' className="w-[200px] h-auto ml-2" />
 				<p className="cursor-pointer" onClick={() => { setShowMenu(false); setPicURL('') }}>X</p>
 			</div>}
+
+			{giphy && <div className="relative inline-block pr-5"><Giphy setPicURL={setPicURL} /></div>}
 
 			{currentChannelId || dmId || meetingId ?
 
@@ -305,7 +325,18 @@ const ChatBox = () => {
 								<SlPicture className='w-6 h-6 text-white cursor-pointer' />
 
 							</label>
+							<label style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}} className='btn btn-xs rounded-full' onClick={() => setGiphy(!giphy)}>
+								<HiOutlineGif className='w-6 h-6 text-white cursor-pointer' />
+							</label>
 						</div>
+					
 					</div>
 				</div> : null}
 		</div>
