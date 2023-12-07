@@ -31,6 +31,7 @@ import { uploadMessagePhoto } from "../../services/storage.service";
 import { SlPicture } from "react-icons/sl";
 import './ChatBox.css'
 import Giphy from "../Giphy/Giphy";
+import { FaTrashAlt } from "react-icons/fa";
 
 import { HiOutlineGif } from "react-icons/hi2";
 
@@ -221,19 +222,12 @@ const ChatBox = () => {
 		}
 	}
 
-	useEffect(()=>{
-		if(picURL && giphy){
+	useEffect(() => {
+		if (picURL && giphy) {
 			setGiphy(false);
 			setShowMenu(true);
 		}
-	},[picURL])
-
-
-
-
-
-
-
+	}, [picURL])
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -254,9 +248,11 @@ const ChatBox = () => {
 					: null}
 			</div>
 
-			{showMenu && <div className='p-3 m-3 flex justify-between rounded'>
+			{showMenu && <div className='p-3 mx-4 flex rounded w-[95%] bg-gray-800 bg-opacity-60'>
 				<img src={picURL} alt='pic' className="w-[200px] h-auto ml-2" />
-				<p className="cursor-pointer" onClick={() => { setShowMenu(false); setPicURL('') }}>X</p>
+				<p className="cursor-pointer ml-2" onClick={() => { setShowMenu(false); setPicURL('') }}>
+					<FaTrashAlt className='text-red-600' />
+				</p>
 			</div>}
 
 			{giphy && <div className="relative inline-block pr-5"><Giphy setPicURL={setPicURL} /></div>}
@@ -336,7 +332,7 @@ const ChatBox = () => {
 								<HiOutlineGif className='w-6 h-6 text-white cursor-pointer' />
 							</label>
 						</div>
-					
+
 					</div>
 				</div> : null}
 		</div>
