@@ -30,6 +30,7 @@ import { setDmSeenBy, setNotSeenDm } from "../../services/dms.service";
 import { uploadMessagePhoto } from "../../services/storage.service";
 import { SlPicture } from "react-icons/sl";
 import './ChatBox.css'
+import Giphy from "../Giphy/Giphy";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
@@ -49,6 +50,7 @@ const ChatBox = () => {
 	const [showMenu, setShowMenu] = useState(false);
 	const [currentChannelId, setCurrentChannelId] = useState('')
 	const [pic, setPic] = useState({});
+	const [giphy, setGiphy] = useState(false);
 
 	const container = useRef(null);
 
@@ -241,6 +243,8 @@ const ChatBox = () => {
 				<p className="cursor-pointer" onClick={() => { setShowMenu(false); setPicURL('') }}>X</p>
 			</div>}
 
+			{giphy && <div><Giphy /></div>}
+
 			{currentChannelId || dmId || meetingId ?
 
 				<div className='flex items-center bg-gray-800 rounded-md ml-4 mb-4' style={{ width: "95%", outline: 'none' }}>
@@ -306,6 +310,16 @@ const ChatBox = () => {
 
 							</label>
 						</div>
+						<button style={{
+								//transform: 'translateY(-50%)',
+								background: 'transparent',
+								border: 'none',
+								outline: 'none',
+								cursor: 'pointer',
+								color: 'white',
+							}} className='btn btn-xs rounded-full' onClick={() => setGiphy(!giphy)}>
+								Gif
+							</button>
 					</div>
 				</div> : null}
 		</div>
