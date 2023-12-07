@@ -2,10 +2,10 @@
 
 
 
-const Gif = ({ url }) => {
+const Gif = ({ url, setPicURL }) => {
     return (
-      <div className="w-1/3 p-2">
-        <img src={url} alt="gif" className=" w-20 h-30 rounded-lg" />
+      <div className="w-[auto] p-2">
+        <img src={url} alt="gif" className=" w-[200px] h-[120px] rounded-lg" onClick={(e)=>{e.preventDefault(); setPicURL(url)}} />
       </div>
     );
   };

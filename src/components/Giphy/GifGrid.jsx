@@ -1,13 +1,13 @@
 import Gif from "./Gif";
 
 
-const GifGrid = ({ gifs }) => {
+const GifGrid = ({ gifs, setPicURL }) => {
 
 
     return (
-      <div className="flex h-[auto] w-[100vh]">
+      <div className="flex h-[auto] w-[150vh]">
         {gifs.map((gif) => (
-          <Gif key={gif.id}  url={gif.images.fixed_width.url} />
+          <Gif key={gif.id}  url={gif.images.downsized.url} setPicURL={setPicURL} />
         ))}
       </div>
     );

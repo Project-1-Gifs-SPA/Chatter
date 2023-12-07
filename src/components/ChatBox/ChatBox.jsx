@@ -32,6 +32,8 @@ import { SlPicture } from "react-icons/sl";
 import './ChatBox.css'
 import Giphy from "../Giphy/Giphy";
 
+import { HiOutlineGif } from "react-icons/hi2";
+
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
 
@@ -219,6 +221,20 @@ const ChatBox = () => {
 		}
 	}
 
+	useEffect(()=>{
+		if(picURL && giphy){
+			setGiphy(false);
+			setShowMenu(true);
+		}
+	},[picURL])
+
+
+
+
+
+
+
+
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
 			{/* Top bar */}
@@ -243,7 +259,7 @@ const ChatBox = () => {
 				<p className="cursor-pointer" onClick={() => { setShowMenu(false); setPicURL('') }}>X</p>
 			</div>}
 
-			{giphy && <div><Giphy /></div>}
+			{giphy && <div className="relative inline-block pr-5"><Giphy setPicURL={setPicURL} /></div>}
 
 			{currentChannelId || dmId || meetingId ?
 
@@ -309,8 +325,7 @@ const ChatBox = () => {
 								<SlPicture className='w-6 h-6 text-white cursor-pointer' />
 
 							</label>
-						</div>
-						<button style={{
+							<label style={{
 								//transform: 'translateY(-50%)',
 								background: 'transparent',
 								border: 'none',
@@ -318,8 +333,10 @@ const ChatBox = () => {
 								cursor: 'pointer',
 								color: 'white',
 							}} className='btn btn-xs rounded-full' onClick={() => setGiphy(!giphy)}>
-								Gif
-							</button>
+								<HiOutlineGif className='w-6 h-6 text-white cursor-pointer' />
+							</label>
+						</div>
+					
 					</div>
 				</div> : null}
 		</div>
