@@ -7,7 +7,7 @@ import ContextMenu from '../ContextMenu/ContextMenu';
 import { IoMdReturnLeft } from 'react-icons/io';
 import { getLiveTeamSeenBy } from '../../services/teams.service';
 import AppContext from '../../context/AppContext';
-import './TeamMember.css'
+
 
 const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 	const [showModal, setShowModal] = useState(false);
