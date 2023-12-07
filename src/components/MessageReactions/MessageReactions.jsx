@@ -1,4 +1,4 @@
-import { useContext} from 'react'
+import { useContext } from 'react'
 import { reactions } from '../../common/constants'
 import { BsEmojiSmile } from "react-icons/bs";
 import { useParams } from 'react-router';
@@ -14,7 +14,7 @@ const MessageReactions = ({ msg }) => {
 	return (<>
 		<div className='dropdown dropdown-hover dropdown-top'>
 			<label tabIndex={0} >
-				<BsEmojiSmile className='text-gray-500 cursor-pointer text-sm ml-2' />
+				<BsEmojiSmile className='text-gray-400 cursor-pointer text-[13px] ml-2' />
 			</label>
 			<ul className="dropdown-content z-1000 menu-horizontal shadow bg-gray-600 rounded-box p-1" tabIndex={0}
 				style={{
