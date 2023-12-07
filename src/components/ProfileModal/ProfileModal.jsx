@@ -59,7 +59,7 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
 		// const checkDMs = userData.DMs ? Object.entries(userData.DMs).find(([partner, dmId]) => partner === profile.handle) : [];
 		// console.log(checkDMs);
 		if (userData.DMs[profile.handle]) {
-			
+
 			navigate(`/dms/${userData.DMs[profile.handle]}`);
 		}
 
@@ -91,7 +91,7 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
 							</p>
 							<p className='text-orange-300'>@{profile.handle}</p>
 							{profile.handle === currentUser.handle && <button
-								className="text-white rounded btn btn-xs bg-purple-600 transition-colors hover:bg-purple-400 border-none"
+								className="text-white rounded btn btn-xs bg-purple-600 transition-colors hover:bg-purple-400 border-none mt-3"
 								onClick={onLogout}
 							>
 								Sign out
@@ -111,7 +111,7 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
 							<p className="text-md font-bold text-white"
 							>Status:</p>
 							<p className="text-sm text-white"
-							>{profile.availability}</p>
+							>{profile.availability.charAt(0).toUpperCase() + profile.availability.slice(1)}</p>
 						</div>
 					</div>
 					{profile.handle !== currentUser.handle && <button
