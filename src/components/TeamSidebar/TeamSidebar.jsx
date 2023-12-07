@@ -37,7 +37,7 @@ const TeamSidebar = () => {
 
 	useEffect(() => {
 		// getGeneralChannel(teamId)
-			// .then(generalId => setGeneralId(generalId));
+		// .then(generalId => setGeneralId(generalId));
 
 		const unsubscribe = getLiveTeamInfo(data => {
 			setCurrentTeam({ ...data })
@@ -123,7 +123,7 @@ const TeamSidebar = () => {
 	return (
 		<div className="h-screen flex flex-col md:flex md:block justify-end bg-gray-800">
 			<div className="h-full flex flex-col border-r shadow-sm bg-gray-800">
-				<div className="border-b border-gray-600 flex px-6 py-2 items-center shadow-xl">
+				<div className="flex px-6 py-2 items-center shadow-xl">
 					<button
 						onClick={() => setExpanded((curr) => !curr)}
 						className="p-0 p-0 rounded-lg focus:outline-none"
@@ -133,8 +133,9 @@ const TeamSidebar = () => {
 						}
 					</button>
 					<p className={`ml-3 text-white overflow-hidden transition-all ${expanded ? "w-54" : "w-0"
-						}`}>Members</p>
+						}`} style={{ fontFamily: 'Rockwell, sans-serif' }}>Members</p>
 				</div>
+				<div className="border-t border-gray-600 py-2"></div>
 				<div
 					className={`flex justify-between items-center
             overflow-hidden transition-all ${expanded ? "w-64" : "w-0"}
