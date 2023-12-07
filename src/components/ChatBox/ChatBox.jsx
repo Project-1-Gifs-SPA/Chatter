@@ -158,7 +158,7 @@ const ChatBox = () => {
 		console.log('msg handle')
 		e.preventDefault();
 
-		if(!msg.trim()) { return; }
+		if (!msg.trim()) { return; }
 
 		if (picURL && channelId) {
 			console.log('pic handling')

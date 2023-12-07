@@ -3,7 +3,7 @@
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
-	background: rgba(31,41,55,255); 
+	background: rgba(55,65,81,255); 
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -13,5 +13,4 @@
   
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
 	background: rgba(84,51,132,255); 
-  background: rgba(168,85,247,255); 
   }
