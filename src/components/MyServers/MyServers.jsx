@@ -244,18 +244,6 @@ const MyServers = () => {
 
 				<div className="flex flex-col h-screen">
 					<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
-						{/* // team-channel
-//					<div className="flex-auto">
-//						<h1 className="font-semibold text-xl leading-tight mb-1 truncate">{teamId ? `${currentTeam.name}` : 'Direct Messages'}</h1>
-//					</div>
-//				</div>
-//				<div className='flex mx-auto content-center items-center'>
-//					<div className='text-xl mr-4'>
-//						Channels
-//					</div>
-//					{teamId && <div>
-//						className="cursor-pointer" */}
-						{/* //======= */}
 						<div className="flex justify-between items-center">
 							<h1
 								style={{ maxWidth: "180px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: 'Rockwell, sans-serif' }}

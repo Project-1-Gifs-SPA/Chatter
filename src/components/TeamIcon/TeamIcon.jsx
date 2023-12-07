@@ -48,7 +48,7 @@ const TeamIcon = ({ id }) => {
 					.then(channelId => navigate(`/teams/${currentTeam.id}/channels/${channelId}`))}
 				onContextMenu={handleContextMenu}
 			>
-				{!isTeamSeen.includes(userData.handle) && <div className='absolute left-[20px] animate-blink-icon'>
+				{!isTeamSeen.includes(userData.handle) && <div className='relative top-3'>
 					<RiCheckboxBlankCircleFill style={{ color: 'white' }} />
 				</div>
 				}
