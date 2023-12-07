@@ -6,7 +6,7 @@ import AppContext from '../../context/AppContext';
 import { getDMbyId } from '../../services/dms.service';
 import { BsCalendarEvent } from 'react-icons/bs';
 
-const ChatTopBar = ({meeting}) => {
+const ChatTopBar = ({ meeting }) => {
 	const { channelId, dmId } = useParams();
 	const { userData } = useContext(AppContext)
 	const [channelName, setChannelName] = useState('');
@@ -27,11 +27,11 @@ const ChatTopBar = ({meeting}) => {
 	}, [channelId, dmId])
 
 	return (<>
-		<div className="border-b border-gray-600 flex px-6 py-2 items-center justify-between shadow-xl">
+		<div className=" flex px-6 py-2 items-center justify-between">
 			<div className="flex flex-col">
 				{/* <h3>Hard coded</h3> */}
 				{channelId &&
-					<h3 className="text-white mb-1 font-bold text-xl text-gray-100">
+					<h3 className="text-white  font-bold text-xl text-gray-100">
 						<span className="text-gray-400">#</span> {channelName}
 					</h3>
 				}
@@ -47,6 +47,7 @@ const ChatTopBar = ({meeting}) => {
 				}
 			</div>
 		</div >
+		<div className="border-t border-gray-600 py-1"></div>
 	</>
 	)
 }

@@ -243,7 +243,7 @@ const MyServers = () => {
 			<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter overflow-y-scroll no-scrollbar flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
 				<div className="flex flex-col h-screen">
-					<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
+					<div className="text-white mb-1 mt-3 px-4 flex justify-between">
 						<div className="flex justify-between items-center">
 							<h1
 								style={{ maxWidth: "180px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: 'Rockwell, sans-serif' }}
@@ -259,6 +259,7 @@ const MyServers = () => {
 							}
 						</div>
 					</div>
+					<div className="border-t border-gray-600 py-2"></div>
 
 					{teamId || meetingId ? <>
 						{expanded ?
