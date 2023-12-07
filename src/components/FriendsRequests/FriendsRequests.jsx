@@ -50,7 +50,7 @@ const FriendsRequests = ({ friendsRequests, onClose }) => {
 	console.log(requests)
 	//
 	return (
-		<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+		<div className='fixed inset-0 z-50 bg-black bg-opacity-25 overflow-y-scroll no-scrollbar backdrop-blur-sm flex justify-center items-center'>
 			<div id='myModal' className='w-[350px] flex flex-col'>
 				<div className='bg-gray-900 p-2 rounded-xl h-[400px]'>
 					{requests.length > 0 ? requests.map(friendRequest => {
@@ -59,10 +59,10 @@ const FriendsRequests = ({ friendsRequests, onClose }) => {
 							<p className='pl-5 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Accept' onClick={() => handleAcceptRequest(friendRequest.handle)}>✅</p>
 							<p className='pl-5 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Decline' onClick={() => handleDeclineRequest(friendRequest.handle)}>❌</p>
 						</div>
-					}) : (<div className='flex justify-center'>
+					}) : (<div className='flex justify-center items-center mt-12'>
 						<p className='text-white text-center mt-20 text-3xl'>
 							You do not have friend <br className="md:hidden lg:inline" />requests for now!<br className="md:hidden lg:inline" />
-							<span role="img" aria-label="sad face" className="ml-2">
+							<span role="img" aria-label="sad face">
 								☹️
 							</span>
 						</p>

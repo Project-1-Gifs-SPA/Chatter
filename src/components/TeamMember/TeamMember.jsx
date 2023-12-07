@@ -61,7 +61,6 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 					owner={owner} member={member.handle} /></div> : null}
 			</div >
 
-
 			{showModal && (
 
 				<div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
@@ -77,4 +76,4 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 	)
 }
 
-export default TeamMember
+export default TeamMember;

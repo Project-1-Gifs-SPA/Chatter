@@ -112,12 +112,12 @@ const Message = ({ message }) => {
 			<div className="chat-header flex items-center mb-1">
 				<span className='font-bold text-[13pt] text-red-300 cursor-pointer hover:underline'>{message.owner}</span>
 				<time className="text-[8pt] font-bold text-gray-400 pl-2">{(new Date(message.createdOn)).toLocaleTimeString('en-US', hOptions)}</time>
-				{userData.handle === message.owner &&
-					<div className="tooltip tooltip-top" data-tip='Edit message'>
-						<FaRegEdit className='ml-2 text-[15px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
-					</div>
-				}
-				<div>
+				<div className='flex items-center'>
+					{userData.handle === message.owner &&
+						<div className="tooltip tooltip-top" data-tip='Edit message'>
+							<FaRegEdit className='ml-2 text-[13px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
+						</div>
+					}
 					<MessageReactions msg={message} />
 				</div>
 			</div>
