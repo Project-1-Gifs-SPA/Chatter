@@ -5,6 +5,7 @@ import AllFriends from '../../components/AllFriends/AllFriends'
 import FriendsRequests from '../../components/FriendsRequests/FriendsRequests'
 import FriendsRequestsDashboard from '../../components/FriendsRequestsDashboard/FriendsRequestsDashboard'
 import MeetingSideBar from '../../components/MeeetingSideBar/MeetingSideBar'
+import ChatBot from '../../components/ChatBot/ChatBot'
 
 const Dashboard = () => {
 
@@ -21,23 +22,25 @@ const Dashboard = () => {
 						<button className="btn btn-xs ml-4 btn-neutral" onClick={() => setShow('all')}>All</button>
 						<button className="btn btn-xs ml-4 btn-neutral" onClick={() => setShow('requests')}>Friend Requests</button>
 						<div className='ml-4 h-[25px] border-l border-gray-500'></div>
-						<button className="btn btn-xs ml-4 btn-neutral" onClick={() => setShow('meetings')}>Meetings</button>
+						<button className="btn btn-xs ml-4 btn-neutral bg-purple-700 hover:bg-purple-900" onClick={() => setShow('meetings')}>vBuddy</button>
 					</div>
 				</div>
+				<div>
 				<div className="lg:mt-0 w-[full]">
 					<SearchBar />
 				</div>
-				
-
 				<div>
 					{show === 'online' ? <OnlineFriends /> : null}
 					{show === 'all' ? <AllFriends /> : null}
 					{show === 'requests' ? <FriendsRequestsDashboard /> : null}
-					{show === 'meetings' ? <p> meetings</p> : null}
+					
 				</div>
-				
+				</div>
+			
 
-
+				<div>
+				{show === 'meetings' ? <ChatBot /> : null}
+				</div>
 			{/* </div> */}
 		</div>
 		<MeetingSideBar />

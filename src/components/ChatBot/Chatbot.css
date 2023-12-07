@@ -1,0 +1,17 @@
+.custom-scrollbar::-webkit-scrollbar {
+	width: 5px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+	background: rgba(31,41,55,255); 
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(84,51,132,255); 
+	border-radius: 5px; 
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: rgba(84,51,132,255); 
+  background: rgba(168,85,247,255); 
+  }
