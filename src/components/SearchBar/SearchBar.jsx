@@ -130,13 +130,14 @@ const SearchBar = ({ team, dm, channel }) => {
 			</div>
 
 
-			{searchedUsers && <div className='w-[auto] rounded bg-gray-700 bg-opacity-90 relative  z-50'> {/* top-24 right-9 w-[300px]*/}
+			{searchedUsers.length > 0 && <div className='w-[auto] h-[200px] overflow-y-scroll custom-scrollbar rounded bg-gray-500 bg-opacity-50 relative'> {/* top-24 right-9 w-[300px]*/}
 
 				{searchedUsers.map(regUser => {
 					console.log(regUser)
-					return (
-						<div key={regUser.uid} className='flex items-center'>
+					return (<div key={regUser.uid}>
+						<div className='flex items-center'>
 							<TeamMember member={regUser} />
+
 							{/* {dmId && <div className='tooltip' data-tip='Add to chat'>
 
 								<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
@@ -154,28 +155,31 @@ const SearchBar = ({ team, dm, channel }) => {
 							)
 							} */}
 							{(team || channel) &&
-								<div className='tooltip'
+								<div className='tooltip tooltip-left'
 									data-tip={dmId
 										? 'Add to chat'
 										: teamId && team.owner === currentUser.handle && channel === generalId
 											? 'Add to team'
 											: 'Add to channel'}
-								>
+								>{currentUser.handle !== regUser.handle &&
 									<IoPeopleSharp className='cursor-pointer text-white text-xl ' onClick={() => handleAddMember(regUser.handle)} />
+									}
 								</div>
 
 							}
 
 							{currentUser.handle !== regUser.handle && (
-								(currentUser.friends && Object.keys(currentUser.friends).includes(regUser.handle)) ? (<div className='tooltip' data-tip='Remove friend'>
-									<MdPersonAddDisabled className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleRemoveFriends(regUser.handle)} />
+								(currentUser.friends && Object.keys(currentUser.friends).includes(regUser.handle)) ? (<div className='tooltip tooltip-left' data-tip='Remove friend'>
+									<MdPersonAddDisabled className='ml-2 mr-2 cursor-pointer text-white text-xl ' onClick={() => handleRemoveFriends(regUser.handle)} />
 								</div>) :
-									(<div className='tooltip' data-tip='Send friend request'>
-										<BsPersonFillAdd className='ml-3 cursor-pointer text-white text-xl ' onClick={() => handleSendFriendRequest(regUser.handle)} />
+									(<div className='tooltip tooltip-left' data-tip='Send friend request'>
+										<BsPersonFillAdd className='ml-2 mr-2 cursor-pointer text-white text-xl ' onClick={() => handleSendFriendRequest(regUser.handle)} />
 									</div>)
 							)
 							}
 						</div>
+						<div className="border-t border-gray-500 border-opacity-50"></div>
+					</div>
 					)
 				})
 				}
