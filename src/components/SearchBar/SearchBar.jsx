@@ -43,15 +43,10 @@ const SearchBar = ({ team, dm, channel }) => {
 			})
 	}, []);
 
-
-
 	useEffect(() => {
-
 		const unsubscribe = getLiveAllUsers(data => setAllUsers([...data].sort((a, b) => a.handle - b.handle)));
 
 		return () => unsubscribe();
-
-
 	}, [userData])
 
 	useEffect(() => {
@@ -117,7 +112,7 @@ const SearchBar = ({ team, dm, channel }) => {
 							className='flex-grow h-7 p-4 rounded-full bg-gray-600 text-gray-200'
 							onChange={handleSearchTerm}
 						/>
-						<div className="dropdown dropdown-hover dropdown-end">
+						<div className="dropdown dropdown-click dropdown-end">
 							<label className="h-7 w-7 bg-gray-600 rounded-full flex items-center justify-center hover:bg-slate-600 cursor-pointer" tabIndex={0} ><IoIosArrowDown /></label>
 							<ul className="dropdown-content z-[1] menu p-2 shadow bg-gray-500 rounded-box w-52" tabIndex={0}>
 								<li><a href="#" className="block px-4 py-2 text-sm text-white hover:bg-gray-100" role="menuitem" onClick={() => setSearchParam('handle')}>By username</a></li>
