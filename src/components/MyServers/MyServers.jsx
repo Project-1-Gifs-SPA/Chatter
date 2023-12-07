@@ -190,6 +190,9 @@ const MyServers = () => {
 					});
 			})
 			.catch(e => console.log(e)) //better error handling
+
+		setChannelName('');
+		modalRef.current.close()
 	}
 
 	const handleAddMember = (userHandle) => setChannelMembers({
@@ -202,7 +205,6 @@ const MyServers = () => {
 			setCheckedChannels(newValue);
 		}
 	};
-	console.log('channels ', currentChannels.length)
 
 	// useEffect(() => {
 	// 	setCheckedChannels(0);
@@ -235,8 +237,6 @@ const MyServers = () => {
 				});
 		}
 	}, [dms])
-	//console.log('Chennels count: ', currentChannels.length)
-	console.log(checkedChannels, ' at MyServers')
 
 	return (
 		<>
@@ -259,7 +259,7 @@ const MyServers = () => {
 						<div className="flex justify-between items-center">
 							<h1
 								style={{ maxWidth: "180px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: 'Rockwell, sans-serif' }}
-								className={`font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
+								className={` font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
 								{teamId ?
 									`${currentTeam.name}` : 'Direct Messages'}
 							</h1>
@@ -317,15 +317,14 @@ const MyServers = () => {
 						{/*</>// main*/}
 
 						<dialog ref={modalRef} id="create-channel" className="modal">
-							<div className="modal-box bg-gray-800">
+							<div className="modal-box bg-gray-800 flex flex-col items-center overflow-y-scroll no-scrollbar" style={{ width: '550px', height: '350px' }}>
 								<h3 className="text-lg py-2 text-white">Enter Channel name</h3>
-								<input type='text' value={channelName} onChange={(e) => setChannelName(e.target.value)} /><br />
+								<input type='text' className='rounded-md' value={channelName} onChange={(e) => setChannelName(e.target.value)} style={{ width: '400px', height: '35px' }} /><br />
 								<span className="bg-red">{channelError}</span>
 
 								<div className="modal-action">
 
-									<form method="dialog" >
-
+									<form method="dialog" className='mr-7'>
 										{/* if there is a button in form, it will close the modal */}
 										<div className='flex'>
 											<p className='text-white mr-3 mb-3'>Create public channel</p>
