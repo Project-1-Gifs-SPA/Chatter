@@ -125,7 +125,11 @@ const SearchBar = ({ team, dm, channel }) => {
 			</div>
 
 
-			{searchedUsers.length > 0 && <div className='w-[auto] h-[200px] overflow-y-scroll custom-scrollbar rounded bg-gray-500 bg-opacity-50 relative'> {/* top-24 right-9 w-[300px]*/}
+			{searchedUsers.length > 0 && <div className={`
+				w-[auto]
+				h-[${searchedUsers.lenth >= 3 ? '200' : searchedUsers.lenth === 2 ? '132' : '66'}px]
+				overflow-y-scroll custom-scrollbar rounded bg-gray-500 bg-opacity-50 relative
+				`}> {/* top-24 right-9 w-[300px]*/}
 
 				{searchedUsers.map(regUser => {
 					console.log(regUser)
