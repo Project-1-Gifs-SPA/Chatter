@@ -103,7 +103,7 @@ const Message = ({ message }) => {
 	};
 
 	return (<>
-		<div className={userData.handle == message.owner ? "chat chat-end" : "chat chat-start mb-2"}>
+		<div className={`${userData.handle == message.owner ? "chat chat-end mb-1" : "chat chat-start mb-1"} ${message.reactions && 'mb-5'}`} >
 			<div className="chat-image avatar">
 				<div className="w-10 rounded-full">
 					<img alt="Tailwind CSS chat bubble component" src={ownerPic} className="cursor-pointer w-10 h-10 rounded-3xl mr-3" />
@@ -117,7 +117,7 @@ const Message = ({ message }) => {
 						<FaRegEdit className='ml-2 text-[15px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
 					</div>
 				}
-				<div>
+				<div style={{ zIndex: '999' }}>
 					<MessageReactions msg={message} />
 				</div>
 			</div>
