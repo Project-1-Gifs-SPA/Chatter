@@ -130,6 +130,7 @@ const Message = ({ message }) => {
 								className='textarea textarea-info textarea-md max-w-[800px] bg-gray-700 border-none-active px-4 py-2 text-white rounded-md xs:w-[30%] sm:w-[50%] md:w-[70%] lg:w-[90%] xl:w-[800px]'
 								value={editedMessage}
 								onChange={handleInputChange}
+								onKeyDown={(e)=> e.key == "Enter"? handleSaveChanges() : null }
 								autoFocus // Autofocus on the input field when editing starts
 							/>
 							<button

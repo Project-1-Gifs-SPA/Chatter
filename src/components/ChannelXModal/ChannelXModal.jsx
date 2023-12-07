@@ -15,9 +15,9 @@ const ChannelXModal = ({ channelId, teamId, isOwner, user, setShowDeleteModal })
 
                 <div className="modal-action">
 
-                    <form method="dialog" >
-                        <button className="btn mr-5" onClick={() => setShowDeleteModal(false)}>Close</button>
-                        <button className="btn border-none bg-red-500 text-white hover:bg-red-600"
+                    <form className="flex"  method="dialog" >
+                        <button className="btn border-none mr-5" onClick={() => setShowDeleteModal(false)}>Close</button>
+                        <button className="btn bg-red-500 text-white hover:bg-red-600 mr-8"
                             onClick={isOwner
                                 ? () => { console.log(channelId); removeChannel(teamId, channelId).then(() => setShowDeleteModal(false)); }
                                 : () => { removeChannelUser(channelId, userData.handle).then(() => setShowDeleteModal(false)); }}>

@@ -4,9 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { BsCalendarEvent } from "react-icons/bs";
 import moment from "moment";
 
-
 const MeetingTile = ({ meetingId }) => {
-
 
   const [currentMeeting, setCurrentMeeting] = useState({});
   const navigate = useNavigate();
@@ -34,10 +32,7 @@ const MeetingTile = ({ meetingId }) => {
         </div>
       </div>
     </div>
-
   )
-
-
 }
 
 export default MeetingTile;
