@@ -316,7 +316,7 @@ const MyServers = () => {
 						</div>
 						{/*</>// main*/}
 
-						<dialog ref={modalRef} id="create-channel" className="modal">
+						<dialog ref={modalRef} id="create-channel" className="modal bg-black bg-opacity-25 backdrop-blur-sm">
 							<div className="modal-box bg-gray-800 flex flex-col items-center overflow-y-scroll no-scrollbar" style={{ width: '550px', height: '350px' }}>
 								<h3 className="text-lg py-2 text-white">Enter Channel name</h3>
 								<input type='text' className='rounded-md' value={channelName} onChange={(e) => setChannelName(e.target.value)} style={{ width: '400px', height: '35px' }} /><br />
