@@ -40,10 +40,10 @@ const OnlineFriends = () => {
 	console.log(Object.keys(friends))
 
 	return (
-		<div className='text-white'>
+		<div className='text-white mt-5'>
 			<h1 className='text-gray-400 text-sm pl-4 font-semibold'>Online friends - {online.length}</h1>
 			<div className="border-t border-gray-500 my-4"></div>
-			<div className='mt-5'>
+			<div>
 				{(Object.keys(friends).length > 0 && online.length > 0) ? online.map((friend, id) => {
 					return <Friends friend={friend.handle} key={id} />
 				}) : (

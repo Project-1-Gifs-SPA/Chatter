@@ -18,7 +18,7 @@ const AllFriends = () => {
 
 
 	return (
-		<div className='text-white'>
+		<div className='text-white mt-5'>
 			<h1 className='text-gray-400 text-sm pl-4 font-semibold'>All friends - {Object.keys(friends).length}</h1>
 			<div className="border-t border-gray-500 my-4"></div>
 			<div className='mt-5'>
