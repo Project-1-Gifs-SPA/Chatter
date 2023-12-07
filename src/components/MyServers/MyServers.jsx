@@ -240,7 +240,7 @@ const MyServers = () => {
 
 	return (
 		<>
-			<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
+			<div className={`bg-gray-800 h-screen max-w-[220px] overflow-y-scroll overflow-x:hidden custom-scrollbar text-purple-lighter flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
 				<div className="flex flex-col h-screen">
 					<div className="text-white mb-2 mt-3 px-4 flex justify-between border-b border-gray-600 py-1 shadow-xl">
@@ -392,20 +392,20 @@ const MyServers = () => {
 							)}
 					</div>
 					<br />
-					<div className={`${expanded ? '' : 'hidden'} flex flex-col`}>
+					<div className={`${expanded ? '' : 'hidden'} flex flex-col `}>
 						{(meetings.length && teamId)
-							? meetings.map((meetingId) => <MeetingTile key={meetingId} meetingId={meetingId} />)
+							? <div className='flex flex-col mb-[110px]'>
+								{meetings.map((meetingId) => <MeetingTile key={meetingId} meetingId={meetingId} />)}
+							</div>
 							: null
-
 						}
 					</div>
 					<div className="flex-grow"></div>
-					<div className={`${expanded ? '' : 'hidden'}`}>
-
-						<ProfileBar />
-					</div>
 				</div >
 			</div >
+			<div className={`${expanded ? '' : 'hidden'} fixed bottom-0 left-[56px] w-[15%] h-[115px] mx-5 z-50 p-4`}>
+				<ProfileBar />
+			</div>
 		</>
 	)
 }
