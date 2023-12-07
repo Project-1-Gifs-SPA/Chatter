@@ -99,7 +99,7 @@ export const addFriends = (handle, friendHandle) => {
   return update(ref(db), updateFriends)
     .then(() => toast.success("Friend request was accepted", {
       position: "top-center",
-      autoClose: 3500,
+      autoClose: 3000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
@@ -117,7 +117,7 @@ export const removeFriends = (handle, friendHandle) => {
   return update(ref(db), updateFriends)
     .then(() => toast.success("Successfully removed from friends", {
       position: "top-center",
-      autoClose: 3500,
+      autoClose: 1000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
@@ -136,7 +136,7 @@ export const sendFriendRequest = (senderHandle, receiverHandle) => {
         // If the friend request already exists, display error toast
         toast.error("Friend request already sent to this user", {
           position: "top-center",
-          autoClose: 3500,
+          autoClose: 1500,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
@@ -155,7 +155,7 @@ export const sendFriendRequest = (senderHandle, receiverHandle) => {
             // Display success toast for sending friend request
             toast.success("Friend request sent successfully", {
               position: "top-center",
-              autoClose: 3500,
+              autoClose: 1000,
               hideProgressBar: true,
               closeOnClick: true,
               pauseOnHover: true,
@@ -179,7 +179,7 @@ export const declineFriendRequest = (handle, friendHandle) => {
   return update(ref(db), updateFriendsRequest)
     .then(() => toast.success("Friend request was declined", {
       position: "top-center",
-      autoClose: 3500,
+      autoClose: 1000,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
