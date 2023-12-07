@@ -25,7 +25,7 @@ const ProfileBar = () => {
 
 	return (
 		<>
-			<div className="bg-gray-900 py-4 text-white flex items-center justify-between">
+			<div className="bg-gray-900 py-3 text-white flex items-center justify-between">
 				<div className="flex items-center ml-2 tooltip cursor-pointer" data-tip="User profile" onClick={() => setShowModal(true)}>
 					<div className={`avatar ${currentUser.availability}`}>
 						<div className="w-10 rounded-full">
