@@ -207,6 +207,8 @@ const ChatBox = () => {
 					setMsg('');
 				})
 		}
+
+		scrollToBottom();
 	};
 
 	const handlePic = (e) => {
