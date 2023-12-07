@@ -117,7 +117,7 @@ const Message = ({ message }) => {
 						<FaRegEdit className='ml-2 text-[15px] text-gray-400 cursor-pointer' onClick={handleEditClick} />
 					</div>
 				}
-				<div style={{ zIndex: '999' }}>
+				<div>
 					<MessageReactions msg={message} />
 				</div>
 			</div>
