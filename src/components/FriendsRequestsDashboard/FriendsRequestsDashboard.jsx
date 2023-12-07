@@ -57,14 +57,14 @@ const FriendsRequestsDashboard = () => {
 	return (
 
 		<div>
-			<div className='flex flex-col'>
+			<div className={`flex flex-col ${requests.length ? '' : 'items-center'}`}>
 				<div className='flex'>
 					{requests.length ? requests.map(friendRequest => {
 						return <div className='flex items-center justify-center mt-5' key={friendRequest.uid}>
 							<TeamMember member={friendRequest} owner={null} />
 							<div className="mr-auto">
-							<p className='pl-5 mr-1 ml-2 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Accept' onClick={() => handleAcceptRequest(friendRequest.handle)}>✅</p>
-							<p className='pl-5 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Decline' onClick={() => handleDeclineRequest(friendRequest.handle)}>❌</p>
+								<p className='pl-5 mr-1 ml-2 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Accept' onClick={() => handleAcceptRequest(friendRequest.handle)}>✅</p>
+								<p className='pl-5 text-2xl tooltip tooltip-bottom cursor-pointer' data-tip='Decline' onClick={() => handleDeclineRequest(friendRequest.handle)}>❌</p>
 							</div>
 						</div>
 					}) : <div className='flex justify-center'>
