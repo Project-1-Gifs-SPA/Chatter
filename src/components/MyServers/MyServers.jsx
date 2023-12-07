@@ -365,6 +365,7 @@ const MyServers = () => {
 									teamMembers={allTeamMembers}
 									checkedChannels={checkedChannels}
 									updateCheckedChannels={updateCheckedChannels}
+									setCurrentChannels={setCurrentChannels}
 
 								/>)}
 							</div>

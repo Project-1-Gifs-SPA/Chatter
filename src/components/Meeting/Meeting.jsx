@@ -84,7 +84,9 @@ useEffect(() => {
 const handleDescription = (e)=>{
 	e.preventDefault();
 	addMeetingDescription(meetingId, description)
-	.then(()=>setIsAddDescription(false))
+	.then(()=>{
+        setDescription('');
+        setIsAddDescription(false)})
 }
 
 
@@ -105,13 +107,17 @@ return (
 
 :<div className="flex gap-24">
     <div>
+<div className="flex">
 <h1 className="font-bold">Description</h1>
-{currentMeeting.description ? <p>{currentMeeting.description}</p> :<div className="tooltip tooltip-top" data-tip='Add description'>
+<FaRegEdit className='ml-2 mt-1 text-[15px] text-gray-400 cursor-pointer' onClick={()=> setIsAddDescription(true)} />
+</div>
+{currentMeeting.description && !isAddDescription ? <p>{currentMeeting.description}</p> :<div className="tooltip tooltip-top" data-tip='Add description'>
                        <div className="flex">
 					    <p> Add description for what's to come in this meeting</p>
-						<FaRegEdit className='ml-2 mt-1 text-[15px] text-gray-400 cursor-pointer' onClick={()=> setIsAddDescription(true)} />
+						
 						</div>
 					</div> }
+                    
                     {isAddDescription &&
 					<div>
 						<div>
