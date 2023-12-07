@@ -5,6 +5,7 @@ import AllFriends from '../../components/AllFriends/AllFriends'
 import FriendsRequests from '../../components/FriendsRequests/FriendsRequests'
 import FriendsRequestsDashboard from '../../components/FriendsRequestsDashboard/FriendsRequestsDashboard'
 import MeetingSideBar from '../../components/MeeetingSideBar/MeetingSideBar'
+import ChatBot from '../../components/ChatBot/ChatBot'
 
 const Dashboard = () => {
 
@@ -33,7 +34,7 @@ const Dashboard = () => {
 					{show === 'online' ? <OnlineFriends /> : null}
 					{show === 'all' ? <AllFriends /> : null}
 					{show === 'requests' ? <FriendsRequestsDashboard /> : null}
-					{show === 'meetings' ? <p> meetings</p> : null}
+					{show === 'meetings' ? <ChatBot /> : null}
 				</div>
 				
 

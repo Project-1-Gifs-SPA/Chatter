@@ -44,3 +44,5 @@ export const reactions = {
 }
 
 //+1 when clicked
+
+export const OPENAI_API_KEY = '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'
