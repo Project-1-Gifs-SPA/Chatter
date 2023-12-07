@@ -55,18 +55,20 @@ const Profile = ({ isVisible, onClose }) => {
 
 		writeUserData(currentUser.handle, newFirstName, newLastName, newPhoneNumber);
 		setShowAlert(true);
+
+		if (photo) {
+			upload(photo, user, setLoading);
+			setShowAlert(true);
+			setFileName('');
+		}
 	}
 
 	function handleDiscardChanges() {
 		setNewFirstName(currentUser.firstName);
 		setNewLastName(currentUser.lastName);
-		setNewPhoneNumber(currentUser.phoneNumber)
-	}
-
-	function handleClick() {
-		upload(photo, user, setLoading);
-		setShowAlert(true);
+		setNewPhoneNumber(currentUser.phoneNumber);
 		setFileName('');
+		setPhoto(null);
 	}
 
 	useEffect(
@@ -124,7 +126,6 @@ const Profile = ({ isVisible, onClose }) => {
 								<input className="hidden" ref={inputRef} type='file' accept="image/jpeg, image/png, image/jpg" onChange={handleChange} />
 								<div>
 									<button className="btn btn-primary btn-sm w-15 mt-2 text-sm" onClick={() => inputRef.current.click()}>Choose File</button>
-									<button className="btn btn-success btn-sm  text-white w-25 mt-2 ml-3 text-sm" disabled={loading || !photo} onClick={handleClick}>Change picture</button>
 								</div>
 							</div>
 						</div>

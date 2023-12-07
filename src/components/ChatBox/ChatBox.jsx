@@ -215,6 +215,7 @@ const ChatBox = () => {
 			const file = e.target.files[0];
 			uploadMessagePhoto(photoURL => {
 				setPicURL(photoURL);
+				setPic({});
 				setShowMenu(true);
 			}, file)
 			// setMsg(e.target.files[0].name)
