@@ -13,11 +13,14 @@ const MeetingTile = ({ meetingId }) => {
     console.log('getting meetingId')
 
     getMeetingById(meetingId)
-      .then(meeting => setCurrentMeeting({ ...meeting }))
+      // .then(meeting => moment(meeting.start).isBefore(moment()) ? console.log(meeting.start) : setCurrentMeeting({ ...meeting }))
+      .then(meeting => moment(meeting.start).isBefore(moment()) ? setCurrentMeeting({}): setCurrentMeeting({...meeting}))
 
   }, [meetingId])
 
   return (
+    <>
+    {currentMeeting.start ?
     <div className="tooltip tooltip-top" data-tip={currentMeeting.topic}>
       <div className="flex m-3 rounded-xl p-3 mb-0 relative bg-gray-700 hover:bg-gray-600 cursor-pointer items-center" onClick={() => navigate(`/meetings/${meetingId}`)}>
         <div className="mr-3 text-gray-300">
@@ -32,6 +35,8 @@ const MeetingTile = ({ meetingId }) => {
         </div>
       </div>
     </div>
+      : null}
+    </> 
   )
 }
 
