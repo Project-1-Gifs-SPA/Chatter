@@ -118,13 +118,14 @@ const ChatBot = () => {
 
     return (
 
-        <div className=" flex flex-col items-center bg-gray-700 h-[90vh]">
-            <div className="px-6 pb-[80px] mb-[100px]">
+        <div className=" flex flex-col items-start bg-gray-700 h-[90vh] w-[100%]">
+            {/* <div className="px-6 pb-[80px] mb-[100px]"> */}
+            <div className="px-6 pb-[80px] mb-[100px] h-[90vh] w-[100%]">
                 {messages.map((message, i) => {
                     return (<ChatBotMessage key={i} message={message} />)
                 })}
             </div>
-            <div className="ml-2 mb-1">{typing && <Typing />}</div>
+            <div className="ml-2 mb-1 mr-1">{typing && <Typing />}</div>
 
             <div className='absolute bottom-0 items-center bg-gray-700 bg-opacity-80 rounded ml-4 mr-4' style={{ width: "77%", height: '70px', outline: 'none' }}>
                 <div className='flex-grow'>
