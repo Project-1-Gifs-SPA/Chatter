@@ -13,6 +13,7 @@ import { uploadCallRecording } from "../../services/storage.service";
 import moment from "moment";
 import { FaRegEdit, FaRegSmile } from "react-icons/fa";
 import { Picker } from "emoji-mart";
+import AlertModal from "../AlertModal/AlertModal";
 
 
 const Meeting = () => {
@@ -29,6 +30,8 @@ const{roomId} = useParams();
 const[isAddDescription, setIsAddDescription] = useState(false);
 const[url, setUrl] = useState('');
 const [description, setDescription ] = useState(currentMeeting?.description)
+const[showAlert,setShowAlert] = useState(false)
+
 
 
 useEffect(()=> {
@@ -140,8 +143,9 @@ return (
 <p className="font-bold">Meeting End:</p> <span>{moment(currentMeeting.end).calendar()}</span>
 <br />
 <button className="btn w-40" onClick={()=> setLoading(true)}>Join Call</button>
+<button className="btn w-40 ml-2" onClick={()=>setShowAlert(true)}>Leave Meeting</button>
 </div>
-
+{showAlert && <AlertModal showAlert={setShowAlert} command={"leave this meeting"} meetingId={meetingId}/>}
 <br />
 <div>
     <h1 className="font-bold">Invited</h1>

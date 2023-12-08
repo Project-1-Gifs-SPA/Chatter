@@ -145,7 +145,6 @@ export const getMeetingMembers = (meetingId) => {
     })
     .catch(e=>console.log(e))
 
-
 }
 
 export const deleteMeeting = (meetingId, teamId) => {
@@ -196,4 +195,12 @@ export const addMeetingDescription = (meetingId, description) => {
     addDescription[`meetings/${meetingId}/description`] = description;
 
     return update(ref(db), addDescription)
+}
+
+export const removeMemberFromMeeting  = (meetingId, handle) => {
+    const removeMember = {};
+    removeMember[`meetings/${meetingId}/members/${handle}`] = null;
+    removeMember[`users/${handle}/meetings/${meetingId}`] = null;
+
+    return update(ref(db), removeMember);
 }
