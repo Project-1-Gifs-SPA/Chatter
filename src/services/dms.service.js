@@ -1,12 +1,9 @@
-import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, startAt, onValue } from 'firebase/database';
+import { ref, push, get, update, onValue } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
-export const createDM = (partner, handle) => {
-    return push(ref(db, 'dms'),{})
-    .then(response=>{
-        return addMembersToDM(partner,handle, response.key)
-    });
-};
+export const createDM = (partner, handle) =>
+    push(ref(db, 'dms'), {})
+        .then(response => addMembersToDM(partner, handle, response.key));
 
 const addMembersToDM = (partner, handle, id) => {
     const updates = {};
@@ -29,7 +26,7 @@ export const addDmMember = (newMember, dmId) => {
     return update(ref(db), addDmMember);
 }
 
-export const createGroupDM = (partner, handle, newMember, dmId ) => {
+export const createGroupDM = (partner, handle, newMember, dmId) => {
     const updates = {};
 
     updates[`users/${handle}/DMs/${partner}`] = null;
@@ -42,41 +39,36 @@ export const createGroupDM = (partner, handle, newMember, dmId ) => {
     return update(ref(db), updates);
 };
 
-export const getLiveGroupDMs = (listenFn, handle) => {
-    return onValue(ref(db, `users/${handle}/groupDMs`), (snapshot)=>{
+export const getLiveGroupDMs = (listenFn, handle) =>
+    onValue(ref(db, `users/${handle}/groupDMs`), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : {};
 
         listenFn(data);
     });
-}
 
-export const getLiveUserDMs = (listenFn, handle) => {
-    return onValue(ref(db, `users/${handle}/DMs`), (snapshot)=>{
+export const getLiveUserDMs = (listenFn, handle) =>
+    onValue(ref(db, `users/${handle}/DMs`), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : {};
 
         listenFn(data);
     });
-}
 
-export const getDMById =(dmId) => {
-    return get(ref(db, `dms/${dmId}`));
-}
+export const getDMById = (dmId) =>
+    get(ref(db, `dms/${dmId}`));
 
-export const getLiveDMs = (listenFn, dmId) => {
-    return onValue(ref(db, `dms/${dmId}`), (snapshot)=>{
+export const getLiveDMs = (listenFn, dmId) =>
+    onValue(ref(db, `dms/${dmId}`), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : {};
 
         listenFn(data);
     });
-}
 
-export const getLiveGroupDMsMembers = (listenFn, dmId) =>{
-    return onValue(ref(db, `dms/${dmId}/members` ), (snapshot)=>{
+export const getLiveGroupDMsMembers = (listenFn, dmId) =>
+    onValue(ref(db, `dms/${dmId}/members`), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : {};
 
         listenFn(data);
-    })
-}
+    });
 
 export const deleteGroupMember = (dmId, member) => {
     const updateMember = {};
@@ -86,22 +78,20 @@ export const deleteGroupMember = (dmId, member) => {
     return update(ref(db), updateMember);
 }
 
-export const editDMmessage = (content, dmId, msgId) => {
-    return update(
-        ref(db,`dms/${dmId}/msgs/${msgId}`),
+export const editDMmessage = (content, dmId, msgId) =>
+    update(
+        ref(db, `dms/${dmId}/msgs/${msgId}`),
         {
-          body:content
+            body: content
         }
-      )
-}
+    );
 
-export const getDMbyId = (dmId) => {
-    return get(ref(db,`dms/${dmId}`))
-    .then(snapshot => snapshot.exists() ? snapshot.val() : {});
-}
+export const getDMbyId = (dmId) =>
+    get(ref(db, `dms/${dmId}`))
+        .then(snapshot => snapshot.exists() ? snapshot.val() : {});
 
-export const getLiveDmMembers = (listenFn, dmId) => {
-    return onValue(
+export const getLiveDmMembers = (listenFn, dmId) =>
+    onValue(
         ref(db, `dms/${dmId}/members`),
         snapshot => {
             const data = snapshot.exists() ? snapshot.val() : {};
@@ -109,8 +99,7 @@ export const getLiveDmMembers = (listenFn, dmId) => {
 
             listenFn(result);
         }
-    )
-}
+    );
 
 export const addDMstatusEdited = (dmId, msgId) => {
     const DmStatus = {};
@@ -119,42 +108,45 @@ export const addDMstatusEdited = (dmId, msgId) => {
     return update(ref(db), DmStatus);
 }
 
-export const addDmReaction = (reaction,userHandle, dmId, msgId) => {
+export const addDmReaction = (reaction, userHandle, dmId, msgId) => {
     const dmReaction = {};
     dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = true;
+
     return update(ref(db), dmReaction);
 }
 
-export const removeDMReaction = (reaction,userHandle, dmId, msgId) => {
+export const removeDMReaction = (reaction, userHandle, dmId, msgId) => {
     const dmReaction = {};
     dmReaction[`dms/${dmId}/msgs/${msgId}/reactions/${reaction}/${userHandle}`] = null;
+
     return update(ref(db), dmReaction);
 }
 
 export const setDmSeenBy = (dmId, user) => {
     const updates = {};
-    if(!dmId) return;
+    if (!dmId) return;
 
-      updates[`dms/${dmId}/seenBy/${user}`] = true;
-      return update(ref(db), updates);
-  };
+    updates[`dms/${dmId}/seenBy/${user}`] = true;
 
-  export const setNotSeenDm = (dmId) => {
-      const updates = {};
-      if(!dmId) return;
+    return update(ref(db), updates);
+};
 
-      updates[`dms/${dmId}/seenBy`] = null;
-      return update(ref(db), updates);
-    }
+export const setNotSeenDm = (dmId) => {
+    const updates = {};
+    if (!dmId) return;
 
-    export const getLiveIsDMSeen = (listenFn, dmId) => {
-        return onValue(
-           ref(db,`dms/${dmId}/seenBy`),
-           snapshot => {
-               const data = snapshot.exists() ? snapshot.val() : {};
-               const result = Object.keys(data);
-        
-               listenFn(result);
-           }
-        )
-    }
+    updates[`dms/${dmId}/seenBy`] = null;
+
+    return update(ref(db), updates);
+}
+
+export const getLiveIsDMSeen = (listenFn, dmId) =>
+    onValue(
+        ref(db, `dms/${dmId}/seenBy`),
+        snapshot => {
+            const data = snapshot.exists() ? snapshot.val() : {};
+            const result = Object.keys(data);
+
+            listenFn(result);
+        }
+    );

@@ -47,8 +47,6 @@ export const removeChannel = (teamId, channelId) => {
     set(ref(db, `channels/${channelId}`), {});
 };
 
-// export const createDefaultChannel = (teamId) => addChannel(teamId, 'General', true);
-
 export const createDefaultChannel = (teamId, members, handle) => {
     if (!teamId) return;
     return addChannel(teamId, 'General', true, handle, handle, members);

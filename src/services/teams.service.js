@@ -1,6 +1,6 @@
-import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, startAt, onValue } from 'firebase/database';
+import { ref, push, get, set, query, equalTo, orderByChild, update, onValue } from 'firebase/database';
 import { db } from '../config/firebase-config';
-import { getAllChannelsByTeam, getAllPublicChannelsByTeam, getChannelById, getGeneralChannel } from './channel.service';
+import { getAllChannelsByTeam, getAllPublicChannelsByTeam, getChannelById } from './channel.service';
 
 const fromTeamsDocument = (snapshot) => {
     const teamsDocument = snapshot.val();
@@ -16,13 +16,15 @@ const fromTeamsDocument = (snapshot) => {
             channels: team.channels ? Object.keys(team.channels) : [],
         };
     });
-}
+};
 
-export const addTeam = (handle, name) => {
-    return push(ref(db, 'teams'), {})
+export const addTeam = (handle, name) =>
+    push(ref(db, 'teams'), {})
         .then(response => {
+
             const members = {};
             members[handle] = true;
+
             set(ref(db, `teams/${response.key}`),
                 {
                     name: name,
@@ -31,37 +33,27 @@ export const addTeam = (handle, name) => {
                     owner: handle,
                     id: response.key,
                 });
+
             return update(ref(db), {
                 [`users/${handle}/myTeams/${response.key}`]: true,
             })
-                .then(() => {
-                    return response.key;
-                });
+                .then(() => response.key);
         });
-}
 
-export const getTeamName = (teamId) => {
-    return get(ref(db, `teams/${teamId}/name`))
-        .then(snapshot => {
-            if (!snapshot.exists()) {
-                return '';
-            }
+export const getTeamName = (teamId) =>
+    get(ref(db, `teams/${teamId}/name`))
+        .then(snapshot => snapshot.exists() ? snapshot.val() : '');
 
-            return snapshot.val();
-        });
-}
-
-export const getLiveTeamInfo = (listenFn, teamId) => {
-    return onValue(
+export const getLiveTeamInfo = (listenFn, teamId) =>
+    onValue(
         ref(db, `teams/${teamId}`),
         snapshot => {
             const data = snapshot.exists() ? snapshot.val() : {};
             listenFn(data);
         });
-};
 
-export const getLiveTeamMembers = (listenFn, teamId) => {
-    return onValue(
+export const getLiveTeamMembers = (listenFn, teamId) =>
+    onValue(
         ref(db, `teams/${teamId}/members`),
         snapshot => {
             const data = snapshot.exists() ? snapshot.val() : {};
@@ -69,11 +61,10 @@ export const getLiveTeamMembers = (listenFn, teamId) => {
 
             listenFn(result);
         }
-    )
-}
+    );
 
-export const getLiveAllTeams = (listenFn) => {
-    return onValue(
+export const getLiveAllTeams = (listenFn) =>
+    onValue(
         ref(db, 'teams'),
         snapshot => {
             const data = snapshot.exists() ? snapshot.val() : {};
@@ -81,21 +72,19 @@ export const getLiveAllTeams = (listenFn) => {
 
             listenFn(result);
         }
-    )
-}
+    );
 
-export const getAllTeamMembers = (teamId) => {
-    return get(ref(db, `teams/${teamId}/members`))
+export const getAllTeamMembers = (teamId) =>
+    get(ref(db, `teams/${teamId}/members`))
         .then(snapshot => {
             if (!snapshot.exists()) {
                 return [];
             }
             return Object.keys(snapshot.val());
-        })
-}
+        });
 
-export const getAllTeams = () => {
-    return get(ref(db, 'teams'))
+export const getAllTeams = () =>
+    get(ref(db, 'teams'))
         .then(snapshot => {
             if (!snapshot.exists()) {
                 return [];
@@ -103,11 +92,9 @@ export const getAllTeams = () => {
 
             return fromTeamsDocument(snapshot);
         });
-};
 
-export const findTeamByName = (name) => {
-    return get(query(ref(db, 'teams'), orderByChild('name'), equalTo(name)));
-};
+export const findTeamByName = (name) =>
+    get(query(ref(db, 'teams'), orderByChild('name'), equalTo(name)));
 
 
 export const getTeamById = (teamId) => get(ref(db, `teams${teamId}`));
@@ -137,14 +124,14 @@ export const addTeamMember = (handle, teamId) => {
             console.error("Error adding team member:", error);
             return Promise.reject("Error adding team member");
         });
-}
+};
 
 export const updateTeamPhoto = (teamId, photoURL) => {
     const changePicture = {};
     changePicture[`/teams/${teamId}/photoURL`] = photoURL;
 
     return update(ref(db), changePicture);
-}
+};
 
 export const removeTeamMember = (teamId, handle) => {
     const memberToRemove = {};
@@ -163,7 +150,6 @@ export const removeTeamMember = (teamId, handle) => {
                 )
                 return update(ref(db), memberToRemove);
             }))
-
 };
 
 export const updateTeamName = (teamId, newName) => {
@@ -171,10 +157,10 @@ export const updateTeamName = (teamId, newName) => {
     nameUpdate[`/teams/${teamId}/name`] = newName;
 
     return update(ref(db), nameUpdate);
-}
+};
 
-export const getLiveTeamSeenBy = (listenFn, teamId) => {
-    return onValue(
+export const getLiveTeamSeenBy = (listenFn, teamId) =>
+    onValue(
         ref(db, `teams/${teamId}/seenBy`),
         snapshot => {
             const data = snapshot.exists() ? snapshot.val() : {};
@@ -182,6 +168,4 @@ export const getLiveTeamSeenBy = (listenFn, teamId) => {
 
             listenFn(result);
         }
-    )
-}
-
+    );
