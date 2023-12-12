@@ -24,6 +24,7 @@ const addMembersToDM = (partner, handle, id) => {
 export const addDmMember = (newMember, dmId) => {
     const addDmMember = {};
     addDmMember[`dms/${dmId}/members/${newMember}`] = true;
+    addDmMember[`users/${newMember}/groupDMs/${dmId}`] = true;
 
     return update(ref(db), addDmMember);
 }
