@@ -59,7 +59,7 @@ export const fromMeetingsDocument = (snapshot) => {
     const meetingsDocument =  snapshot.val();
 
 
-    return Object.key(meetingsDocument).map(key=>{
+    return Object.keys(meetingsDocument).map(key=>{
         const meeting =meetingsDocument[key];
 
         return{
