@@ -2,30 +2,20 @@ import { get, set, ref, query, equalTo, orderByChild, update, onValue } from 'fi
 import { db } from '../config/firebase-config';
 import { toast } from 'react-toastify';
 
-export const getUserByHandle = (handle) => {
+export const getUserByHandle = (handle) => get(ref(db, `users/${handle}`));
 
-  return get(ref(db, `users/${handle}`));
-};
+export const createUserHandle = (handle, uid, email, firstName, lastName, phoneNumber, availability) =>
+  set(ref(db, `users/${handle}`), { handle, uid, email, createdOn: Date.now(), firstName, lastName, phoneNumber, availability, });
 
-export const createUserHandle = (handle, uid, email, firstName, lastName, phoneNumber, availability) => {
+export const getUserData = (uid) => get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
 
-  return set(ref(db, `users/${handle}`), { handle, uid, email, createdOn: Date.now(), firstName, lastName, phoneNumber, availability, })
-};
-
-export const getUserData = (uid) => {
-
-  return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
-};
-
-export const writeUserData = (handle, firstName, lastName, phoneNumber) => {
-
+export const writeUserData = (handle, firstName, lastName, phoneNumber) =>
   update(ref(db, `users/${handle}`), {
     firstName: firstName,
     lastName: lastName,
     phoneNumber: phoneNumber
   })
-    .catch(error => console.error(error))
-}
+    .catch(e => console.error(e.message));
 
 export const updateUserPhoto = (handle, photoURL) => {
   const changePicture = {};
@@ -34,23 +24,20 @@ export const updateUserPhoto = (handle, photoURL) => {
   return update(ref(db), changePicture);
 }
 
-export const changeUserStatus = (handle, status) => {
-
+export const changeUserStatus = (handle, status) =>
   update(ref(db, `users/${handle}`), {
     availability: status
   })
-    .catch(error => console.error(error))
-}
+    .catch(e => console.error(e.message));
 
-export const getLiveUserInfo = (listener, handle) => {
-  return onValue(
+export const getLiveUserInfo = (listener, handle) =>
+  onValue(
     ref(db, `users/${handle}`),
     snapshot => {
       const data = snapshot.exists() ? snapshot.val() : {};
 
       listener(data);
     });
-};
 
 const fromUsersDocument = snapshot => {
   const usersDocument = snapshot.val();
@@ -62,32 +49,26 @@ const fromUsersDocument = snapshot => {
       ...user,
       createdOn: new Date(user.createdOn),
     }
-  })
-}
+  });
+};
 
-export const getAllUsers = () => {
-
-  return get(ref(db, 'users'))
+export const getAllUsers = () =>
+  get(ref(db, 'users'))
     .then(snapshot => {
       if (!snapshot.exists()) {
         return [];
       }
 
       return fromUsersDocument(snapshot);
-    })
-};
+    });
 
-export const getUsersBySearchTerm = (users, searchParam, searchTerm) => {
-
-  console.log(users);
-
-  return searchTerm === ''
+export const getUsersBySearchTerm = (users, searchParam, searchTerm) =>
+  searchTerm === ''
     ? []
     : users.filter((user) => typeof user[searchParam] === 'string'
       ? user[searchParam].toLowerCase().includes(searchTerm)
       : false
     );
-};
 
 export const addFriends = (handle, friendHandle) => {
   const updateFriends = {};
@@ -125,7 +106,7 @@ export const removeFriends = (handle, friendHandle) => {
       progress: undefined,
       theme: "colored",
     }));
-}
+};
 
 export const sendFriendRequest = (senderHandle, receiverHandle) => {
   const receiverFriendRequestsRef = ref(db, `/users/${receiverHandle}/friendRequests/${senderHandle}`);
@@ -172,6 +153,7 @@ export const sendFriendRequest = (senderHandle, receiverHandle) => {
       return Promise.reject("Error sending friend request");
     });
 };
+
 export const declineFriendRequest = (handle, friendHandle) => {
   const updateFriendsRequest = {};
   updateFriendsRequest[`/users/${handle}/friendRequests/${friendHandle}`] = null;
@@ -187,21 +169,19 @@ export const declineFriendRequest = (handle, friendHandle) => {
       progress: undefined,
       theme: "colored",
     }));
-}
+};
 
-export const getLiveUserFriends = (listener, handle) => {
-  return onValue(
+export const getLiveUserFriends = (listener, handle) =>
+  onValue(
     ref(db, `users/${handle}/friends`),
     snapshot => {
       const data = snapshot.exists() ? snapshot.val() : {};
 
       listener(data);
     });
-};
 
-
-export const getLiveAllUsers = (listenFn) => {
-  return onValue(
+export const getLiveAllUsers = (listenFn) =>
+  onValue(
     ref(db, 'users'),
     snapshot => {
       const data = snapshot.exists() ? snapshot.val() : {};
@@ -209,5 +189,4 @@ export const getLiveAllUsers = (listenFn) => {
 
       listenFn(result);
     }
-  )
-}
+  );
