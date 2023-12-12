@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import ChatBotMessage from "./ChatBotMessage";
 import AppContext from "../../context/AppContext";
 import { OPENAI_API_KEY } from "../../common/constants";
@@ -15,6 +15,20 @@ const ChatBot = () => {
             sender: "chatGPT"
         }
     ])
+
+    const container = useRef(null);
+
+    const scrollToBottom = () => {
+        const chat = document.getElementById("chat");
+        chat.scrollTop = chat?.scrollHeight;
+    };
+
+    const scroll = () => {
+        const { offsetHeight, scrollHeight, scrollTop } = container.current;
+        if (scrollHeight <= scrollTop + offsetHeight + 100) {
+            container.current?.scrollTo(0, scrollHeight);
+        }
+    };
 
     const getBotResponse = (apiRequestBody, chatMessages) => {
         fetch("https://api.openai.com/v1/chat/completions", {
@@ -36,11 +50,12 @@ const ChatBot = () => {
                 )
                 setTyping(false);
             })
+            .then(() => scrollToBottom())
             .catch(e => console.log(e));
     }
 
     const getChatBotMessage = (chatMessages) => {
-
+        scrollToBottom();
         let apiMessages = chatMessages.map((messageObject) => {
             let role = '';
 
@@ -98,6 +113,7 @@ const ChatBot = () => {
     useEffect(() => {
         if (typing) {
             getChatBotMessage(messages);
+            scrollToBottom();
         }
 
     }, [typing]);
@@ -118,43 +134,37 @@ const ChatBot = () => {
 
     return (
 
-        <div className=" flex flex-col items-start bg-gray-700 h-[90vh] w-[100%]">
+        <div className=" flex flex-1 flex-col items-start bg-gray-700 h-[93vh] w-[100%]">
             {/* <div className="px-6 pb-[80px] mb-[100px]"> */}
-            <div className="px-6 pb-[80px] mb-[100px] h-[90vh] w-[100%]">
+            <div ref={container} className="flex-1 px-6 mb-[25px] h-[90vh] w-[100%] overflow-y-scroll custom-scrollbar" id='chat'>
                 {messages.map((message, i) => {
                     return (<ChatBotMessage key={i} message={message} />)
                 })}
             </div>
             <div className="ml-2 mb-1 mr-1">{typing && <Typing />}</div>
+            <form
+                style={{
+                    backgroundColor: "gray 900",
+                    color: "white",
+                    border: "none",
+                    padding: "2px 20px",
+                    width: '95%',
+                    height: '70px'
+                }}
+                onSubmit={handleSend}
+            >
+                <input
+                    className="bg-gray-800 border-none rounded"
+                    style={{ padding: "15px 30px", width: "100%", outline: 'none' }}
+                    type="text"
+                    value={msg}
+                    placeholder={`Type something...`}
+                    onChange={(e) => setMsg(e.target.value)}
+                />
 
-            <div className='absolute bottom-0 items-center bg-gray-700 bg-opacity-80 rounded ml-4 mr-4' style={{ width: "77%", height: '70px', outline: 'none' }}>
-                <div className='flex-grow'>
-                    <form
-                        style={{
-                            backgroundColor: "gray 900",
-                            color: "white",
-                            border: "none",
-                            padding: "2px 20px",
-                        }}
-                        onSubmit={handleSend}
-                    >
-                        <input
-                            className="bg-gray-800 border-none rounded"
-                            style={{ padding: "15px 30px", width: "100%", outline: 'none' }}
-                            type="text"
-                            value={msg}
-                            placeholder={`Type something...`}
-                            onChange={(e) => setMsg(e.target.value)}
-                        />
-
-                        {/* <button type='submit' className='ml-50'>Send</button> */}
-                    </form>
-
-                </div>
-            </div>
+                {/* <button type='submit' className='ml-50'>Send</button> */}
+            </form>
         </div>
-
-
     )
 
 

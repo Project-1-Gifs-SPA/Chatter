@@ -93,16 +93,11 @@ const Meeting = () => {
             })
     }
 
-
-
-
-
     return (
 
 
         <>
-
-            <div className="flex-1 flex flex-col bg-gray-700">
+            <div className="flex-1 flex flex-col bg-gray-700 ">
                 <ChatTopBar meeting={currentMeeting} />
                 {roomId ?
                     <div style={{ height: '50vh', width: 'auto' }} >
@@ -157,12 +152,8 @@ const Meeting = () => {
                             </div>
 
                         </div>
-
-
                     </div>}
-
                 <ChatBox />
-
             </div>
 
         </>
