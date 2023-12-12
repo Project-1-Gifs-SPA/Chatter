@@ -34,6 +34,7 @@ import Giphy from "../Giphy/Giphy";
 import { FaTrashAlt } from "react-icons/fa";
 
 import { HiOutlineGif } from "react-icons/hi2";
+import { getSearchGifs } from "../../services/giphy.service";
 
 const ChatBox = () => {
 	// const messagesEndRef = useRef();
@@ -54,7 +55,12 @@ const ChatBox = () => {
 	const [currentChannelId, setCurrentChannelId] = useState('')
 	const [pic, setPic] = useState({});
 	const [giphy, setGiphy] = useState(false);
-
+	const[gifQuery, setGifQuery] = useState(false);
+	const[inputWidth, setInputWidth] = useState("100%");
+	const [searchTerm, setSearchTerm] = useState('');
+	const [gifResults, setGifResults] = useState([]);
+	const [gifOption, setGifOption] = useState(false);
+ 
 	const container = useRef(null);
 
 	useEffect(() => {
@@ -225,12 +231,37 @@ const ChatBox = () => {
 		}
 	}
 
+
 	useEffect(() => {
 		if (picURL && giphy) {
 			setGiphy(false);
 			setShowMenu(true);
 		}
+		if(picURL && gifResults){
+			setGifResults([]);
+			setGifQuery(false)
+			setShowMenu(true)
+			setSearchTerm('');
+		}
 	}, [picURL])
+
+
+
+	useEffect(()=> {
+		if(msg==='/gif'){
+			setGifOption(true);
+		}
+	}, [msg]);
+
+	useEffect(()=>{
+		if(searchTerm){
+		
+			getSearchGifs(searchTerm)
+			.then(data => setGifResults(data))
+			.catch(e=>console.log(e.message))
+				
+		}
+	},[searchTerm])
 
 	return (
 		<div className="flex-1 flex flex-col bg-gray-700">
@@ -257,6 +288,16 @@ const ChatBox = () => {
 					<FaTrashAlt className='text-red-600' />
 				</p>
 			</div>}
+			{gifResults.length!==0 && <div className='p-3 mx-4 flex rounded w-[95%] bg-gray-800 bg-opacity-60'>
+				{gifResults.map(gif =><div key={gif.id}> <img src={gif.images.downsized.url} alt='pic' className="w-[200px] h-auto ml-2" onClick={()=>setPicURL(gif.images.downsized.url)}/></div>)}
+				</div>}
+			
+			{gifOption && <div className='p-3 mx-4 flex rounded w-[95%] bg-gray-800 bg-opacity-60'>
+				<p className="cursor-pointer ml-2 hover:bg-gray-900" onClick={() => {setGifQuery(true); setMsg(''); setGifOption(false)}}>
+					/gif Query - search your favorite gifs
+				</p>
+			</div>}
+
 
 			{giphy && <div className="absolute bottom-[55px] right-[100px] mt-[-38px] pr-5"><Giphy setPicURL={setPicURL} /></div>}
 
@@ -273,16 +314,27 @@ const ChatBox = () => {
 							}}
 							onSubmit={handleMsg}
 						>
+							<div className="flex" style={{ padding: "10px 20px", width:"100%", outline: 'none' }} >
+							{!gifQuery ?
 							<input
 								className="bg-gray-800 border-none rounded"
-								style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
+								style={{ padding: "10px 20px", width:"100%", outline: 'none' }} //10px 20px
 								type="text"
 								value={msg}
 								placeholder={`Type something...`}
 								onChange={(e) => setMsg(e.target.value)}
 							/>
-
-							{/* <button type='submit' className='ml-50'>Send</button> */}
+							:
+							<div className="flex">
+							<span className="mr-1" onClick={()=>{setGifQuery(false);setGifResults([]);}}>/gif query </span>
+							<input className="active"
+							style={{ padding: "10px 20px", width:"50%", height:"70%", outline: 'none' }}
+							value={searchTerm} placeholder="search" onChange={e=>setSearchTerm(e.target.value)}
+							autoFocus
+							></input>
+							</div>}
+							</div>
+							
 
 							<input className='upl hidden' id='pic' type='file' accept="image/jpeg, image/png, image/jpg" onChange={handlePic} />
 						</form>
