@@ -51,6 +51,7 @@ const ChatBox = () => {
   const [gifOption, setGifOption] = useState(false);
 
   const container = useRef(null);
+  const messageBubble = useRef(null);
 
   useEffect(() => {
     setCurrentChannelId(channelId);
@@ -237,6 +238,27 @@ const ChatBox = () => {
     }
   }, [searchTerm]);
 
+  const nextElementFocus = (tabIndex)=>{
+
+    switch(tabIndex){
+      case '3': container.current.focus(); break;
+      case '4' : messageBubble.current.focus(); break;
+      default: return;
+    }
+  }
+
+  const handleTabIndex = () => {
+  
+    const currentTabIndex = document.activeElement.tabIndex;
+    nextElementFocus(currentTabIndex);
+  }
+
+  useEffect(()=>{
+
+    container.current.focus();
+  },[dmId])
+
+
   return (
     <div className="flex-1 flex flex-col bg-gray-700">
       <ChatTopBar />
@@ -244,10 +266,12 @@ const ChatBox = () => {
         ref={container}
         className="px-6 py-4 flex-1 overflow-y-scroll custom-scrollbar"
         id="chat"
+        tabIndex = "3"
+        onKeyDown={handleTabIndex}
       >
         {messages.length
           ? messages.map((message) => (
-            <Message key={message.id} message={message} channelId={currentChannelId} dmId={dmId} />
+            <div tabIndex="4" onKeyDown={(e)=>e.key ==="ArrowLeft" ? console.log('arrowleft') : handleTabIndex()} ref={messageBubble} key={message.id}><Message  message={message} channelId={currentChannelId} dmId={dmId} /></div>
           ))
           : null}
       </div>
