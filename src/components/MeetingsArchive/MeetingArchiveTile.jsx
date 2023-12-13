@@ -31,12 +31,12 @@ const MeetingsArchiveTile = ({ meetingId, callId }) => {
         </div>
         <div className="truncate">
           <div className="flex justify-left text-white content-center truncate">
-            <h2>{pastMeeting.topic}</h2>
+            <h2 style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }}>{pastMeeting.topic}</h2>
           </div>
-          <span className="text-xs justify-left text-gray-300 hidden sm:flex">Ended: {moment(pastMeeting.end).calendar()}</span>
+          <span className="text-xs justify-left text-gray-300 hidden sm:flex" style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }}>Ended: {moment(pastMeeting.end).calendar()}</span>
           {recording
-            ? <span className="text-xs justify-left text-red-500 hidden sm:flex hover:underline"><a href={recording} download>Get Recording</a></span>
-            : <span className="text-xs justify-left text-gray-300 hidden sm:flex">No recording</span>}
+            ? <span className="text-xs justify-left text-red-500 hidden sm:flex hover:underline" style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }}><a href={recording} download>Get Recording</a></span>
+            : <span className="text-xs justify-left text-gray-300 hidden sm:flex" style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }}>No recording</span>}
         </div>
 
       </div>

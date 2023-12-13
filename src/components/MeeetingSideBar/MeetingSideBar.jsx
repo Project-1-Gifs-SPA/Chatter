@@ -34,7 +34,7 @@ const MeetingSideBar = () => {
             }
           </button>
           <p className={`ml-3 text-white overflow-hidden transition-all ${expanded ? "w-54" : "w-0"
-            }`}>Upcoming Meetings</p>
+            }`} style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }}>Upcoming Meetings</p>
         </div>
         <div className={`${expanded ? 'border-t border-gray-600 py-1' : ''}`}></div>
         <div
@@ -42,7 +42,7 @@ const MeetingSideBar = () => {
         >
           <div className="mt-6 pt-6 pb-12 overflow-y-scroll:hidden overflow-x-hidden custom-scrollbar" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <div>
-              <button className="btn ml-6 mr-6 btn-active btn-primary w-[auto]"
+              <button className="btn btn-sm ml-6 mr-6 btn-active btn-primary w-[auto]"
                 onClick={() => setShowArchive(!showArchive)}
               >
                {showArchive ? 'Upcoming' : 'Archive'}
@@ -51,7 +51,7 @@ const MeetingSideBar = () => {
             {showArchive ? <MeetingsArchive />
               : userMeetings ? userMeetings.map(meetingId =>
 
-                <div className='text-gray-300 pt-3 md:block ' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }} key={meetingId} >
+                <div className='text-gray-300 md:block' style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }} key={meetingId} >
                   <MeetingTile meetingId={meetingId} />
                 </div>
               )
