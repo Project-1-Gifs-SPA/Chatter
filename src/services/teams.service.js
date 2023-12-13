@@ -47,7 +47,7 @@ export const getLiveTeamInfo = (listenFn, teamId) =>
     onValue(ref(db, `teams/${teamId}`), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : {};
         listenFn(data);
-    }).catch((e) => console.error(e));
+    });
 
 export const getLiveTeamMembers = (listenFn, teamId) =>
     onValue(ref(db, `teams/${teamId}/members`), (snapshot) => {
