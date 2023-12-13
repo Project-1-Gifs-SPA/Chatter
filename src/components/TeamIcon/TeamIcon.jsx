@@ -48,17 +48,21 @@ const TeamIcon = ({ id }) => {
 					.then(channelId => navigate(`/teams/${currentTeam.id}/channels/${channelId}`))}
 				onContextMenu={handleContextMenu}
 			>
-				{!isTeamSeen.includes(userData.handle) && <div className='relative top-3'>
+				{!isTeamSeen.includes(userData.handle) && <div className='relative top-3'
+				
+				>
 					<RiCheckboxBlankCircleFill style={{ color: 'white' }} />
 				</div>
 				}
 				<div className="tooltip tooltip-right" data-tip={currentTeam.name}>
 					<div
+						
 						className="bg-purple-500 h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden hover:rounded">
 						{currentTeam.photoURL ?
-							<img src={currentTeam.photoURL} />
+							<img src={currentTeam.photoURL} aria-label={`team name ${currentTeam.name}`} />
 							: currentTeam?.name && (
-								<span className='text-xl'>
+								<span className='text-xl'
+								aria-label={`team name ${currentTeam.name}`}>
 									{currentTeam.name.includes(' ')
 										? currentTeam.name.split(' ').map(name => name[0]).join('')
 										: currentTeam.name.substring(0, 1)}
