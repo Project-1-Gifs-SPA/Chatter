@@ -19,28 +19,24 @@ export const MIN_MESSAGE_LENGTH = 1;
 export const defaultPicURL = 'gs://chatter-app-52b85.appspot.com/Png.png'
 export const groupDefaultPicURL = 'gs://chatter-app-52b85.appspot.com/groupDefault.png'
 
-export const statuses = { 
-	online: 'online',
-	offline: 'offline',
-	doNotDisturb: 'doNotDisturb'
+export const statuses = {
+  online: 'online',
+  offline: 'offline',
+  doNotDisturb: 'doNotDisturb'
 }
 
-export const isValidPhoneNumber = (phoneNumber) =>{
-	const regex = /^\d{10}$/
-	return regex.test(phoneNumber);
+export const isValidPhoneNumber = (phoneNumber) => {
+  const regex = /^\d{10}$/
+  return regex.test(phoneNumber);
 }
-
-export const MIN_CHANNELNAME_LENGTH = 3;
-
-export const MAX_CHANNELNAMELENGTH = 40; // remove
 
 export const reactions = {
-	Like: '👍',
-    Love: '❤️',
-    Haha: '😄',
-    Wow: '😮',
-    Sad:'🙁',
-    Angry: '😠'
+  Like: '👍',
+  Love: '❤️',
+  Haha: '😄',
+  Wow: '😮',
+  Sad: '🙁',
+  Angry: '😠'
 }
 
 //+1 when clicked

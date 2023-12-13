@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { GoPlus } from "react-icons/go";
-import { addTeam, findTeamByName } from "../../services/teams.service";
-import AppContext from "../../context/AppContext";
 import { useNavigate } from 'react-router-dom';
-import { createDefaultChannel } from "../../services/channel.service";
 import { MAX_TEAMNAME_LENGTH, MIN_TEAMNAME_LENGTH } from "../../common/constants";
+import AppContext from "../../context/AppContext";
+import { createDefaultChannel } from "../../services/channel.service";
+import { addTeam, findTeamByName } from "../../services/teams.service";
 
 const AddTeam = () => {
   const modalRef = useRef(null)
@@ -21,9 +21,10 @@ const AddTeam = () => {
     if (teamName.length < MIN_TEAMNAME_LENGTH || teamName.length > MAX_TEAMNAME_LENGTH) {
       setTeamError('Team name must be between 3 and 40 characters');
       throw new Error('Team name must be between 3 and 40 characters');
-
     }
-    setTeamError('')
+
+    setTeamError('');
+
     findTeamByName(teamName)
       .then(snapshot => {
         if (snapshot.exists()) {
@@ -38,7 +39,7 @@ const AddTeam = () => {
               });
           });
       })
-      .catch(e => console.log(e)) //better error handling
+      .catch((e) => console.error(e)) //better error handling
     // document.getElementById(modalRef.current.id).close();
     // console.log(modalRef.current.id)
   }
@@ -46,11 +47,11 @@ const AddTeam = () => {
   return (
     <div
       className="cursor-pointer"
-
       onClick={() => document.getElementById("my_modal_1").showModal()}
     >
       <div className="bg-white opacity-25 h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-3xl mb-1 overflow-hidden hover:rounded-md ">
         <GoPlus className="h-10 w-10" />
+
         <dialog ref={modalRef} id="my_modal_1" className="modal fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
 
           <div className="modal-box bg-gray-700">
@@ -71,6 +72,7 @@ const AddTeam = () => {
           </div>
 
         </dialog>
+
       </div>
     </div>
   );

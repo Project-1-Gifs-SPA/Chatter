@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getSearchGifs, getTrendingGifs } from "../../services/giphy.service";
-import { useEffect } from "react";
 import GifGrid from "./GifGrid";
 
 const Giphy = ({ setPicURL }) => {
 
   const [gifs, setGifs] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('')
-  const [search, setSearch] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [search, setSearch] = useState(false);
 
   useEffect(() => {
     getTrendingGifs()
       .then(data => setGifs(data))
-  }, [])
+      .catch((e) => console.error(e));
+  }, []);
 
   useEffect(() => {
     if (search) {
@@ -22,12 +22,17 @@ const Giphy = ({ setPicURL }) => {
           setSearchTerm('');
           setSearch(false);
         })
+        .catch((e) => console.error(e));
     }
-  }, [search])
+  }, [search]);
 
   return (
     <div className='p-3 m-3 flex flex-col bg-gray-800 rounded w-[515px]'>
-      <form onSubmit={(e) => { e.preventDefault(); setSearch(true) }} className="flex items-end mb-4 text-sm">
+
+      <form className="flex items-end mb-4 text-sm"
+        onSubmit={(e) => { e.preventDefault(); setSearch(true) }}
+      >
+
         <input
           type="text"
           value={searchTerm}
@@ -41,7 +46,9 @@ const Giphy = ({ setPicURL }) => {
         >
           Search
         </button>
+
       </form>
+
       <GifGrid gifs={gifs} setPicURL={setPicURL} />
     </div>
   );

@@ -1,55 +1,57 @@
-import { auth } from "./config/firebase-config";
-import MainPage from "./views/MainPage/MainPage"
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useState } from "react";
-import AppContext from "./context/AppContext";
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { Route, Routes } from 'react-router-dom';
-import LandingPage from "./views/LandingPage/LandingPage";
+import { statuses } from "./common/constants";
+import Loader from "./components/Loader/Loader";
+import { auth } from "./config/firebase-config";
+import AppContext from "./context/AppContext";
 import AuthenticatedRoute from "./hoc/AuthenticatedRoute";
+import { changeUserStatus, getUserData } from "./services/users.service";
+import LandingPage from "./views/LandingPage/LandingPage";
+import MainPage from "./views/MainPage/MainPage";
+import Profile from "./views/Profile/Profile";
 import SignIn from "./views/SignIn/SignIn";
 import SignUp from "./views/SignUp/SignUp";
-import { changeUserStatus, getUserData } from "./services/users.service";
-import Loader from "./components/Loader/Loader";
-import Profile from "./views/Profile/Profile";
-import { statuses } from "./common/constants";
-
 
 function App() {
 
   const [user] = useAuthState(auth);
+
   const [appState, setAppState] = useState({
     user,
     userData: null
-  })
-  const [loading, setLoading] = useState(false)
+  });
+  const [loading, setLoading] = useState(false);
 
   if (appState.user !== user) {
     setAppState({ user, userData: null });
   }
 
   useEffect(() => {
-
     if (user === null) {
       setLoading(false)
       return;
     }
-    setLoading(true)
+
+    setLoading(true);
 
     getUserData(user.uid)
       .then(snapshot => {
         if (!snapshot.exists()) {
           throw new Error('User data not found');
         }
+
         const currentUserData = snapshot.val()[Object.keys(snapshot.val())[0]];
-        changeUserStatus(currentUserData.handle, statuses.online)
+        changeUserStatus(currentUserData.handle, statuses.online);
 
         setAppState({
           ...appState,
           userData: currentUserData,
-        })
-        setLoading(false)
-      })
+        });
 
+        setLoading(false);
+      })
+      .catch((e) => console.error(e));
   }, [user]);
 
   return (
@@ -72,7 +74,7 @@ function App() {
         }
       </AppContext.Provider>
     </>
-  )
+  );
 }
 
 export default App;
