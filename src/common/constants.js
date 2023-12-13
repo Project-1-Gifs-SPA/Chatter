@@ -45,7 +45,7 @@ export const reactions = {
 
 //+1 when clicked
 
-export const OPENAI_API_KEY = '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';
+export const OPENAI_API_KEY = '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';
 export const GIPHY_API_KEY = "5HHbQrWtBlmLdQdHMd0ZeRjx3baS9v1b";
 
 export const GIPHY_BASE_URL = 'http://api.giphy.com/v1/gifs/';

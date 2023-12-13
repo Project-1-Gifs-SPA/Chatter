@@ -66,7 +66,7 @@ const SideBar = () => {
 
 	return (
 		<>
-			<div className="flex flex-col md:flex-col justify-between h-screen bg-gray-900">
+			<div className="flex flex-col md:flex-col justify-between h-screen bg-gray-900" aria-label='navigation bar for teams with icons for each team and a create team button'>
 				<div className="bg-gray-900 text-purple-lighter flex-none w-24 p-6 md:block">
 					{/* Your existing content */}
 					<DMIcon />
