@@ -34,7 +34,7 @@ const MeetingSideBar = () => {
             }
           </button>
           <p className={`ml-3 text-white overflow-hidden transition-all ${expanded ? "w-54" : "w-0"
-            }`} style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }}>Upcoming Meetings</p>
+            }`} style={{ fontFamily: 'Rockwell, sans-serif', fontSize: '0.8 em', lineHeight: '1.4' }}>{showArchive ? 'Archived meetings' : 'Upcoming Meetings'}</p>
         </div>
         <div className={`${expanded ? 'border-t border-gray-600 py-1' : ''}`}></div>
         <div
