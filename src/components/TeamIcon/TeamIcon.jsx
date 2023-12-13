@@ -52,7 +52,6 @@ const TeamIcon = ({ id }) => {
         onContextMenu={handleContextMenu}
       >
         {!isTeamSeen.includes(userData.handle) && <div className='relative top-3'
-
         >
           <RiCheckboxBlankCircleFill style={{ color: 'white' }} />
         </div>

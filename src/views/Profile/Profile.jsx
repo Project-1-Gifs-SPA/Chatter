@@ -138,7 +138,6 @@ const Profile = ({ isVisible, onClose }) => {
             </div>
           </div>
 
-          {/* Change names section */}
           <div className="flex justify-center">
             <div className='h-[360px] w-[360px] pt-5 rounded-xl mt-5 ml-5 mr-5'>
               <div className="flex flex-col items-center text-white">

@@ -21,7 +21,6 @@ export const upload = (file, user, setLoading) => {
     .then((photoURL) => updateUserPhoto(user.displayName, photoURL))
     .then(() => {
       setLoading(false);
-      // alert('Uploaded file!');
     })
     .catch(e => console.error('Error uploading file:', e.message));
 }
@@ -42,7 +41,6 @@ export const setDefaultPic = (user, picURL, setLoading) => {
     .catch(e => console.error('Error uploading file:', e.message));
 }
 
-//setTeamDefaultPic
 export const uploadTeamPhoto = (file, teamId, setLoading) => {
 
   const fileRef = ref(storage, teamId + '.png');
@@ -54,7 +52,6 @@ export const uploadTeamPhoto = (file, teamId, setLoading) => {
     .then((photoURL) => updateTeamPhoto(teamId, photoURL))
     .then(() => {
       setLoading(false);
-      // alert('Uploaded file!');
     })
     .catch(e => console.error('Error uploading file:', e.message));
 }

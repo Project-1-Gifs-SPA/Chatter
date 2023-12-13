@@ -30,32 +30,18 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
       .then(channel => {
         setChannelName(channel.name);
       })
-      .catch((e) => console.error(e))
+      .catch((e) => console.error(e));
   }, [channelId]);
 
   useEffect(() => {
     const unsubscribe = getLiveChannelSeenBy(data => {
       setIsChannelSeen([...data]);
-    }, channelId)
+    }, channelId);
 
     return () => {
       unsubscribe();
     }
   }, [channelId]);
-  // updateCheckedChannels(0)
-
-  // useEffect(() => {
-  //     if (isChannelSeen.includes(userData.handle)) {
-  //         console.log('entered')
-  //         updateCheckedChannels(checkedChannels + 1)
-  //         console.log('updating checked channels: ', checkedChannels)
-  //     }
-  //     // if (!isChannelSeen.includes(userData.handle)) {
-  //     //     console.log('second if')
-  //     //     updateCheckedChannels(checkedChannels - 1)
-  //     //     console.log('decreasing checked channels: ', checkedChannels)
-  //     // }
-  // }, [isChannelSeen])
 
   useEffect(() => {
     if (isChannelSeen.includes(userData.handle)) {
@@ -90,18 +76,6 @@ const ChannelTile = ({ channelId, generalId, isOwner, addMembers, channelMembers
           onClose={() => setShowDeleteModal(false)}
           channelId={channelId} teamId={teamId} isOwner={isOwner}
         />}
-
-        {/* {/* {/* isVisible={showDeleteModal}
-                onClose={() => setShowDeleteModal(false)}
-                channelId={channelId} teamId={teamId} isOwner={isOwner}
-            />}
-            {contextMenuVisible ? <ContextMenu
-                channelList={true}
-                channelId={channelId}
-                isOwner={isOwner}
-                contextMenuVisible={contextMenuVisible}
-                setContextMenuVisible={setContextMenuVisible}
-                setShowDeleteModal={setShowDeleteModal} /> : null} } */}
       </div>
       {contextMenuVisible &&
         <div className='relative top-auto -mb-10 left-10 z-[0] overflow-hidden'> <ContextMenu channelList={true} channelId={channelId} isOwner={isOwner} contextMenuVisible={contextMenuVisible} setContextMenuVisible={setContextMenuVisible} setShowDeleteModal={setShowDeleteModal} /></div>

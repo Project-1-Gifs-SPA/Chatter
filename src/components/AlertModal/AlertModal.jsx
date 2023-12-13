@@ -8,7 +8,7 @@ import { removeTeamMember } from "../../services/teams.service";
 const AlertModal = ({ showAlert, command, setContextMenuVisible, teamId, member, groupDmId, meetingId }) => {
 
   const [action, setAction] = useState(command);
-  const { userData } = useContext(AppContext)
+  const { userData } = useContext(AppContext);
   const navigate = useNavigate();
 
   const handleClick = (e) => {
@@ -19,7 +19,7 @@ const AlertModal = ({ showAlert, command, setContextMenuVisible, teamId, member,
           showAlert(false);
           setContextMenuVisible(false);
         })
-        .catch((e) => console.error(e))
+        .catch((e) => console.error(e));
     }
 
     if (command === 'remove member from team') {
@@ -28,7 +28,7 @@ const AlertModal = ({ showAlert, command, setContextMenuVisible, teamId, member,
           showAlert(false);
           setContextMenuVisible(false);
         })
-        .catch((e) => console.error(e))
+        .catch((e) => console.error(e));
     }
 
     if (command === 'leave group chat') {
@@ -37,7 +37,7 @@ const AlertModal = ({ showAlert, command, setContextMenuVisible, teamId, member,
           showAlert(false);
           setContextMenuVisible(false);
         })
-        .catch((e) => console.error(e))
+        .catch((e) => console.error(e));
     }
 
     if (command === 'leave this meeting') {
@@ -46,7 +46,7 @@ const AlertModal = ({ showAlert, command, setContextMenuVisible, teamId, member,
           showAlert(false);
           navigate('/');
         })
-        .catch((e) => console.error(e))
+        .catch((e) => console.error(e));
     }
   }
 

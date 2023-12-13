@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import AppContext from '../../context/AppContext';
 import { loginUser } from '../../services/auth.service';
+import { MIN_PASSWORD_LENGTH } from '../../common/constants';
 
 const SignIn = () => {
 
@@ -44,7 +45,7 @@ const SignIn = () => {
       return;
     }
 
-    if (!form.password && form.password.length < 6) {
+    if (!form.password && form.password.length < MIN_PASSWORD_LENGTH) {
       toast.error("Password is required and must be at least 6 characters long", {
         position: "top-center",
         autoClose: 3500,

@@ -12,10 +12,10 @@ const MainPage = () => {
 
   return (
     <div className="font-sans antialiased h-screen flex overflow-x-hidden">
-      <SideBar /> {/* Adjust width as needed */}
-      {!meetingId && <MyServers />} {/* Adjust width as needed */}
+      <SideBar />
+      {!meetingId && <MyServers />}
       {teamId || dmId ? <ChatBox /> : meetingId ? <Meeting /> : <Dashboard />}
-      {teamId || dmId ? <TeamSidebar /> : null} {/* Adjust width as needed */}
+      {teamId || dmId ? <TeamSidebar /> : null}
     </div>
   );
 };

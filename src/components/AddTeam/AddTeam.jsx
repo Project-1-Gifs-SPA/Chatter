@@ -35,13 +35,11 @@ const AddTeam = () => {
           .then(teamId => {
             createDefaultChannel(teamId, [userData.handle], userData.handle)
               .then(channelId => {
-                navigate(`/teams/${teamId}/channels/${channelId}`)
+                navigate(`/teams/${teamId}/channels/${channelId}`);
               });
           });
       })
-      .catch((e) => console.error(e)) //better error handling
-    // document.getElementById(modalRef.current.id).close();
-    // console.log(modalRef.current.id)
+      .catch((e) => console.error(e));
   }
 
   return (

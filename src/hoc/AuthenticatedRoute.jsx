@@ -2,7 +2,7 @@ import { useContext } from "react";
 import AppContext from "../context/AppContext";
 import { Navigate, useLocation } from "react-router-dom";
 
-export default function AuthenticatedRoute({ children }) {
+const AuthenticatedRoute = ({ children }) => {
 
   const { user } = useContext(AppContext);
   const location = useLocation();
@@ -13,3 +13,5 @@ export default function AuthenticatedRoute({ children }) {
 
   return children;
 }
+
+export default AuthenticatedRoute;

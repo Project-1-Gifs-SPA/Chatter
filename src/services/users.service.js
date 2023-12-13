@@ -110,7 +110,6 @@ export const sendFriendRequest = (senderHandle, receiverHandle) => {
   return get(receiverFriendRequestsRef)
     .then((friendRequestSnapshot) => {
       if (friendRequestSnapshot.exists()) {
-        // If the friend request already exists, display error toast
         toast.error("Friend request already sent to this user", {
           position: "top-center",
           autoClose: 1500,
@@ -123,13 +122,11 @@ export const sendFriendRequest = (senderHandle, receiverHandle) => {
         });
         return Promise.reject("Friend request already sent to this user");
       } else {
-        // If the friend request doesn't exist, proceed to send the request
         const sendRequest = {};
         sendRequest[`/users/${receiverHandle}/friendRequests/${senderHandle}`] = true;
 
         return update(ref(db), sendRequest)
           .then(() => {
-            // Display success toast for sending friend request
             toast.success("Friend request sent successfully", {
               position: "top-center",
               autoClose: 1000,

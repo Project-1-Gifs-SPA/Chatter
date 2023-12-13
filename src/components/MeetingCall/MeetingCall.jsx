@@ -28,8 +28,6 @@ const MeetingCall = ({ token }) => {
           </DyteProvider>
           : <div style={{ height: '30vh', width: 'auto' }}><Loader /> </div>
         }
-        <div>
-        </div>
       </div>
     </>
   );

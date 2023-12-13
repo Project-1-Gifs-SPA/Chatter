@@ -48,7 +48,6 @@ const GroupDmTile = ({ groupDmId }) => {
     }
   }, [groupDmId]);
 
-
   useEffect(() => {
     const unsubscribe = getLiveGroupDMsMembers(data => {
       const promises = Object.keys(data).map(member =>

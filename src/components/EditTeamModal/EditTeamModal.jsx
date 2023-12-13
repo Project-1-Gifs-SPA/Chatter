@@ -80,7 +80,6 @@ const EditTeamModal = ({ teamId, onClose, name, teamPic }) => {
       <div id='myModal' className='w-[550px] flex flex-col'>
         <div className='bg-gray-900 p-2 rounded-xl h-[350px]'>
 
-          {/* Avatar section */}
           <div className="p-6 space-y-6">
             <div className="flex flex-col md:flex-row space-y-6 md:space-x-6">
               <div className="flex items-center">
@@ -107,7 +106,6 @@ const EditTeamModal = ({ teamId, onClose, name, teamPic }) => {
                   maxLength="35"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  // placeholder={currentUser.firstName}
                   type="text"
                 />
                 <div>

@@ -10,7 +10,7 @@ const OnlineFriends = () => {
 
   useEffect(() => {
     const unsubscribe = getLiveUserFriends(data => {
-      setFriends(data)
+      setFriends(data);
     }, userData.handle);
 
     return () => {

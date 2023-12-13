@@ -37,7 +37,7 @@ const TeamSidebar = () => {
 
   useEffect(() => {
     const unsubscribe = getLiveTeamInfo(data => {
-      setCurrentTeam({ ...data })
+      setCurrentTeam({ ...data });
     }, teamId);
 
     return () => {
@@ -53,7 +53,7 @@ const TeamSidebar = () => {
 
   useEffect(() => {
     const unsubscribe = getLiveChannelInfo(data => {
-      setCurrentChannel({ ...data })
+      setCurrentChannel({ ...data });
     }, channelId);
 
     return () => {
@@ -63,7 +63,7 @@ const TeamSidebar = () => {
 
   useEffect(() => {
     const unsubscribe = getLiveDMs(data => {
-      setCurrentDm({ ...data })
+      setCurrentDm({ ...data });
     }, dmId);
 
     return () => {
@@ -80,7 +80,7 @@ const TeamSidebar = () => {
 
       Promise.all(promises)
         .then((membersData) => setMembers(membersData))
-        .catch((e) => console.error(e))
+        .catch((e) => console.error(e));
     }
 
     if (currentDM.members) {
@@ -127,7 +127,6 @@ const TeamSidebar = () => {
         >
           <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <SearchBar team={currentTeam} dm={currentDM} channel={channelId} />
-            {/* Everything in the sidebar */}
             {members.length > 0 ?
               (members.map(member => {
                 return (
@@ -150,7 +149,6 @@ const TeamSidebar = () => {
                 Reach out to your friends connecting the silence with shared moments and laughter.</p>)
             }
           </div>
-          {/* inside the sidebar ends here */}
         </div>
       </div>
     </div >

@@ -11,11 +11,12 @@ const AllFriends = () => {
   useEffect(() => {
     const unsubscribe = getLiveUserFriends(data => {
       setFriends(data)
-    }, userData.handle)
+    }, userData.handle);
+
     return () => {
       unsubscribe();
     }
-  }, [userData.handle])
+  }, [userData.handle]);
 
   return (
     <div className='text-white mt-5'>

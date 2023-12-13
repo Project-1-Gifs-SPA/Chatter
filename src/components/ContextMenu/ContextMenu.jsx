@@ -9,7 +9,7 @@ const ContextMenu = ({ teamId, channelList, owner, isOwner, contextMenuVisible, 
 
   const [showAlert, setShowAlert] = useState(false);
   const [command, setCommand] = useState('');
-  const [currentUser, setCurrentUser] = useState(userData)
+  const [currentUser, setCurrentUser] = useState(userData);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -31,34 +31,6 @@ const ContextMenu = ({ teamId, channelList, owner, isOwner, contextMenuVisible, 
 
     return () => unsubscribe();
   }, [userData]);
-
-  // const handleLeave = (e, teamMember) =>{
-  // 	e.preventDefault()
-  // 	console.log('remove from team')
-  // 	removeTeamMember(teamId, teamMember)
-  // 	.then(()=>setContextMenuVisible(false));
-  // }
-
-  // const handleLeave = () =>{
-
-  // 	console.log('remove from team')
-  // 	setCommand('leave this team');
-  // 	setShowAlert(true)
-  // 	setContextMenuVisible(false);
-  // }
-
-  // const handleLeaveGroup = (e, groupMember) => {
-  // 	e.preventDefault();
-  // 	deleteGroupMember(groupDmId, groupMember)
-  // 	.then(()=>setContextMenuVisible(false));
-
-  // }
-
-  // const handleLeaveChannel = (e, channelMember) => {
-  //   e.preventDefault();
-  //   removeChannelUser(channelId, channelMember)
-  //     .then(() => setContextMenuVisible(false));
-  // }
 
   return (
     <>

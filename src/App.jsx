@@ -13,7 +13,7 @@ import Profile from "./views/Profile/Profile";
 import SignIn from "./views/SignIn/SignIn";
 import SignUp from "./views/SignUp/SignUp";
 
-function App() {
+const App = () => {
 
   const [user] = useAuthState(auth);
 

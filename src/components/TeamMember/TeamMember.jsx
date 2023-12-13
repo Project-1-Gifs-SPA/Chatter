@@ -67,7 +67,6 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 
         <div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
           <div className='w-[90%] sm:w-[80%] md:w-[60%] lg:w-[50%] flex flex-col'>
-            {/* ProfileModal content */}
             <ProfileModal isVisible={showModal} onClose={() => setShowModal(false)} profile={member ? member : partner} />
           </div>
         </div>

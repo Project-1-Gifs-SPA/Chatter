@@ -84,11 +84,11 @@ const SearchBar = ({ team, dm, channel }) => {
   };
 
   const handleSendFriendRequest = (user) => {
-    sendFriendRequest(userData.handle, user)
+    sendFriendRequest(userData.handle, user);
   };
 
   const handleRemoveFriends = (user) => {
-    removeFriends(userData.handle, user)
+    removeFriends(userData.handle, user);
   };
 
   const handleSearchTerm = (e) => {

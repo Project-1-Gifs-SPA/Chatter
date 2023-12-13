@@ -34,6 +34,7 @@ const ProfileModal = ({ isVisible, onClose, profile }) => {
       setCurrentUser(data);
     },
       userData.handle);
+
     return () => {
       u1();
     };

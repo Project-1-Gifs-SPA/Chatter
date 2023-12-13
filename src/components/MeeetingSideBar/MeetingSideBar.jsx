@@ -41,7 +41,6 @@ const MeetingSideBar = () => {
           className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-64" : "w-0"}`}
         >
           <div className="mt-6 pt-6" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-            {/* Everything in the sidebar */}
             <div>
               <button className="btn ml-6 mr-6 btn-active btn-primary w-[auto]"
                 onClick={() => setShowArchive(!showArchive)}
@@ -61,8 +60,6 @@ const MeetingSideBar = () => {
                   You have no upcoming meetings</p>
             }
           </div>
-          {/* inside the sidebar ends here */}
-
         </div>
 
       </div>

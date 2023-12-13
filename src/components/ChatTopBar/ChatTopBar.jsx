@@ -31,7 +31,6 @@ const ChatTopBar = ({ meeting }) => {
   return (<>
     <div className=" flex px-6 py-2 items-center justify-between">
       <div className="flex flex-col">
-        {/* <h3>Hard coded</h3> */}
         {channelId &&
           <h3 className="text-white  font-bold text-xl text-gray-100">
             <span className="text-gray-400">#</span> {channelName}

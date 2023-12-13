@@ -1,12 +1,11 @@
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FaRegEdit, FaRegSmile } from "react-icons/fa";
 import AppContext from '../../context/AppContext';
 import { addChannelMsgStatusEdited, editChannelMessage } from '../../services/channel.service';
 import { addDMstatusEdited, editDMmessage } from '../../services/dms.service';
 import { getLiveUserInfo } from '../../services/users.service';
-
 import { useParams } from 'react-router';
 import { toast } from 'react-toastify';
 import { MIN_MESSAGE_LENGTH } from '../../common/constants';
@@ -104,11 +103,11 @@ const Message = ({ message }) => {
     <div className={`${userData.handle == message.owner ? "chat chat-end mb-1" : "chat chat-start mb-1"} ${message.reactions && 'mb-5'}`} >
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
-          <img alt="Tailwind CSS chat bubble component" src={ownerPic} className="cursor-pointer w-10 h-10 rounded-3xl mr-3" />
+          <img alt="Tailwind CSS chat bubble component" src={ownerPic} className="w-10 h-10 rounded-3xl mr-3"/>
         </div>
       </div>
       <div className="chat-header flex items-center mb-1">
-        <span className='font-bold text-[13pt] text-red-300 cursor-pointer hover:underline'>{message.owner}</span>
+        <span className='font-bold text-[13pt] text-red-300 hover:underline'>{message.owner}</span>
         <time className="text-[8pt] font-bold text-gray-400 pl-2">{(new Date(message.createdOn)).toLocaleTimeString('en-US', hOptions)}</time>
         <div className='flex items-center'>
           {userData.handle === message.owner &&
@@ -129,11 +128,10 @@ const Message = ({ message }) => {
                 value={editedMessage}
                 onChange={handleInputChange}
                 onKeyDown={(e) => e.key == "Enter" ? handleSaveChanges() : null}
-                autoFocus // Autofocus on the input field when editing starts
+                autoFocus
               />
               <button
                 style={{
-                  //transform: 'translateY(-50%)',
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',

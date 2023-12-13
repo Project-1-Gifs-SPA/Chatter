@@ -1,6 +1,7 @@
 import { equalTo, get, onValue, orderByChild, push, query, ref, set, update } from "firebase/database";
 import { db } from "../config/firebase-config";
 import { getAllChannelsByTeam, getAllPublicChannelsByTeam, getChannelById } from "./channel.service";
+import { toast } from 'react-toastify';
 
 const fromTeamsDocument = (snapshot) => {
   const teamsDocument = snapshot.val();
@@ -97,7 +98,16 @@ export const addTeamMember = (handle, teamId) => {
   return get(teamRef)
     .then((teamSnapshot) => {
       if (teamSnapshot.exists()) {
-        return Promise.reject(alert("User is already a member of this team!")); //handle alert with toast notification?
+        return Promise.reject(toast.error("User is already a member of this team!", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }));
       } else {
         return getAllPublicChannelsByTeam(teamId).then((publicTeams) => {
           const updateTeam = {};

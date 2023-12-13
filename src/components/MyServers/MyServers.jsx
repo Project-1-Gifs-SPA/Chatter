@@ -27,7 +27,7 @@ const MyServers = () => {
   const [currentTeam, setCurrentTeam] = useState({});
   const [currentChannels, setCurrentChannels] = useState([]);
   const [generalId, setGeneralId] = useState('');
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(true);
   const [checkedChannels, setCheckedChannels] = useState(0);
   const [allDms, setAllDms] = useState([]);
   const [arialChannels, setArialChannels] = useState('Sidebar with create meetings button, create channel button and a list of all channels and meetings you are part of');
@@ -45,7 +45,7 @@ const MyServers = () => {
   const [allTeamMembers, setAllTeamMembers] = useState([]);
 
   const [channelError, setChannelError] = useState('');
-  const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : [])
+  const [dms, setDms] = useState(userData.DMs ? Object.entries(userData.DMs) : []);
 
   const [groupDMs, setGroupDms] = useState(userData.groupDMs ? Object.keys(userData.groupDMs) : []);
   const [meetings, setMeetings] = useState([]);
@@ -76,7 +76,7 @@ const MyServers = () => {
     if (!teamId) { return; }
 
     const unsubscribe = getLiveTeamInfo(data => {
-      setCurrentTeam({ ...data })
+      setCurrentTeam({ ...data });
     }, teamId);
 
     getChannelIdsInTeamByUser(teamId, userData.handle)
@@ -103,15 +103,7 @@ const MyServers = () => {
       .catch((e) => console.error(e));
 
     const unsub = getLiveMeetingsByHandle(data => {
-
-      // if(currentTeam.meetings){
-      // const filterMeetings = Object.keys(currentTeam.meetings).filter((meetingId=> data.includes(meetingId)? meetingId:null))
-      // console.log(filterMeetings)
-      // setMeetings([...filterMeetings]);
-      // }
-
-      setCurrentUserMeetings(data)
-
+      setCurrentUserMeetings(data);
     }, userData?.handle)
 
     return () => {
@@ -139,7 +131,7 @@ const MyServers = () => {
     const unsubscribe = getLiveChannelsByTeam(data => {
       Promise.all(data.map(channelId => getChannelById(channelId)))
         .then(channels => {
-          const filteredCHanneld = channels.filter(channel => Object.keys(channel.members).includes(userData.handle))
+          const filteredCHanneld = channels.filter(channel => Object.keys(channel.members).includes(userData.handle));
           setCurrentChannels(filteredCHanneld.map(channel => channel.id));
         })
         .catch((e) => console.error(e));
@@ -252,7 +244,6 @@ const MyServers = () => {
               </div>
               <div
                 className="cursor-pointer"
-
                 onClick={() => document.getElementById("create-channel").showModal()}
               >
                 <div className="bg-white opacity-25 h-5 w-5 flex items-center justify-center text-black text-2xl font-semibold rounded-2xl overflow-hidden">
@@ -270,7 +261,6 @@ const MyServers = () => {
                 <div className="modal-action">
 
                   <form method="dialog" className='mr-7'>
-                    {/* if there is a button in form, it will close the modal */}
                     <div className='flex'>
                       <p className='text-white mr-3 mb-3'>Create public channel</p>
                       <input type="checkbox" className="checkbox" style={{ border: '1px solid white' }}
@@ -306,7 +296,6 @@ const MyServers = () => {
                   checkedChannels={checkedChannels}
                   updateCheckedChannels={updateCheckedChannels}
                   setCurrentChannels={setCurrentChannels}
-
                 />)}
               </div>
               : (
@@ -318,7 +307,6 @@ const MyServers = () => {
                       <TeamMember dmPartner={partner} dmId={dm.id} /></div>
                   })
                   }
-
                   {groupDMs && groupDMs.map(groupDmId => <GroupDmTile key={groupDmId} groupDmId={groupDmId} />)}
                 </>
               )}

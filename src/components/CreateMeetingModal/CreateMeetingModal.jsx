@@ -41,7 +41,7 @@ const CreateMeetingModal = ({ setShowModal, teamMembers }) => {
   useEffect(() => {
     if (check) {
       const allMembers = {}
-      teamMembers.map(member => allMembers[member.handle] = true)
+      teamMembers.map(member => allMembers[member.handle] = true);
       setMembers(allMembers);
     }
   }, [check]);
@@ -50,8 +50,6 @@ const CreateMeetingModal = ({ setShowModal, teamMembers }) => {
     <div className='fixed inset-0 z-50 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
       <div id='myModal' className='w-[550px] flex flex-col justify-center'>
         <div className='bg-gray-900 p-2 rounded-xl h-[auto]'>
-
-          {/* Avatar section */}
 
           <div className="flex-col ml-10 pr-0 align-top mt-5 " >
             <div className="form-control pl-7 ml-10">
@@ -65,59 +63,28 @@ const CreateMeetingModal = ({ setShowModal, teamMembers }) => {
                 placeholder='Enter meeting topic'
                 type="text"
               />
-              <div>
-                {/* <button  className="btn btn-primary w-15 mt-2 text-sm"
-                                        >
-                                            Save name
-                                        </button> */}
-
-              </div>
-
             </div>
-
           </div>
-          {/* start Date */}
 
           <div className="flex-col ml-10 pr-0 align-top " >
             <div className="form-control pl-7 ml-10">
               <label className="form-labe">Start time</label>
               <input
                 className="input input-bordered w-[300px]"
-                // style={{ backgroundColor: 'white' }}
                 maxLength="35"
-
                 onChange={(e) => setStartDate(e.target.value)}
-
-                // placeholder={currentUser.firstName}
                 type="datetime-local"
               />
-              <div>
-                {/* <button  className="btn btn-primary w-15 mt-2 text-sm"
-                                        onClick={()=>console.log(startDate)}
-                                        >
-                                            Save name
-                                        </button> */}
-
-              </div>
-
             </div>
-
           </div>
-
-
-          {/* end date*/}
 
           <div className="flex-col ml-10 pr-0 align-top " >
             <div className="form-control pl-7 ml-10">
               <label className="form-labe">End time</label>
               <input
                 className="input input-bordered w-[300px]"
-                // style={{ backgroundColor: 'white' }}
                 maxLength="35"
-
                 onChange={(e) => setEndDate(e.target.value)}
-
-                // placeholder={currentUser.firstName}
                 type="datetime-local"
               />
               <div className=" mt-5 w-[300px]">
@@ -140,7 +107,6 @@ const CreateMeetingModal = ({ setShowModal, teamMembers }) => {
                 >
                   Close
                 </button>
-                {/* <SearchBar team={teamId} /> */}
               </div>
             </div>
           </div>

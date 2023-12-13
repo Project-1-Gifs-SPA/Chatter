@@ -42,7 +42,7 @@ const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const [picURL, setPicURL] = useState('');
   const [showMenu, setShowMenu] = useState(false);
-  const [currentChannelId, setCurrentChannelId] = useState('')
+  const [currentChannelId, setCurrentChannelId] = useState('');
   const [pic, setPic] = useState({});
   const [giphy, setGiphy] = useState(false);
   const [gifQuery, setGifQuery] = useState(false);
@@ -86,7 +86,7 @@ const ChatBox = () => {
     if (currentChannelId) {
       getChat(currentChannelId)
         .then((response) => {
-          setMessages(Object.values(response))
+          setMessages(Object.values(response));
         })
         .then(() => scrollToBottom())
         .catch((e) => console.error(e));
@@ -206,7 +206,6 @@ const ChatBox = () => {
         setPic({});
         setShowMenu(true);
       }, file);
-      // setMsg(e.target.files[0].name)
     }
   }
 
@@ -218,8 +217,8 @@ const ChatBox = () => {
 
     if (picURL && gifResults) {
       setGifResults([]);
-      setGifQuery(false)
-      setShowMenu(true)
+      setGifQuery(false);
+      setShowMenu(true);
       setSearchTerm('');
     }
   }, [picURL]);
@@ -240,16 +239,12 @@ const ChatBox = () => {
 
   return (
     <div className="flex-1 flex flex-col bg-gray-700">
-      {/* Top bar */}
       <ChatTopBar />
-      {/* <!-- Chat messages --> */}
       <div
         ref={container}
         className="px-6 py-4 flex-1 overflow-y-scroll custom-scrollbar"
         id="chat"
       >
-        {/* <Message />
-				<Message /> */}
         {messages.length
           ? messages.map((message) => (
             <Message key={message.id} message={message} channelId={currentChannelId} dmId={dmId} />
@@ -292,7 +287,7 @@ const ChatBox = () => {
                 {!gifQuery ?
                   <input
                     className="bg-gray-800 border-none rounded"
-                    style={{ padding: "10px 20px", width: "100%", outline: 'none' }} //10px 20px
+                    style={{ padding: "10px 20px", width: "100%", outline: 'none' }}
                     type="text"
                     value={msg}
                     placeholder={`Type something...`}
@@ -328,7 +323,6 @@ const ChatBox = () => {
             </div>
             <div className="flex items-center justify-between">
               <button style={{
-                //transform: 'translateY(-50%)',
                 background: 'transparent',
                 border: 'none',
                 outline: 'none',
@@ -338,7 +332,6 @@ const ChatBox = () => {
                 <FaRegSmile className="w-6 h-6" />
               </button>
               <label style={{
-                //transform: 'translateY(-50%)',
                 background: 'transparent',
                 border: 'none',
                 outline: 'none',
@@ -350,7 +343,6 @@ const ChatBox = () => {
 
               </label>
               <label style={{
-                //transform: 'translateY(-50%)',
                 background: 'transparent',
                 border: 'none',
                 outline: 'none',
