@@ -40,12 +40,12 @@ const MeetingSideBar = () => {
         <div
           className={`flex justify-between items-center overflow-hidden transition-all ${expanded ? "w-64" : "w-0"}`}
         >
-          <div className="mt-6 pt-6" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+          <div className="mt-6 pt-6 pb-12 overflow-y-scroll:hidden overflow-x-hidden custom-scrollbar" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <div>
               <button className="btn ml-6 mr-6 btn-active btn-primary w-[auto]"
                 onClick={() => setShowArchive(!showArchive)}
               >
-                Archive
+               {showArchive ? 'Upcoming' : 'Archive'}
               </button>
             </div>
             {showArchive ? <MeetingsArchive />
