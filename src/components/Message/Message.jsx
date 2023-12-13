@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { MIN_MESSAGE_LENGTH } from '../../common/constants';
 import MessageReactions from '../MessageReactions/MessageReactions';
 import Reactions from '../Reactions/Reactions';
+import moment from 'moment';
 
 const Message = ({ message }) => {
 
@@ -24,6 +25,7 @@ const Message = ({ message }) => {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedMessage, setEditedMessage] = useState(message.body);
+  const [ariaLabel, setAriaLabel] = useState(`chat bubble from ${message.owner===userData.handle? 'you' : message.owner} that reads ${message.body}`);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -100,7 +102,7 @@ const Message = ({ message }) => {
   };
 
   return (<>
-    <div className={`${userData.handle == message.owner ? "chat chat-end mb-1" : "chat chat-start mb-1"} ${message.reactions && 'mb-5'}`} >
+    <div className={`${userData.handle == message.owner ? "chat chat-end mb-1" : "chat chat-start mb-1"} ${message.reactions && 'mb-5'}`} aria-label={ariaLabel}>
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
           <img alt="Tailwind CSS chat bubble component" src={ownerPic} className="w-10 h-10 rounded-3xl mr-3"/>

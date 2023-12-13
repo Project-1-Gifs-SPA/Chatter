@@ -34,6 +34,8 @@ const MyServers = () => {
   const [arialDM, setArialDM] = useState('Sidebar with a list of direct messages');
 
   const modalRef = useRef(null);
+  const sidebarTitle = useRef(null);
+  const dmTile = useRef(null);
 
   const [channelName, setChannelName] = useState('');
 
@@ -200,6 +202,22 @@ const MyServers = () => {
     }
   }, [dms]);
 
+
+  const nextElementFocus = (tabIndex)=>{
+
+    switch(tabIndex){
+      case '1': sidebarTitle.current.focus(); break;
+      case '2' : dmTile.current.focus(); break;
+      default: return;
+    }
+  }
+
+  const handleTabIndex = () => {
+  
+    const currentTabIndex = document.activeElement.tabIndex;
+    nextElementFocus(currentTabIndex);
+  }
+ 
   return (
     <>
       <div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter overflow-y-scroll no-scrollbar flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
@@ -209,7 +227,11 @@ const MyServers = () => {
             <div className="flex justify-between items-center">
               <h1
                 style={{ maxWidth: "180px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontFamily: 'Rockwell, sans-serif' }}
-                className={` font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}>
+                className={` font-semibold text-xl leading-tight mb-1 whitespace-normal ${expanded ? '' : 'hidden'}`}
+                tabIndex = '1'
+                ref={sidebarTitle}
+                onKeyDown={()=>sidebarTitle.current.focus()}
+                >
                 {teamId ?
                   `${currentTeam.name}` : 'Direct Messages'}
               </h1>
@@ -300,9 +322,12 @@ const MyServers = () => {
               </div>
               : (
                 <>
-                  {dms && allDms.map((dm) => {
+                  {dms && allDms.map((dm,index) => {
                     const partner = Object.keys(dm.members).find(member => member !== userData.handle)
                     return <div key={dm.id}
+                      tabIndex="2"
+                      ref={dmTile}
+                      onKeyDown={(e)=>e.key=="Enter"? navigate(`/dms/${dm.id}`): handleTabIndex()} //onKeyDown={(e) => e.key == "Enter" ? handleSaveChanges() : null}
                       className={`hover:bg-gray-700 cursor-pointer`}>
                       <TeamMember dmPartner={partner} dmId={dm.id} /></div>
                   })
