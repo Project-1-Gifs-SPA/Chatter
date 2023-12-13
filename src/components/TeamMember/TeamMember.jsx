@@ -17,6 +17,7 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 	const { teamId, channelId } = useParams();
 	const [isDmSeen, setIsDmSeen] = useState([]);
 	const navigate = useNavigate();
+	const[arialDM, setArialDM] = useState(`private chat with ${dmPartner}`)
 
 	useEffect(() => {
 		getUserByHandle(dmPartner)
@@ -44,7 +45,8 @@ const TeamMember = ({ member, owner, dmPartner, dmId }) => {
 	return (
 		<>
 			<div className={`flex p-3 relative ${(dmId && !isDmSeen.includes(userData.handle)) && 'bg-gradient-to-r from-purple-700 to-gray-800'}`} onClick={dmId ? () => navigate(`/dms/${dmId}`) : null}
-				onContextMenu={handleContextMenu}>
+				onContextMenu={handleContextMenu}
+				aria-label={!channelId ? arialDM: null}>
 				{member ? member.handle === owner && (<p className="absolute top-2 left-8 transform -translate-x-1/2 -translate-y-1/2 tooltip tooltip-right" data-tip='Team owner'>👑</p>) : null}
 				<div className={`avatar ${member ? member.availability : partner.availability} relative z-[0]`}>
 

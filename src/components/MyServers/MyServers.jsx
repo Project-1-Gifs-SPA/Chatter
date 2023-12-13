@@ -39,6 +39,9 @@ const MyServers = () => {
 	const [checkedChannels, setCheckedChannels] = useState(0);
 	const [allDms, setAllDms] = useState([])
 	const [isDmSeen, setIsDmSeen] = useState([])
+	const [arialChannels, setArialChannels] = useState('Sidebar with create meetings button, create channel button and a list of all channels and meetings you are part of');
+	const [arialDM, setArialDM] = useState('Sidebar with a list of direct messages');
+
 
 	const modalRef = useRef(null);
 
@@ -242,7 +245,7 @@ const MyServers = () => {
 		<>
 			<div className={`bg-gray-800 h-screen max-w-[220px] text-purple-lighter overflow-y-scroll no-scrollbar flex-col md:flex-col ${expanded ? "w-54" : "w-10"} pb-6 md:block`}>
 
-				<div className="flex flex-col h-screen">
+				<div className="flex flex-col h-screen" aria-label={channelId? arialChannels : arialDM}>
 					<div className="text-white mb-1 mt-3 px-4 flex justify-between">
 						<div className="flex justify-between items-center">
 							<h1
