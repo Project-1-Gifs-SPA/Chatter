@@ -1,4 +1,4 @@
-import { ref, push, get, set, query, equalTo, orderByChild, update, endAt, startAt, onValue, limitToFirst, serverTimestamp } from 'firebase/database';
+import { ref, push, get, set, query, orderByChild, update, onValue, limitToFirst, serverTimestamp } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
 
@@ -11,7 +11,8 @@ export const sendMessage = (channelId, handle, msg, picURL) =>
                 owner: handle,
                 createdOn: serverTimestamp(),
                 avatar: picURL
-            }));
+            }))
+        .catch(e => console.error(e));
 
 export const getLiveMessages = (listenFn, channelId) => {
     const q = query(
@@ -24,7 +25,8 @@ export const getLiveMessages = (listenFn, channelId) => {
 
 export const getChat = (channelId) =>
     get(ref(db, `channels/${channelId}/msgs`))
-        .then(snapshot => snapshot.exists() ? snapshot.val() : []);
+        .then(snapshot => snapshot.exists() ? snapshot.val() : [])
+        .catch(e => console.error(e));
 
 export const sendDirectMessage = (dmId, handle, msg, picURL) =>
     push(ref(db, `dms/${dmId}/msgs`), {})
@@ -35,12 +37,13 @@ export const sendDirectMessage = (dmId, handle, msg, picURL) =>
                 owner: handle,
                 createdOn: serverTimestamp(),
                 avatar: picURL
-            })
-        );
+            }))
+        .catch(e => console.error(e));
 
 export const getDMChat = (dmId) =>
     get(ref(db, `dms/${dmId}/msgs`))
-        .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+        .then(snapshot => snapshot.exists() ? snapshot.val() : {})
+        .catch(e => console.error(e));
 
 export const getLiveDirectMessages = (listenFn, dmId) => {
     const q = query(
@@ -64,7 +67,8 @@ export const sendMeetingMessage = (meetingId, handle, msg, picURL) =>
                 createdOn: serverTimestamp(),
                 avatar: picURL
             })
-        );
+        )
+        .catch(e => console.error(e));
 
 export const getLiveMeetingMessages = (listenFn, meetingId) => {
     const q = query(
@@ -78,7 +82,8 @@ export const getLiveMeetingMessages = (listenFn, meetingId) => {
 
 export const getMeetingChat = (meetingId) =>
     get(ref(db, `meetings/${meetingId}/msgs`))
-        .then(snapshot => snapshot.exists() ? snapshot.val() : []);
+        .then(snapshot => snapshot.exists() ? snapshot.val() : [])
+        .catch(e => console.error(e));
 
 export const setChannelSeenBy = (channelId, user) => {
     const updates = {};
@@ -121,7 +126,8 @@ export const sendPictureMessage = (channelId, handle, msg, picURL) =>
                     owner: handle,
                     createdOn: serverTimestamp(),
                 })
-        );
+        )
+        .catch(e => console.error(e));
 
 export const sendPictureDirectMessage = (dmId, handle, msg, picURL) =>
     push(ref(db, `dms/${dmId}/msgs`), {})
@@ -134,7 +140,8 @@ export const sendPictureDirectMessage = (dmId, handle, msg, picURL) =>
                     owner: handle,
                     createdOn: serverTimestamp(),
                 })
-        );
+        )
+        .catch(e => console.error(e));
 
 export const sendMeetingPictureMessage = (meetingId, handle, msg, picURL) =>
     push(ref(db, `meetings/${meetingId}/msgs`), {})
@@ -147,4 +154,5 @@ export const sendMeetingPictureMessage = (meetingId, handle, msg, picURL) =>
                     owner: handle,
                     createdOn: serverTimestamp(),
                 })
-        );
+        )
+        .catch(e => console.error(e));

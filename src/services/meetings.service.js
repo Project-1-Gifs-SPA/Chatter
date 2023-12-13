@@ -29,12 +29,14 @@ export const createMeeting = (handle, participants, topic, start, end, teamId) =
                     }
                 })
                 .then(() => response.key);
-        });
+        })
+        .catch(e => console.error(e));
 };
 
 export const getMeetingById = (meetingId) => {
     return get(ref(db, `meetings/${meetingId}`))
-        .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+        .then(snapshot => snapshot.exists() ? snapshot.val() : {})
+        .catch(e => console.error(e));
 }
 
 export const addMemberToMeeting = (meetingId, handle) => {
@@ -72,7 +74,8 @@ export const getAllMeetings = () =>
             const data = snapshot.exists() ? snapshot : [];
 
             return fromMeetingsDocument(data);
-        });
+        })
+        .catch(e => console.error(e));
 
 export const getAllMeetingsByHandle = (handle) =>
     get(ref(db, `users/${handle}/meetings`))
@@ -80,7 +83,8 @@ export const getAllMeetingsByHandle = (handle) =>
             const data = snapshot.exists() ? Object.keys(snapshot.val()) : [];
 
             return data;
-        });
+        })
+        .catch(e => console.error(e));
 
 export const getLiveMeetingsByHandle = (listenFn, handle) =>
     onValue(
@@ -150,9 +154,9 @@ export const deleteMeeting = (meetingId, teamId) =>
                     deleteMeeting[`teams/${teamId}/meetings/${meetingId}`] = null;
 
                     return update(ref(db), deleteMeeting);
-                })
-                .catch(e => console.error(e.message));
-        });
+                });
+        })
+        .catch(e => console.error(e));
 
 export const addRecordingToMeeting = (meetingId, recordingURL) => {
     const addRecording = {};

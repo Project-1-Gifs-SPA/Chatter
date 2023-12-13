@@ -3,7 +3,8 @@ import { db } from '../config/firebase-config';
 
 export const createDM = (partner, handle) =>
     push(ref(db, 'dms'), {})
-        .then(response => addMembersToDM(partner, handle, response.key));
+        .then(response => addMembersToDM(partner, handle, response.key))
+        .catch(e => console.error(e));
 
 const addMembersToDM = (partner, handle, id) => {
     const updates = {};
@@ -40,28 +41,31 @@ export const createGroupDM = (partner, handle, newMember, dmId) => {
 };
 
 export const getLiveGroupDMs = (listenFn, handle) =>
-    onValue(ref(db, `users/${handle}/groupDMs`), (snapshot) => {
-        const data = snapshot.exists() ? snapshot.val() : {};
+    onValue(
+        ref(db, `users/${handle}/groupDMs`), (snapshot) => {
+            const data = snapshot.exists() ? snapshot.val() : {};
 
-        listenFn(data);
-    });
+            listenFn(data);
+        });
 
 export const getLiveUserDMs = (listenFn, handle) =>
-    onValue(ref(db, `users/${handle}/DMs`), (snapshot) => {
-        const data = snapshot.exists() ? snapshot.val() : {};
+    onValue(
+        ref(db, `users/${handle}/DMs`), (snapshot) => {
+            const data = snapshot.exists() ? snapshot.val() : {};
 
-        listenFn(data);
-    });
+            listenFn(data);
+        });
 
 export const getDMById = (dmId) =>
     get(ref(db, `dms/${dmId}`));
 
 export const getLiveDMs = (listenFn, dmId) =>
-    onValue(ref(db, `dms/${dmId}`), (snapshot) => {
-        const data = snapshot.exists() ? snapshot.val() : {};
+    onValue(
+        ref(db, `dms/${dmId}`), (snapshot) => {
+            const data = snapshot.exists() ? snapshot.val() : {};
 
-        listenFn(data);
-    });
+            listenFn(data);
+        });
 
 export const getLiveGroupDMsMembers = (listenFn, dmId) =>
     onValue(ref(db, `dms/${dmId}/members`), (snapshot) => {
@@ -79,16 +83,15 @@ export const deleteGroupMember = (dmId, member) => {
 }
 
 export const editDMmessage = (content, dmId, msgId) =>
-    update(
-        ref(db, `dms/${dmId}/msgs/${msgId}`),
+    update(ref(db, `dms/${dmId}/msgs/${msgId}`),
         {
             body: content
         }
     );
 
-export const getDMbyId = (dmId) =>
-    get(ref(db, `dms/${dmId}`))
-        .then(snapshot => snapshot.exists() ? snapshot.val() : {});
+export const getDMbyId = (dmId) => get(ref(db, `dms/${dmId}`))
+    .then(snapshot => snapshot.exists() ? snapshot.val() : {})
+    .catch(e => console.error(e));
 
 export const getLiveDmMembers = (listenFn, dmId) =>
     onValue(
