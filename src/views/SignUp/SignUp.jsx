@@ -235,11 +235,14 @@ const SignUp = () => {
             <button
               className="text-white px-4 py-2 rounded btn bg-purple-600 transition-colors hover:bg-purple-700 border-none"
               onClick={onRegister}
+              data-testid='signup-button'
             >
               Sign up
             </button>
             {showAlert && (
-              <div className="bg-red-500 text-white p-2 rounded">
+              <div 
+              data-testid='fail'
+              className="bg-red-500 text-white p-2 rounded">
                 {fail}
               </div>
             )}

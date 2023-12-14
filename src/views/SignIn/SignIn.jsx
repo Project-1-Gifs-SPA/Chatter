@@ -113,6 +113,7 @@ const SignIn = () => {
               <button
                 className="text-white px-4 py-2 rounded btn bg-purple-600 transition-colors hover:bg-purple-700 border-none"
                 onClick={onLogin}
+                data-testid='signin-button'
               >
                 Sign in
               </button>
