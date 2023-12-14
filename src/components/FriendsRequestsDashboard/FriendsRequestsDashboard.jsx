@@ -14,8 +14,8 @@ const FriendsRequestsDashboard = () => {
     if (currentUser.friendRequests) {
       const promises = Object.keys(currentUser.friendRequests).map(request =>
         getUserByHandle(request)
-          .then((snapshot) => snapshot.val()))
-        .catch((e) => console.error(e));
+          .then((snapshot) => snapshot.val())
+        .catch((e) => console.error(e)));
 
       Promise.all(promises)
         .then((membersData) => {
