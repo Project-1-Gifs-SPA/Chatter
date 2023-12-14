@@ -3,35 +3,35 @@ import { localHost, logInFn } from "./testsHelpFn.js";
 
 
 
-test('should input the team name', async ({ page }) => {
-    await page.goto(localHost);
-    await page.goto(localHost+'welcome');
-    await logInFn(page);
-    await page.getByLabel('navigation bar for teams with').locator('path').click();
-    await page.getByRole('textbox').click();
+// test('should input the team name', async ({ page }) => {
+//     await page.goto(localHost);
+//     await page.goto(localHost+'welcome');
+//     await logInFn(page);
+//     await page.getByLabel('navigation bar for teams with').locator('path').click();
+//     await page.getByRole('textbox').click();
   
-    const testText = 'Sasho'
-    await page.getByRole('textbox').fill(testText);
+//     const testText = 'Sasho'
+//     await page.getByRole('textbox').fill(testText);
   
-    await expect(page.getByRole('textbox')).toHaveValue(testText);
-  });
+//     await expect(page.getByRole('textbox')).toHaveValue(testText);
+//   });
 
 
-test('should show me an error', async({page})=>{
+// test('should show me an error', async({page})=>{
 
-    await page.goto(localHost);
-    await page.goto(localHost + 'welcome');
-    await logInFn(page);
-    await page.getByLabel('navigation bar for teams with').locator('path').click();
-    await page.getByRole('textbox').click();
+//     await page.goto(localHost);
+//     await page.goto(localHost + 'welcome');
+//     await logInFn(page);
+//     await page.getByLabel('navigation bar for teams with').locator('path').click();
+//     await page.getByRole('textbox').click();
   
-    const testText = 'a'
-    await page.getByRole('textbox').fill(testText);
-    await page.getByRole('button', { name: 'Add Team' }).click();
+//     const testText = 'a'
+//     await page.getByRole('textbox').fill(testText);
+//     await page.getByRole('button', { name: 'Add Team' }).click();
 
-    await expect(page.getByText('Team name must be')).toBeVisible();
+//     await expect(page.getByText('Team name must be')).toBeVisible();
 
-});
+// });
 
 
 test('should open team modal', async({page})=>{

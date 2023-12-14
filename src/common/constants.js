@@ -39,7 +39,7 @@ export const reactions = {
   Angry: '😠'
 }
 
-export const OPENAI_API_KEY = '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';
+export const OPENAI_API_KEY = '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';
 export const GIPHY_API_KEY = "5HHbQrWtBlmLdQdHMd0ZeRjx3baS9v1b";
 
 export const GIPHY_BASE_URL = 'http://api.giphy.com/v1/gifs/';
